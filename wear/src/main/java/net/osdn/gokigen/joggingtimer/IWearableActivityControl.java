@@ -9,6 +9,6 @@ import android.support.wearable.activity.WearableActivity;
  */
 public interface IWearableActivityControl
 {
-    void setup(WearableActivity activity);
+    void setup(WearableActivity activity, IClickCallback callback);
     void exitApplication(WearableActivity activity);
 }

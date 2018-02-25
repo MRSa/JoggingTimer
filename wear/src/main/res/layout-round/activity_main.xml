@@ -5,23 +5,109 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/dark_grey"
+    android:background="@color/white"
     android:padding="@dimen/box_inset_layout_padding"
     tools:context="net.osdn.gokigen.joggingtimer.MainActivity"
     tools:deviceIds="wear">
 
-    <FrameLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="@dimen/inner_frame_layout_padding"
         app:boxedEdges="all">
 
         <TextView
-            android:id="@+id/text"
-            android:layout_width="wrap_content"
+            android:id="@+id/main_counter"
+            android:textColor="@color/dark_grey"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/app_title" />
+            android:textSize="14pt"
+            android:text="@string/counter" />
 
-    </FrameLayout>
+
+        <ImageButton
+            android:id="@+id/btn2"
+            android:background="@color/white"
+            android:layout_gravity="bottom"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentBottom="true"
+            android:clickable="true"
+            android:focusable="true"
+            android:scaleType="fitCenter"
+            android:visibility="invisible"
+            android:contentDescription="@string/blank"
+            android:src="@drawable/ic_location_off_black_24dp"
+            />
+
+
+        <ImageButton
+            android:id="@+id/btn3"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_alignParentBottom="true"
+            android:layout_gravity="bottom"
+            android:layout_toEndOf="@+id/btn2"
+            android:background="@color/white"
+            android:clickable="true"
+            android:contentDescription="@string/blank"
+            android:focusable="true"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_stop_black_24dp"
+            android:visibility="invisible" />
+
+        <ImageButton
+            android:id="@+id/btn1"
+            android:background="@color/white"
+            android:layout_gravity="bottom"
+            android:layout_width="60dp"
+            android:layout_height="48dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:clickable="true"
+            android:focusable="true"
+            android:scaleType="fitCenter"
+            android:visibility="visible"
+            android:contentDescription="@string/blank"
+            android:src="@drawable/ic_play_arrow_black_24dp"
+            />
+
+        <TextView
+            android:id="@+id/sub_counter1"
+            android:textColor="@color/dark_grey"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@id/main_counter"
+            android:layout_below="@id/main_counter"
+            android:textSize="8pt"
+            android:text="@string/counter" />
+        <TextView
+            android:id="@+id/sub_counter2"
+            android:textColor="@color/dark_grey"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@id/main_counter"
+            android:layout_below="@id/sub_counter1"
+            android:textSize="8pt"
+            android:text="@string/counter" />
+        <TextView
+            android:id="@+id/sub_counter3"
+            android:textColor="@color/dark_grey"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@id/main_counter"
+            android:layout_below="@id/sub_counter2"
+            android:textSize="8pt"
+            android:text="@string/counter" />
+
+        <View
+            android:id="@+id/background"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentStart="true"
+            android:visibility="gone" />
+    </RelativeLayout>
 </android.support.wear.widget.BoxInsetLayout>
 
