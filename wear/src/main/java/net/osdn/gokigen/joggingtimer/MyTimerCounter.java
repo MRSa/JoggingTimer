@@ -38,7 +38,13 @@ public class MyTimerCounter implements Parcelable, ITimerCounter
         int sec = (int) (millis / 1000) % 60;
         int minutes = (int) ((millis / (1000 * 60)) % 60);
         int hours = (int) ((millis / (1000 * 60 * 60)) % 24);
-        return (String.format(Locale.US,"%02d:%02d:%02d.%d", hours, minutes, sec, ms));
+
+        if (hours < 1)
+        {
+            // １時間経過していない時は、時間表示は省略する
+            return (String.format(Locale.US,"%02d'%02d\"%d", minutes, sec, ms));
+        }
+        return (String.format(Locale.US,"%d:%02d'%02d\"%d", hours, minutes, sec, ms));
         //return (DateFormat.format("hh:mm:ss.S", time));
     }
 

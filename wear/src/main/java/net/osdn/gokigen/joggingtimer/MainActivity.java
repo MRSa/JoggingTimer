@@ -201,13 +201,19 @@ public class MainActivity extends WearableActivity implements IClickCallback, My
         {
             if (timerCounter.isStarted())
             {
-                timerCounter.timeStamp();
+                // チャタリング防止（ラップタイムとして、３秒以内は記録しないようにする）
+                if (timerCounter.getCurrentElapsedTime() > 3000)
+                {
+                    timerCounter.timeStamp();
+                    controller.vibrate(50);
+                }
             }
             else
             {
                 timerCounter.start();
                 MyTimerTrigger trigger = new MyTimerTrigger(this, 100, timerCounter);
                 trigger.startTimer();
+                controller.vibrate(120);
             }
             updateTimerLabel();
         }
@@ -225,6 +231,7 @@ public class MainActivity extends WearableActivity implements IClickCallback, My
             if (timerCounter.isStarted())
             {
                 timerCounter.stop();
+                controller.vibrate(120);
             }
             updateTimerLabel();
         }
@@ -242,6 +249,7 @@ public class MainActivity extends WearableActivity implements IClickCallback, My
             if (!timerCounter.isStarted())
             {
                 timerCounter.reset();
+                controller.vibrate(50);
             }
             updateTimerLabel();
         }
@@ -319,7 +327,6 @@ public class MainActivity extends WearableActivity implements IClickCallback, My
         }
     }
 
-
     /**
      *
      *
@@ -338,5 +345,4 @@ public class MainActivity extends WearableActivity implements IClickCallback, My
         }
         return (elapsedTime);
     }
-
 }

@@ -1,9 +1,18 @@
 package net.osdn.gokigen.joggingtimer;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.os.PowerManager;
+import android.os.Vibrator;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.wearable.activity.WearableActivity;
 import android.util.Log;
 import android.widget.ImageButton;
 import android.widget.TextView;
+
+import static android.content.Context.POWER_SERVICE;
+import static android.content.Context.VIBRATOR_SERVICE;
 
 /**
  *
@@ -14,6 +23,9 @@ class WearableActivityController implements IWearableActivityControl
 {
     private final String TAG = toString();
     private final ButtonClickListener clickListener = new ButtonClickListener();
+    private Vibrator vibrator = null;
+    //private PowerManager powerManager = null;
+
 
     WearableActivityController()
     {
@@ -23,8 +35,8 @@ class WearableActivityController implements IWearableActivityControl
     @Override
     public void setup(WearableActivity activity, IClickCallback callback)
     {
-        setupPermissions();
-        setupHardwares();
+        setupPermissions(activity);
+        setupHardwares(activity);
         setupScreen(activity);
         setupListeners(activity, callback);
     }
@@ -34,7 +46,7 @@ class WearableActivityController implements IWearableActivityControl
      *
      *
      */
-    private void setupPermissions()
+    private void setupPermissions(WearableActivity activity)
     {
 /*
         // Set up permissions
@@ -60,17 +72,29 @@ class WearableActivityController implements IWearableActivityControl
                     REQUEST_NEED_PERMISSIONS);
         }
 */
-
+        if ((ContextCompat.checkSelfPermission(activity, Manifest.permission.VIBRATE) != PackageManager.PERMISSION_GRANTED)||
+                (ContextCompat.checkSelfPermission(activity, Manifest.permission.WAKE_LOCK) != PackageManager.PERMISSION_GRANTED))
+        {
+            ActivityCompat.requestPermissions(activity,
+                    new String[]{
+                            Manifest.permission.VIBRATE,
+                            Manifest.permission.WAKE_LOCK,
+                    },
+                    100);
+        }
     }
 
     /**
      *
      *
      */
-    private void setupHardwares()
+    private void setupHardwares(WearableActivity activity)
     {
+        // バイブレータをつかまえる
+        vibrator = (Vibrator) activity.getSystemService(VIBRATOR_SERVICE);
 
-
+        // パワーマネージャをつかまえる
+        // powerManager = (PowerManager) activity.getSystemService(POWER_SERVICE);
     }
 
     /**
@@ -125,5 +149,29 @@ class WearableActivityController implements IWearableActivityControl
         //finish();
         //finishAndRemoveTask();
         //android.os.Process.killProcess(android.os.Process.myPid());
+    }
+
+    @Override
+    public void vibrate(final int duration)
+    {
+        try
+        {
+            if ((vibrator == null)||(!vibrator.hasVibrator()))
+            {
+                return;
+            }
+
+            Thread thread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    vibrator.vibrate(duration);
+                }
+            });
+            thread.start();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
     }
 }

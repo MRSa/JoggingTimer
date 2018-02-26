@@ -11,4 +11,6 @@ public interface IWearableActivityControl
 {
     void setup(WearableActivity activity, IClickCallback callback);
     void exitApplication(WearableActivity activity);
+
+    void vibrate(int duration);
 }
