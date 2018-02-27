@@ -6,4 +6,8 @@ public interface IClickCallback
     void clickedBtn2();
     void clickedBtn3();
 
+    boolean pushedBtn1();
+    boolean pushedBtn2();
+    boolean pushedBtn3();
+
 }

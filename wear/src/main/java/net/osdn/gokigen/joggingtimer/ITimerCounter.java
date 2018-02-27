@@ -5,6 +5,7 @@ import java.util.List;
 public interface ITimerCounter
 {
     boolean isStarted();
+    boolean isReset();
     void start();
     void stop();
     void timeStamp();

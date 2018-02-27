@@ -46,7 +46,24 @@ public class ButtonClickListener implements View.OnClickListener, View.OnLongCli
     @Override
     public boolean onLongClick(View v)
     {
-        return false;
+        boolean ret = false;
+        int id = v.getId();
+        if (callback != null)
+        {
+            if (id == R.id.btn1)
+            {
+                ret = callback.pushedBtn1();
+            }
+            else if (id == R.id.btn2)
+            {
+                ret = callback.pushedBtn2();
+            }
+            else if (id == R.id.btn3)
+            {
+                ret = callback.pushedBtn3();
+            }
+        }
+        return (ret);
     }
 
 

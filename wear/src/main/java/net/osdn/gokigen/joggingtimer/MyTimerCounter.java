@@ -59,6 +59,12 @@ public class MyTimerCounter implements Parcelable, ITimerCounter
         return (!isTimerStopped);
     }
 
+    @Override
+    public boolean isReset()
+    {
+        return ((isTimerStopped)&&(startTime == 0));
+    }
+
     /**
      *   Start Timer
      *
