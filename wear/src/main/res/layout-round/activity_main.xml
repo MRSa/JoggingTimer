@@ -82,7 +82,7 @@
             android:layout_alignStart="@id/main_counter"
             android:layout_below="@id/main_counter"
             android:textSize="8pt"
-            android:text="@string/counter" />
+            android:text="@string/blank" />
         <TextView
             android:id="@+id/sub_counter2"
             android:textColor="@color/dark_grey"
@@ -91,7 +91,7 @@
             android:layout_alignStart="@id/main_counter"
             android:layout_below="@id/sub_counter1"
             android:textSize="8pt"
-            android:text="@string/counter" />
+            android:text="@string/blank" />
         <TextView
             android:id="@+id/sub_counter3"
             android:textColor="@color/dark_grey"
@@ -100,7 +100,7 @@
             android:layout_alignStart="@id/main_counter"
             android:layout_below="@id/sub_counter2"
             android:textSize="8pt"
-            android:text="@string/counter" />
+            android:text="@string/blank" />
 
         <View
             android:id="@+id/background"
