@@ -1,5 +1,6 @@
 package net.osdn.gokigen.joggingtimer;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.wearable.activity.WearableActivity;
@@ -69,7 +70,16 @@ public class MainActivity extends WearableActivity implements IClickCallback, My
     protected void onResume()
     {
         super.onResume();
-        Log.v(TAG, "onResume()");
+
+        // インテントを取得する
+        Intent intent = getIntent();
+        String action = intent.getAction();
+        Log.v(TAG, "onResume() : " + action);
+        if ((action != null)&&(action.equals("com.google.android.wearable.action.STOPWATCH")))
+        {
+            // start a timer!
+            startTimer();
+        }
     }
 
     /**
@@ -239,6 +249,15 @@ public class MainActivity extends WearableActivity implements IClickCallback, My
      */
     @Override
     public void clickedBtn1()
+    {
+        startTimer();
+    }
+
+    /**
+     *
+     *
+     */
+    private void startTimer()
     {
         ITimerCounter timerCounter = counter;
         if (timerCounter != null)
