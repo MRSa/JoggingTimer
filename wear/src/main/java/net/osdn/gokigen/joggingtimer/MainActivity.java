@@ -157,7 +157,7 @@ public class MainActivity extends WearableActivity implements IClickCallback, My
         ITimerCounter timerCounter = counter;
         if (timerCounter != null)
         {
-            int bgColor = Color.WHITE;
+            int bgColor;
             RelativeLayout layout = findViewById(R.id.relative_main_layout);
             TextView main = findViewById(R.id.main_counter);
             ImageButton btn1 = findViewById(R.id.btn1);
