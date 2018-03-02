@@ -3,6 +3,7 @@ package net.osdn.gokigen.joggingtimer;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.wear.widget.BoxInsetLayout;
 import android.support.wearable.activity.WearableActivity;
 import android.util.Log;
 import android.view.View;
@@ -75,7 +76,23 @@ public class MainActivity extends WearableActivity implements IClickCallback, My
         Intent intent = getIntent();
         String action = intent.getAction();
         Log.v(TAG, "onResume() : " + action);
-        if ((action != null)&&(action.equals("com.google.android.wearable.action.STOPWATCH")))
+        boolean isStartTimer = false;
+        if (action != null)
+        {
+            if (action.equals("com.google.android.wearable.action.STOPWATCH"))
+            {
+                isStartTimer = true;
+            }
+            else if (action.equals("vnd.google.fitness.TRACK"))
+            {
+                String activity = intent.getStringExtra("actionStatus");
+                if ((activity != null)&&(activity.equals("ActiveActionStatus")))
+                {
+                    isStartTimer = true;
+                }
+            }
+        }
+        if (isStartTimer)
         {
             // start a timer!
             startTimer();
@@ -158,6 +175,7 @@ public class MainActivity extends WearableActivity implements IClickCallback, My
         if (timerCounter != null)
         {
             int bgColor;
+            BoxInsetLayout insetLayout = findViewById(R.id.box_inset_layout);
             RelativeLayout layout = findViewById(R.id.relative_main_layout);
             TextView main = findViewById(R.id.main_counter);
             ImageButton btn1 = findViewById(R.id.btn1);
@@ -166,6 +184,9 @@ public class MainActivity extends WearableActivity implements IClickCallback, My
             if (timerCounter.isStarted())
             {
                 bgColor = Color.CYAN;
+                insetLayout.setBackgroundColor(bgColor);
+                insetLayout.invalidate();
+
                 layout.setBackgroundColor(bgColor);
                 layout.invalidate();
 
@@ -192,6 +213,9 @@ public class MainActivity extends WearableActivity implements IClickCallback, My
             else if (timerCounter.isReset())
             {
                 bgColor = Color.WHITE;
+                insetLayout.setBackgroundColor(bgColor);
+                insetLayout.invalidate();
+
                 layout.setBackgroundColor(bgColor);
                 layout.invalidate();
 
@@ -218,6 +242,9 @@ public class MainActivity extends WearableActivity implements IClickCallback, My
             else
             {
                 bgColor = Color.rgb(250, 80, 80);
+                insetLayout.setBackgroundColor(bgColor);
+                insetLayout.invalidate();
+
                 layout.setBackgroundColor(bgColor);
                 layout.invalidate();
 
