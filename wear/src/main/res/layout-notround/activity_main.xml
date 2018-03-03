@@ -23,6 +23,7 @@
             android:textColor="@color/dark_grey"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textAlignment="center"
             android:textSize="15pt"
             android:text="@string/counter" />
 
@@ -31,8 +32,8 @@
             android:id="@+id/btn2"
             android:background="@color/white"
             android:layout_gravity="bottom"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
+            android:layout_width="34dp"
+            android:layout_height="34dp"
             android:layout_alignParentStart="true"
             android:layout_alignParentBottom="true"
             android:clickable="true"
@@ -45,8 +46,8 @@
 
         <ImageButton
             android:id="@+id/btn3"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
+            android:layout_width="34dp"
+            android:layout_height="34dp"
             android:layout_alignParentBottom="true"
             android:layout_gravity="bottom"
             android:layout_toEndOf="@+id/btn2"
@@ -58,13 +59,12 @@
             android:src="@drawable/ic_stop_black_24dp"
             android:visibility="invisible" />
 
-
         <ImageButton
             android:id="@+id/btn1"
             android:background="@color/white"
             android:layout_gravity="bottom"
             android:layout_width="80dp"
-            android:layout_height="56dp"
+            android:layout_height="34dp"
             android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
             android:clickable="true"
@@ -80,26 +80,42 @@
             android:textColor="@color/dark_grey"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textAlignment="textStart"
             android:layout_alignStart="@id/main_counter"
             android:layout_below="@id/main_counter"
             android:textSize="8pt"
             android:text="@string/blank" />
+
         <TextView
             android:id="@+id/sub_counter2"
             android:textColor="@color/dark_grey"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textAlignment="textStart"
             android:layout_alignStart="@id/main_counter"
             android:layout_below="@id/sub_counter1"
             android:textSize="8pt"
             android:text="@string/blank" />
+
         <TextView
             android:id="@+id/sub_counter3"
             android:textColor="@color/dark_grey"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textAlignment="textStart"
             android:layout_alignStart="@id/main_counter"
             android:layout_below="@id/sub_counter2"
+            android:textSize="8pt"
+            android:text="@string/blank" />
+
+        <TextView
+            android:id="@+id/sub_counter4"
+            android:textColor="@color/dark_grey"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="textStart"
+            android:layout_alignStart="@id/main_counter"
+            android:layout_below="@id/sub_counter3"
             android:textSize="8pt"
             android:text="@string/blank" />
 

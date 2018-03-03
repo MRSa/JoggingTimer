@@ -394,6 +394,7 @@ public class MainActivity extends WearableActivity implements IClickCallback, My
         TextView area1 = findViewById(R.id.sub_counter1);
         TextView area2 = findViewById(R.id.sub_counter2);
         TextView area3 = findViewById(R.id.sub_counter3);
+        TextView area4 = findViewById(R.id.sub_counter4);
 
         ITimerCounter timerCounter = counter;
         if (timerCounter != null)
@@ -409,6 +410,8 @@ public class MainActivity extends WearableActivity implements IClickCallback, My
                 area2.invalidate();
                 area3.setText(dummy);
                 area3.invalidate();
+                area4.setText(dummy);
+                area4.invalidate();
                 return;
             }
             if (indexSize <= 2)
@@ -422,20 +425,43 @@ public class MainActivity extends WearableActivity implements IClickCallback, My
                 area2.invalidate();
                 area3.setText(dummy);
                 area3.invalidate();
+                area4.setText(dummy);
+                area4.invalidate();
+                return;
+            }
+            if (indexSize <= 3)
+            {
+                // ラップが３つとれた場合
+                long time1 = (elapsedTimes.get(indexSize - 2) - elapsedTimes.get(indexSize - 3));
+                long time2 = (elapsedTimes.get(indexSize - 1) - elapsedTimes.get(indexSize - 2));
+                String elapsedTime1 = "[" + (timerCounter.getElapsedCount() - 2) + "] " + MyTimerCounter.getTimeString(time1);
+                String elapsedTime2 = "[" + (timerCounter.getElapsedCount() - 1) + "] " + MyTimerCounter.getTimeString(time2);
+                area1.setText(elapsedTime1);
+                area1.invalidate();
+                area2.setText(elapsedTime2);
+                area2.invalidate();
+                area3.setText(getElapsedTime());
+                area3.invalidate();
+                area4.setText(dummy);
+                area4.invalidate();
                 return;
             }
 
-            // ラップが３つ以上ある場合
-            long time1 = (elapsedTimes.get(indexSize - 2) - elapsedTimes.get(indexSize - 3));
-            long time2 = (elapsedTimes.get(indexSize - 1) - elapsedTimes.get(indexSize - 2));
-            String elapsedTime1 = "[" + (timerCounter.getElapsedCount() - 2) + "] " + MyTimerCounter.getTimeString(time1);
-            String elapsedTime2 = "[" + (timerCounter.getElapsedCount() - 1) + "] " + MyTimerCounter.getTimeString(time2);
+            // ラップが４つ以上ある場合
+            long time1 = (elapsedTimes.get(indexSize - 3) - elapsedTimes.get(indexSize - 4));
+            long time2 = (elapsedTimes.get(indexSize - 2) - elapsedTimes.get(indexSize - 3));
+            long time3 = (elapsedTimes.get(indexSize - 1) - elapsedTimes.get(indexSize - 2));
+            String elapsedTime1 = "[" + (timerCounter.getElapsedCount() - 3) + "] " + MyTimerCounter.getTimeString(time1);
+            String elapsedTime2 = "[" + (timerCounter.getElapsedCount() - 2) + "] " + MyTimerCounter.getTimeString(time2);
+            String elapsedTime3 = "[" + (timerCounter.getElapsedCount() - 1) + "] " + MyTimerCounter.getTimeString(time3);
             area1.setText(elapsedTime1);
             area1.invalidate();
             area2.setText(elapsedTime2);
             area2.invalidate();
-            area3.setText(getElapsedTime());
+            area3.setText(elapsedTime3);
             area3.invalidate();
+            area4.setText(getElapsedTime());
+            area4.invalidate();
         }
     }
 
