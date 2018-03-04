@@ -1,11 +1,9 @@
 package net.osdn.gokigen.joggingtimer;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import android.text.format.DateFormat;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.os.SystemClock;

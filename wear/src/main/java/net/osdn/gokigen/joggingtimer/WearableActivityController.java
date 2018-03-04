@@ -2,7 +2,6 @@ package net.osdn.gokigen.joggingtimer;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
-import android.os.PowerManager;
 import android.os.Vibrator;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -11,7 +10,6 @@ import android.util.Log;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import static android.content.Context.POWER_SERVICE;
 import static android.content.Context.VIBRATOR_SERVICE;
 
 /**
@@ -130,6 +128,10 @@ class WearableActivityController implements IWearableActivityControl
             ImageButton btn3 = activity.findViewById(R.id.btn3);
             btn3.setOnClickListener(clickListener);
             btn3.setOnLongClickListener(clickListener);
+
+            TextView main = activity.findViewById(R.id.main_counter);
+            main.setOnClickListener(clickListener);
+            main.setOnLongClickListener(clickListener);
         }
         catch (Exception e)
         {

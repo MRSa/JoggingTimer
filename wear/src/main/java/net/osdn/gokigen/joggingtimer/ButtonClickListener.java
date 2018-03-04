@@ -2,6 +2,7 @@ package net.osdn.gokigen.joggingtimer;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 import android.view.View;
 
 /**
@@ -10,6 +11,7 @@ import android.view.View;
  */
 public class ButtonClickListener implements View.OnClickListener, View.OnLongClickListener, Parcelable
 {
+    private final String TAG = toString();
     private IClickCallback callback = null;
 
     ButtonClickListener()
@@ -39,6 +41,10 @@ public class ButtonClickListener implements View.OnClickListener, View.OnLongCli
             else if (id == R.id.btn3)
             {
                 callback.clickedBtn3();
+            }
+            else if (id == R.id.main_counter)
+            {
+                callback.clickedCounter();
             }
         }
     }
@@ -79,7 +85,7 @@ public class ButtonClickListener implements View.OnClickListener, View.OnLongCli
     @Override
     public void writeToParcel(Parcel dest, int flags)
     {
-
+        Log.v(TAG, "writeToParcel() ");
     }
     public static final Parcelable.Creator<ButtonClickListener> CREATOR = new Parcelable.Creator<ButtonClickListener>()
     {
@@ -96,15 +102,14 @@ public class ButtonClickListener implements View.OnClickListener, View.OnLongCli
 
     private ButtonClickListener(Parcel in)
     {
-/*
         try
         {
             //
+            Log.v(TAG, " in : " + in.toString());
         }
         catch (Exception e)
         {
             e.printStackTrace();
         }
-*/
     }
 }

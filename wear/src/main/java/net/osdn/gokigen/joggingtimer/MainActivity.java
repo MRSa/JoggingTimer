@@ -22,6 +22,7 @@ public class MainActivity extends WearableActivity implements IClickCallback, My
     private final String TAG = toString();
     private final IWearableActivityControl controller = new WearableActivityController();
     private MyTimerCounter counter = new MyTimerCounter();
+    private boolean isCounterLapTime = false;
 
     /**
      *
@@ -177,10 +178,13 @@ public class MainActivity extends WearableActivity implements IClickCallback, My
             int bgColor;
             BoxInsetLayout insetLayout = findViewById(R.id.box_inset_layout);
             RelativeLayout layout = findViewById(R.id.relative_main_layout);
-            TextView main = findViewById(R.id.main_counter);
+
             ImageButton btn1 = findViewById(R.id.btn1);
             ImageButton btn2 = findViewById(R.id.btn2);
             ImageButton btn3 = findViewById(R.id.btn3);
+
+            updateMainSubCounter();
+
             if (timerCounter.isStarted())
             {
                 bgColor = Color.CYAN;
@@ -204,9 +208,6 @@ public class MainActivity extends WearableActivity implements IClickCallback, My
                 btn3.setBackgroundColor(bgColor);
                 btn3.setVisibility(View.INVISIBLE);
                 btn3.invalidate();
-
-                main.setText(MyTimerCounter.getTimeString(timerCounter.getPastTime()));
-                main.invalidate();
 
                 updateElapsedTimes();
             }
@@ -234,9 +235,6 @@ public class MainActivity extends WearableActivity implements IClickCallback, My
                 btn3.setVisibility(View.INVISIBLE);
                 btn3.invalidate();
 
-                main.setText(MyTimerCounter.getTimeString(timerCounter.getPastTime()));
-                main.invalidate();
-
                 updateElapsedTimes();
             }
             else
@@ -263,12 +261,16 @@ public class MainActivity extends WearableActivity implements IClickCallback, My
                 btn3.setBackgroundColor(bgColor);
                 btn3.invalidate();
 
-                main.setText(MyTimerCounter.getTimeString(timerCounter.getPastTime()));
-                main.invalidate();
-
                 updateElapsedTimes();
             }
         }
+    }
+
+    @Override
+    public void clickedCounter()
+    {
+        // 表示順番を変える
+        isCounterLapTime = !isCounterLapTime;
     }
 
     /**
@@ -388,13 +390,50 @@ public class MainActivity extends WearableActivity implements IClickCallback, My
         }
     }
 
+    private void updateMainSubCounter()
+    {
+        TextView main = findViewById(R.id.main_counter);
+        TextView sub = findViewById(R.id.sub_counter1);
+
+        ITimerCounter timerCounter = counter;
+        if (timerCounter != null)
+        {
+            long time1 = timerCounter.getPastTime();
+            CharSequence str1 = MyTimerCounter.getTimeString(time1);
+
+            CharSequence str2 = "";
+            if (timerCounter.isStarted())
+            {
+                long time2 = timerCounter.getCurrentElapsedTime();
+                int lapCount = timerCounter.getElapsedCount();
+                if ((time2 >= 100) && (lapCount > 1)) {
+                    str2 = "[" + lapCount + "] " + MyTimerCounter.getTimeString(time2);
+                }
+            }
+
+            if ((str2.length() > 0)&&(isCounterLapTime))
+            {
+                // ラップタイムの方を大きく表示する
+                main.setText(str2);
+                sub.setText(str1);
+            }
+            else
+            {
+                main.setText(str1);
+                sub.setText(str2);
+            }
+            main.invalidate();
+            sub.invalidate();
+        }
+    }
+
+
     private void updateElapsedTimes()
     {
         String dummy = "";
-        TextView area1 = findViewById(R.id.sub_counter1);
-        TextView area2 = findViewById(R.id.sub_counter2);
-        TextView area3 = findViewById(R.id.sub_counter3);
-        TextView area4 = findViewById(R.id.sub_counter4);
+        TextView area1 = findViewById(R.id.sub_counter2);
+        TextView area2 = findViewById(R.id.sub_counter3);
+        TextView area3 = findViewById(R.id.sub_counter4);
 
         ITimerCounter timerCounter = counter;
         if (timerCounter != null)
@@ -410,23 +449,19 @@ public class MainActivity extends WearableActivity implements IClickCallback, My
                 area2.invalidate();
                 area3.setText(dummy);
                 area3.invalidate();
-                area4.setText(dummy);
-                area4.invalidate();
                 return;
             }
             if (indexSize <= 2)
             {
-                // ラップが２つとれた場合
+                // ラップが１つとれた場合
                 long time = (elapsedTimes.get(indexSize - 1) - elapsedTimes.get(indexSize - 2));
                 String elapsedTime = "[" + (timerCounter.getElapsedCount() - 1) + "] " + MyTimerCounter.getTimeString(time);
                 area1.setText(elapsedTime);
                 area1.invalidate();
-                area2.setText(getElapsedTime());
+                area2.setText(dummy);
                 area2.invalidate();
                 area3.setText(dummy);
                 area3.invalidate();
-                area4.setText(dummy);
-                area4.invalidate();
                 return;
             }
             if (indexSize <= 3)
@@ -440,10 +475,8 @@ public class MainActivity extends WearableActivity implements IClickCallback, My
                 area1.invalidate();
                 area2.setText(elapsedTime2);
                 area2.invalidate();
-                area3.setText(getElapsedTime());
+                area3.setText(dummy);
                 area3.invalidate();
-                area4.setText(dummy);
-                area4.invalidate();
                 return;
             }
 
@@ -460,15 +493,14 @@ public class MainActivity extends WearableActivity implements IClickCallback, My
             area2.invalidate();
             area3.setText(elapsedTime3);
             area3.invalidate();
-            area4.setText(getElapsedTime());
-            area4.invalidate();
         }
     }
 
-    /**
+    /*
      *
      *
      */
+/*
     private String getElapsedTime()
     {
         String elapsedTime = "";
@@ -483,4 +515,5 @@ public class MainActivity extends WearableActivity implements IClickCallback, My
         }
         return (elapsedTime);
     }
+*/
 }
