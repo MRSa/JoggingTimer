@@ -227,7 +227,7 @@ public class MainActivity extends WearableActivity implements IClickCallback, My
 
                 btn2.setImageResource(R.drawable.ic_format_list_bulleted_black_24dp);
                 btn2.setBackgroundColor(bgColor);
-                btn2.setVisibility(View.INVISIBLE);
+                btn2.setVisibility(View.VISIBLE);
                 btn2.invalidate();
 
                 btn3.setImageResource(R.drawable.ic_refresh_black_24dp);

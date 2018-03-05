@@ -87,39 +87,41 @@
             android:layout_below="@id/main_counter"
             android:textSize="8pt"
             android:text="@string/blank" />
-
-        <TextView
-            android:id="@+id/sub_counter2"
-            android:textColor="@color/dark_grey"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textAlignment="textStart"
-            android:layout_alignStart="@id/main_counter"
-            android:layout_below="@id/sub_counter1"
-            android:textSize="8pt"
-            android:text="@string/blank" />
+            android:id="@+id/lap_time_area"
+            android:orientation="vertical"
+            android:scrollbarAlwaysDrawVerticalTrack="true"
+            android:layout_below="@id/sub_counter1">
 
-        <TextView
-            android:id="@+id/sub_counter3"
-            android:textColor="@color/dark_grey"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textAlignment="textStart"
-            android:layout_alignStart="@id/main_counter"
-            android:layout_below="@id/sub_counter2"
-            android:textSize="8pt"
-            android:text="@string/blank" />
+            <TextView
+                android:id="@+id/sub_counter2"
+                android:textColor="@color/dark_grey"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAlignment="textStart"
+                android:textSize="7pt"
+                android:text="@string/blank" />
 
-        <TextView
-            android:id="@+id/sub_counter4"
-            android:textColor="@color/dark_grey"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textAlignment="textStart"
-            android:layout_alignStart="@id/main_counter"
-            android:layout_below="@id/sub_counter3"
-            android:textSize="8pt"
-            android:text="@string/blank" />
+            <TextView
+                android:id="@+id/sub_counter3"
+                android:textColor="@color/dark_grey"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAlignment="textStart"
+                android:textSize="7pt"
+                android:text="@string/blank" />
+
+            <TextView
+                android:id="@+id/sub_counter4"
+                android:textColor="@color/dark_grey"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAlignment="textStart"
+                android:textSize="7pt"
+                android:text="@string/blank" />
+        </LinearLayout>
 
         <View
             android:id="@+id/background"
