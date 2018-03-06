@@ -40,9 +40,9 @@
             android:clickable="true"
             android:focusable="true"
             android:scaleType="fitEnd"
-            android:visibility="invisible"
+            android:visibility="visible"
             android:contentDescription="@string/blank"
-            android:src="@drawable/ic_location_off_black_24dp"
+            android:src="@drawable/ic_format_list_bulleted_black_24dp"
             />
 
         <ImageButton

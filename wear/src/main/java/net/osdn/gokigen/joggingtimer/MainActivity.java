@@ -317,6 +317,15 @@ public class MainActivity extends WearableActivity implements IClickCallback, My
     @Override
     public void clickedBtn2()
     {
+        ITimerCounter timerCounter = counter;
+        if (timerCounter != null)
+        {
+            if (!timerCounter.isStarted())
+            {
+                // 停止中は、記録一覧を呼び出す
+                launchListActivity();
+            }
+        }
         updateTimerLabel();
     }
 
@@ -493,6 +502,24 @@ public class MainActivity extends WearableActivity implements IClickCallback, My
             area2.invalidate();
             area3.setText(elapsedTime3);
             area3.invalidate();
+        }
+    }
+
+    /**
+     *  Launch ListActivity
+     *
+     */
+    private void launchListActivity()
+    {
+        Log.v(TAG, "launchListActivity()");
+        try
+        {
+            Intent intent = new Intent(this, ListActivity.class);
+            startActivity(intent);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
         }
     }
 
