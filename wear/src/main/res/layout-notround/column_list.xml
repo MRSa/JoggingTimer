@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    >
+    <ImageView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/gokigen_icon"
+        android:layout_width="18dp"
+        android:layout_height="18dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/ic_info_outline_black_24dp"
+        android:layout_gravity="center_vertical"
+        android:maxHeight="18dp"
+        android:minWidth="18dp"
+        android:layout_margin="4dp"
+        android:contentDescription="@string/blank"
+        android:tint="@color/white"
+        android:tag="icon"
+        />
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:id="@+id/data_list"
+        >
+        <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="normal"
+            android:textSize="10pt"
+            android:clickable="false"
+            android:focusable="false"
+            android:tag="main"
+            android:id="@+id/main_text"
+            />
+        <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="8pt"
+            android:clickable="false"
+            android:focusable="false"
+            android:tag="sub"
+            android:id="@+id/sub_text"
+            />
+    </LinearLayout>
+</LinearLayout>

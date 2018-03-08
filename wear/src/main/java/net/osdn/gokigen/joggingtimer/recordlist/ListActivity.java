@@ -1,9 +1,12 @@
-package net.osdn.gokigen.joggingtimer;
+package net.osdn.gokigen.joggingtimer.recordlist;
 
 import android.os.Bundle;
+import android.support.wear.widget.WearableLinearLayoutManager;
 import android.support.wearable.activity.WearableActivity;
 import android.support.wear.widget.WearableRecyclerView;
 import android.util.Log;
+
+import net.osdn.gokigen.joggingtimer.R;
 
 public class ListActivity extends WearableActivity
 {
@@ -22,6 +25,20 @@ public class ListActivity extends WearableActivity
 
         // Enables Always-on
         setAmbientEnabled();
+
+        try
+        {
+            WearableRecyclerView view = findViewById(R.id.recycler_list_view);
+            RecordSummaryAdapter adapter = new RecordSummaryAdapter();
+            WearableLinearLayoutManager layoutManager = new WearableLinearLayoutManager(this);
+
+            view.setLayoutManager(layoutManager);
+            view.setAdapter(adapter);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
     }
 
     /**
