@@ -10,8 +10,8 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/list_title_area"
-        android:text="@string/result_list"
+        android:id="@+id/detail_title_area"
+        android:text="@string/result_detail"
         android:textAlignment="center"
         android:clickable="true"
         android:focusable="true"
@@ -19,7 +19,7 @@
         />
     <android.support.wear.widget.WearableRecyclerView
         xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/recycler_list_view"
+        android:id="@+id/recycler_detail_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scrollbars="vertical"

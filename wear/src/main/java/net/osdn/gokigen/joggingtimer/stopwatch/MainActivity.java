@@ -1,4 +1,4 @@
-package net.osdn.gokigen.joggingtimer;
+package net.osdn.gokigen.joggingtimer.stopwatch;
 
 import android.content.Intent;
 import android.graphics.Color;
@@ -11,6 +11,7 @@ import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import net.osdn.gokigen.joggingtimer.R;
 import net.osdn.gokigen.joggingtimer.recordlist.ListActivity;
 
 import java.util.List;
@@ -417,8 +418,9 @@ public class MainActivity extends WearableActivity implements IClickCallback, My
             {
                 long time2 = timerCounter.getCurrentElapsedTime();
                 int lapCount = timerCounter.getElapsedCount();
-                if ((time2 >= 100) && (lapCount > 1)) {
-                    str2 = "[" + lapCount + "] " + MyTimerCounter.getTimeString(time2);
+                if ((time2 >= 100) && (lapCount > 1))
+                {
+                    str2 =  "[" + lapCount + "] " + MyTimerCounter.getTimeString(time2);
                 }
             }
 
@@ -480,8 +482,8 @@ public class MainActivity extends WearableActivity implements IClickCallback, My
                 // ラップが３つとれた場合
                 long time1 = (elapsedTimes.get(indexSize - 2) - elapsedTimes.get(indexSize - 3));
                 long time2 = (elapsedTimes.get(indexSize - 1) - elapsedTimes.get(indexSize - 2));
-                String elapsedTime1 = "[" + (timerCounter.getElapsedCount() - 2) + "] " + MyTimerCounter.getTimeString(time1);
-                String elapsedTime2 = "[" + (timerCounter.getElapsedCount() - 1) + "] " + MyTimerCounter.getTimeString(time2);
+                String elapsedTime1 = "[" +  (timerCounter.getElapsedCount() - 2) + "] " + MyTimerCounter.getTimeString(time1);
+                String elapsedTime2 = "[" +  (timerCounter.getElapsedCount() - 1) + "] " + MyTimerCounter.getTimeString(time2);
                 area1.setText(elapsedTime1);
                 area1.invalidate();
                 area2.setText(elapsedTime2);
@@ -495,9 +497,9 @@ public class MainActivity extends WearableActivity implements IClickCallback, My
             long time1 = (elapsedTimes.get(indexSize - 3) - elapsedTimes.get(indexSize - 4));
             long time2 = (elapsedTimes.get(indexSize - 2) - elapsedTimes.get(indexSize - 3));
             long time3 = (elapsedTimes.get(indexSize - 1) - elapsedTimes.get(indexSize - 2));
-            String elapsedTime1 = "[" + (timerCounter.getElapsedCount() - 3) + "] " + MyTimerCounter.getTimeString(time1);
-            String elapsedTime2 = "[" + (timerCounter.getElapsedCount() - 2) + "] " + MyTimerCounter.getTimeString(time2);
-            String elapsedTime3 = "[" + (timerCounter.getElapsedCount() - 1) + "] " + MyTimerCounter.getTimeString(time3);
+            String elapsedTime1 = "[" +  (timerCounter.getElapsedCount() - 3) + "] " + MyTimerCounter.getTimeString(time1);
+            String elapsedTime2 = "[" +  (timerCounter.getElapsedCount() - 2) + "] " + MyTimerCounter.getTimeString(time2);
+            String elapsedTime3 = "[" +  (timerCounter.getElapsedCount() - 1) + "] " + MyTimerCounter.getTimeString(time3);
             area1.setText(elapsedTime1);
             area1.invalidate();
             area2.setText(elapsedTime2);

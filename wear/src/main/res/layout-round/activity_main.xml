@@ -8,7 +8,7 @@
     android:layout_height="match_parent"
     android:background="@color/white"
     android:padding="@dimen/box_inset_layout_padding"
-    tools:context="net.osdn.gokigen.joggingtimer.MainActivity"
+    tools:context="net.osdn.gokigen.joggingtimer.stopwatch.MainActivity"
     tools:deviceIds="wear">
 
     <RelativeLayout

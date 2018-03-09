@@ -1,4 +1,4 @@
-package net.osdn.gokigen.joggingtimer.recordlist;
+package net.osdn.gokigen.joggingtimer.recorddetail;
 
 import android.util.Log;
 import android.view.View;
@@ -7,11 +7,9 @@ import android.view.View;
  *
  *
  */
-public class DataRecord implements View.OnClickListener, View.OnLongClickListener
+public class DetailRecord implements View.OnClickListener
 {
     private final String TAG = toString();
-    private final int dataId;
-    private final IDetailLauncher launcher;
     private int iconId = 0;
     private String title = "";
     private String detail = "";
@@ -19,13 +17,11 @@ public class DataRecord implements View.OnClickListener, View.OnLongClickListene
     /**
      *
      */
-    DataRecord(int dataId, int iconId, String title, String detail, IDetailLauncher launcher)
+    DetailRecord(int iconId, String title, String detail)
     {
-        this.dataId = dataId;
         this.iconId = iconId;
         this.title = title;
         this.detail = detail;
-        this.launcher = launcher;
     }
 
     void setIconId(int iconId)
@@ -51,14 +47,7 @@ public class DataRecord implements View.OnClickListener, View.OnLongClickListene
     @Override
     public void onClick(View v)
     {
-        Log.v(TAG, "Clicked : " + dataId + " " + title + " " + detail);
-        launcher.launchDetail(dataId);
-    }
+        Log.v(TAG, "Clicked : " + title + " " + detail);
 
-    @Override
-    public boolean onLongClick(View v)
-    {
-        Log.v(TAG, "LONG CLICK : " + dataId + " " + title + " " + detail);
-        return (true);
     }
 }

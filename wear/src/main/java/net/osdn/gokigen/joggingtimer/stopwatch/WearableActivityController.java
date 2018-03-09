@@ -1,4 +1,4 @@
-package net.osdn.gokigen.joggingtimer;
+package net.osdn.gokigen.joggingtimer.stopwatch;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
@@ -9,6 +9,8 @@ import android.support.wearable.activity.WearableActivity;
 import android.util.Log;
 import android.widget.ImageButton;
 import android.widget.TextView;
+
+import net.osdn.gokigen.joggingtimer.R;
 
 import static android.content.Context.VIBRATOR_SERVICE;
 
@@ -46,30 +48,6 @@ class WearableActivityController implements IWearableActivityControl
      */
     private void setupPermissions(WearableActivity activity)
     {
-/*
-        // Set up permissions
-        if ((ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_NETWORK_STATE) != PackageManager.PERMISSION_GRANTED)||
-                (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_WIFI_STATE) != PackageManager.PERMISSION_GRANTED)||
-                (ContextCompat.checkSelfPermission(this, Manifest.permission.CHANGE_WIFI_STATE) != PackageManager.PERMISSION_GRANTED)||
-                (ContextCompat.checkSelfPermission(this, Manifest.permission.CHANGE_NETWORK_STATE) != PackageManager.PERMISSION_GRANTED)||
-                (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_SETTINGS) != PackageManager.PERMISSION_GRANTED)||
-                (ContextCompat.checkSelfPermission(this, Manifest.permission.WAKE_LOCK) != PackageManager.PERMISSION_GRANTED)||
-                (ContextCompat.checkSelfPermission(this, Manifest.permission.VIBRATE) != PackageManager.PERMISSION_GRANTED)||
-                (ContextCompat.checkSelfPermission(this, Manifest.permission.INTERNET) != PackageManager.PERMISSION_GRANTED))
-        {
-            ActivityCompat.requestPermissions(this,
-                    new String[]{
-                            Manifest.permission.ACCESS_NETWORK_STATE,
-                            Manifest.permission.ACCESS_WIFI_STATE,
-                            Manifest.permission.CHANGE_WIFI_STATE,
-                            Manifest.permission.CHANGE_NETWORK_STATE,
-                            Manifest.permission.WRITE_SETTINGS,
-                            Manifest.permission.WAKE_LOCK,
-                            Manifest.permission.INTERNET,
-                    },
-                    REQUEST_NEED_PERMISSIONS);
-        }
-*/
         if ((ContextCompat.checkSelfPermission(activity, Manifest.permission.VIBRATE) != PackageManager.PERMISSION_GRANTED)||
                 (ContextCompat.checkSelfPermission(activity, Manifest.permission.WAKE_LOCK) != PackageManager.PERMISSION_GRANTED))
         {

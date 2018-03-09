@@ -1,9 +1,11 @@
-package net.osdn.gokigen.joggingtimer;
+package net.osdn.gokigen.joggingtimer.stopwatch;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
 import android.view.View;
+
+import net.osdn.gokigen.joggingtimer.R;
 
 /**
  *

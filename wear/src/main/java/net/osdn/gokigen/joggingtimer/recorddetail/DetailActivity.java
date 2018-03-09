@@ -1,19 +1,18 @@
-package net.osdn.gokigen.joggingtimer.recordlist;
+package net.osdn.gokigen.joggingtimer.recorddetail;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.wear.widget.WearableLinearLayoutManager;
-import android.support.wearable.activity.WearableActivity;
 import android.support.wear.widget.WearableRecyclerView;
+import android.support.wearable.activity.WearableActivity;
 import android.util.Log;
 
 import net.osdn.gokigen.joggingtimer.R;
-import net.osdn.gokigen.joggingtimer.recorddetail.DetailActivity;
 
-public class ListActivity extends WearableActivity implements IDetailLauncher
+public class DetailActivity extends WearableActivity
 {
     private final String TAG = toString();
+    public static final String INTENT_EXTRA_DATA_ID = "Detail.dataId";
 
     /**
      *
@@ -24,15 +23,15 @@ public class ListActivity extends WearableActivity implements IDetailLauncher
         super.onCreate(savedInstanceState);
         Log.v(TAG, "onCreate()");
 
-        setContentView(R.layout.activity_list);
+        setContentView(R.layout.activity_detail);
 
         // Enables Always-on
         setAmbientEnabled();
 
         try
         {
-            WearableRecyclerView view = findViewById(R.id.recycler_list_view);
-            RecordSummaryAdapter adapter = new RecordSummaryAdapter(this);
+            WearableRecyclerView view = findViewById(R.id.recycler_detail_view);
+            RecordDetailAdapter adapter = new RecordDetailAdapter();
             WearableLinearLayoutManager layoutManager = new WearableLinearLayoutManager(this);
 
             view.setCircularScrollingGestureEnabled(getResources().getConfiguration().isScreenRound());
@@ -74,7 +73,15 @@ public class ListActivity extends WearableActivity implements IDetailLauncher
     protected void onResume()
     {
         super.onResume();
-        Log.v(TAG, "onResume()");
+        try
+        {
+            int dataId = getIntent().getIntExtra(INTENT_EXTRA_DATA_ID, -1);
+            Log.v(TAG, "onResume() " + dataId);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -140,28 +147,5 @@ public class ListActivity extends WearableActivity implements IDetailLauncher
     {
         super.onUpdateAmbient();
         Log.v(TAG, "onUpdateAmbient()");
-    }
-
-    @Override
-    public void launchDetail(int recordId)
-    {
-        Log.v(TAG, "launchDetail() id:" + recordId);
-        try
-        {
-            Intent intent = new Intent(this, DetailActivity.class);
-            intent.putExtra(DetailActivity.INTENT_EXTRA_DATA_ID, recordId);
-            startActivity(intent);
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    public void deleteRecord(int recordId)
-    {
-        Log.v(TAG, "deleteRecord() id:" + recordId);
-
     }
 }

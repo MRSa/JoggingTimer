@@ -1,4 +1,4 @@
-package net.osdn.gokigen.joggingtimer.recordlist;
+package net.osdn.gokigen.joggingtimer.recorddetail;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -7,30 +7,25 @@ import android.widget.TextView;
 
 import net.osdn.gokigen.joggingtimer.R;
 
-class RecordHolder extends RecyclerView.ViewHolder
+class DetailHolder  extends RecyclerView.ViewHolder
 {
     private final View itemView;
     private ImageView iconView = null;
     private TextView mainText = null;
     private TextView subText = null;
 
-    RecordHolder(View itemView)
+    DetailHolder(View itemView)
     {
         super(itemView);
-        iconView = itemView.findViewById(R.id.gokigen_icon);
-        mainText = itemView.findViewById(R.id.main_text);
-        subText = itemView.findViewById(R.id.sub_text);
+        iconView = itemView.findViewById(R.id.detail_icon);
+        mainText = itemView.findViewById(R.id.label1);
+        subText = itemView.findViewById(R.id.label2);
         this.itemView = itemView;
     }
 
     void setOnClickListener(View.OnClickListener listener)
     {
         itemView.setOnClickListener(listener);
-    }
-
-    void setOnLongClickListener(View.OnLongClickListener listener)
-    {
-        itemView.setOnLongClickListener(listener);
     }
 
     void setIconId(int iconId)
@@ -50,4 +45,5 @@ class RecordHolder extends RecyclerView.ViewHolder
     {
         subText.setText(message);
     }
+
 }

@@ -1,8 +1,11 @@
-package net.osdn.gokigen.joggingtimer;
+package net.osdn.gokigen.joggingtimer.stopwatch;
 
-public class MyTimerTrigger
+/**
+ *
+ *
+ */
+class MyTimerTrigger
 {
-    private final String TAG = toString();
     private final ITimeoutReceiver triggerReceiver;
     private final long duration;
     private final ITimerCounter timerCounter;
@@ -14,7 +17,7 @@ public class MyTimerTrigger
         this.timerCounter = timerCounter;
     }
 
-    public void startTimer()
+    void startTimer()
     {
         Thread thread = new Thread(new Runnable() {
             @Override
