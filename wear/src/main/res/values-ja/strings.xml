@@ -6,4 +6,8 @@
     <string name="app_title">ジョギングタイマ</string>
     <string name="blank"> </string>
     <string name="counter">00\'00\"0</string>
+    <string name="dialog_title_delete">記録の削除</string>
+    <string name="dialog_message_delete">削除します </string>
+    <string name="dialog_positive_execute">OK</string>
+    <string name="dialog_negative_cancel">Cancel</string>
 </resources>

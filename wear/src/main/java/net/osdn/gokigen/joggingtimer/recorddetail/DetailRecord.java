@@ -10,6 +10,7 @@ import android.view.View;
 public class DetailRecord implements View.OnClickListener
 {
     private final String TAG = toString();
+    private final int dataId;
     private int iconId = 0;
     private String title = "";
     private String detail = "";
@@ -17,8 +18,9 @@ public class DetailRecord implements View.OnClickListener
     /**
      *
      */
-    DetailRecord(int iconId, String title, String detail)
+    DetailRecord(int dataId, int iconId, String title, String detail)
     {
+        this.dataId = dataId;
         this.iconId = iconId;
         this.title = title;
         this.detail = detail;
@@ -47,7 +49,7 @@ public class DetailRecord implements View.OnClickListener
     @Override
     public void onClick(View v)
     {
-        Log.v(TAG, "Clicked : " + title + " " + detail);
+        Log.v(TAG, "Clicked : [" + dataId + "] " + title + " " + detail);
 
     }
 }

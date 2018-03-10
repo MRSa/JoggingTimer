@@ -2,6 +2,7 @@ package net.osdn.gokigen.joggingtimer.recordlist;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.wear.widget.WearableLinearLayoutManager;
 import android.support.wearable.activity.WearableActivity;
@@ -10,10 +11,12 @@ import android.util.Log;
 
 import net.osdn.gokigen.joggingtimer.R;
 import net.osdn.gokigen.joggingtimer.recorddetail.DetailActivity;
+import net.osdn.gokigen.joggingtimer.utilities.ConfirmationDialog;
 
 public class ListActivity extends WearableActivity implements IDetailLauncher
 {
     private final String TAG = toString();
+    private RecordSummaryAdapter summaryAdapter = null;
 
     /**
      *
@@ -32,7 +35,7 @@ public class ListActivity extends WearableActivity implements IDetailLauncher
         try
         {
             WearableRecyclerView view = findViewById(R.id.recycler_list_view);
-            RecordSummaryAdapter adapter = new RecordSummaryAdapter(this);
+            summaryAdapter = new RecordSummaryAdapter(this);
             WearableLinearLayoutManager layoutManager = new WearableLinearLayoutManager(this);
 
             view.setCircularScrollingGestureEnabled(getResources().getConfiguration().isScreenRound());
@@ -41,11 +44,12 @@ public class ListActivity extends WearableActivity implements IDetailLauncher
 
             view.addItemDecoration(dividerDecoration);
             view.setLayoutManager(layoutManager);
-            view.setAdapter(adapter);
+            view.setAdapter(summaryAdapter);
         }
         catch (Exception e)
         {
             e.printStackTrace();
+            summaryAdapter = null;
         }
     }
 
@@ -159,9 +163,32 @@ public class ListActivity extends WearableActivity implements IDetailLauncher
     }
 
     @Override
-    public void deleteRecord(int recordId)
+    public void deleteRecord(@NonNull DataRecord targetRecord)
     {
-        Log.v(TAG, "deleteRecord() id:" + recordId);
+        try
+        {
+            final int positionId = targetRecord.getPositionId();
+            final String title = targetRecord.getTitle();
 
+            Log.v(TAG, "deleteRecord() : " + title);
+
+            String message = getString(R.string.dialog_message_delete) + " (" + title + ")";
+            ConfirmationDialog dialog = new ConfirmationDialog(this);
+            dialog.show(R.string.dialog_title_delete, message, new ConfirmationDialog.Callback() {
+                @Override
+                public void confirm()
+                {
+                    Log.v(TAG, "Delete Record Execute [" + title + "]" + " pos:" + positionId);
+                    if (summaryAdapter != null)
+                    {
+                        summaryAdapter.removeItem(positionId);
+                    }
+                }
+            });
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
     }
 }

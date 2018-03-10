@@ -12,6 +12,7 @@ public class DataRecord implements View.OnClickListener, View.OnLongClickListene
     private final String TAG = toString();
     private final int dataId;
     private final IDetailLauncher launcher;
+    private int positionId = -1;
     private int iconId = 0;
     private String title = "";
     private String detail = "";
@@ -26,6 +27,16 @@ public class DataRecord implements View.OnClickListener, View.OnLongClickListene
         this.title = title;
         this.detail = detail;
         this.launcher = launcher;
+    }
+
+    void setPositionId(int positionId)
+    {
+        this.positionId = positionId;
+    }
+
+    int getPositionId()
+    {
+        return (positionId);
     }
 
     void setIconId(int iconId)
@@ -58,7 +69,8 @@ public class DataRecord implements View.OnClickListener, View.OnLongClickListene
     @Override
     public boolean onLongClick(View v)
     {
-        Log.v(TAG, "LONG CLICK : " + dataId + " " + title + " " + detail);
+        Log.v(TAG, "LONG CLICK : " + dataId + " " + title + " [" + detail + "] (" + positionId + ")");
+        launcher.deleteRecord(this);
         return (true);
     }
 }
