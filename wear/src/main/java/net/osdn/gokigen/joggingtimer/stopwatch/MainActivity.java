@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.wear.widget.BoxInsetLayout;
 import android.support.wearable.activity.WearableActivity;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
@@ -573,6 +574,24 @@ public class MainActivity extends WearableActivity implements IClickCallback, My
         {
             e.printStackTrace();
         }
+    }
+
+    /*
+     *
+     *
+     */
+    @Override
+    public boolean dispatchKeyEvent(KeyEvent e)
+    {
+        Log.v(TAG, "dispatchKeyEvent() : " + e.getAction() + " " + e.getKeyCode());
+
+        // DOWNとUPが取得できるのでログの2重表示防止のため
+        if (e.getAction() == KeyEvent.ACTION_DOWN)
+        {
+            //キーコード表示
+            Log.d("KeyCode","KeyCode:"+ e.getKeyCode());
+        }
+        return (super.dispatchKeyEvent(e));
     }
 
     /*
