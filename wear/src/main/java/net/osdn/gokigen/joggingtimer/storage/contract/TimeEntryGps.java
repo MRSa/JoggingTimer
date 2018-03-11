@@ -10,7 +10,7 @@ public final class TimeEntryGps
     /* Inner class that defines the table contents */
     public static class EntryGps implements BaseColumns
     {
-        public static final String TABLE_NAME = "gps";
+        public static final String TABLE_NAME = "gps_entry";
         public static final String COLUMN_NAME_DATETIME = "datetime";    // integer(long)
         public static final String COLUMN_NAME_LONGITUDE = "longitude";  // real(double)
         public static final String COLUMN_NAME_LATITUDE = "latitude";    // real(double)

@@ -10,7 +10,7 @@ import android.view.View;
 public class DataRecord implements View.OnClickListener, View.OnLongClickListener
 {
     private final String TAG = toString();
-    private final int dataId;
+    private final long dataId;
     private final IDetailLauncher launcher;
     private int positionId = -1;
     private int iconId = 0;
@@ -20,7 +20,7 @@ public class DataRecord implements View.OnClickListener, View.OnLongClickListene
     /**
      *
      */
-    DataRecord(int dataId, int iconId, String title, String detail, IDetailLauncher launcher)
+    DataRecord(long dataId, int iconId, String title, String detail, IDetailLauncher launcher)
     {
         this.dataId = dataId;
         this.iconId = iconId;

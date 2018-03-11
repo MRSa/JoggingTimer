@@ -17,7 +17,7 @@ import net.osdn.gokigen.joggingtimer.storage.contract.TimeEntryMemo;
  *        > TimeEntryDataOpenHelper mDbHelper = new TimeEntryDataOpenHelper(getContext());
  *
  */
-public class TimeEntryDataOpenHelper extends SQLiteOpenHelper
+class TimeEntryDataOpenHelper extends SQLiteOpenHelper
 {
     private final String TAG = toString();
     private static final String DATABASE_NAME = "TimeEntryData.db";
@@ -35,7 +35,7 @@ public class TimeEntryDataOpenHelper extends SQLiteOpenHelper
                     TimeEntryData.EntryData.COLUMN_NAME_ICON_ID + INTEGER_TYPE + COMMA_SEP +
                     TimeEntryData.EntryData.COLUMN_NAME_MEMO_ID + INTEGER_TYPE + COMMA_SEP +
                     TimeEntryData.EntryData.COLUMN_NAME_GPS_ID + INTEGER_TYPE + COMMA_SEP +
-                    TimeEntryData.EntryData.COLUMN_NAME_ORDER + INTEGER_TYPE + COMMA_SEP +
+                    TimeEntryData.EntryData.COLUMN_NAME_OTHER_ID + INTEGER_TYPE + COMMA_SEP +
                     TimeEntryData.EntryData.COLUMN_NAME_RECORD_TYPE + INTEGER_TYPE + COMMA_SEP +
                     TimeEntryData.EntryData.COLUMN_NAME_TIME_ENTRY + INTEGER_TYPE + " )";
 
@@ -82,7 +82,7 @@ public class TimeEntryDataOpenHelper extends SQLiteOpenHelper
      *
      * @param context  context
      */
-    public TimeEntryDataOpenHelper(Context context)
+    TimeEntryDataOpenHelper(Context context)
     {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
@@ -136,5 +136,13 @@ public class TimeEntryDataOpenHelper extends SQLiteOpenHelper
     public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion)
     {
         onUpgrade(db, oldVersion, newVersion);
+    }
+
+    /**
+     *
+     */
+    static void deleteDatabase(Context context)
+    {
+        context.deleteDatabase(DATABASE_NAME);
     }
 }

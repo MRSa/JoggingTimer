@@ -10,7 +10,7 @@ import android.view.View;
 public class DetailRecord implements View.OnClickListener
 {
     private final String TAG = toString();
-    private final int dataId;
+    private final long dataId;
     private int iconId = 0;
     private String title = "";
     private String detail = "";
@@ -18,7 +18,7 @@ public class DetailRecord implements View.OnClickListener
     /**
      *
      */
-    DetailRecord(int dataId, int iconId, String title, String detail)
+    DetailRecord(long dataId, int iconId, String title, String detail)
     {
         this.dataId = dataId;
         this.iconId = iconId;

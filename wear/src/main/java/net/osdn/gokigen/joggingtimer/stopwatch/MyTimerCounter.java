@@ -26,27 +26,6 @@ public class MyTimerCounter implements Parcelable, ITimerCounter
 
 
     /**
-     *  Converts time value from long to string
-     * @param millis  time(milliseconds)
-     * @return  hh:mm:ss.S
-     */
-    static CharSequence getTimeString(long millis)
-    {
-        int ms = (int) ((millis % 1000) / 100);
-        int sec = (int) (millis / 1000) % 60;
-        int minutes = (int) ((millis / (1000 * 60)) % 60);
-        int hours = (int) ((millis / (1000 * 60 * 60)) % 24);
-
-        if (hours < 1)
-        {
-            // １時間経過していない時は、時間表示は省略する
-            return (String.format(Locale.US,"%02d'%02d\"%d", minutes, sec, ms));
-        }
-        return (String.format(Locale.US,"%d:%02d'%02d\"%d", hours, minutes, sec, ms));
-        //return (DateFormat.format("hh:mm:ss.S", time));
-    }
-
-    /**
      *   Is my timer running?
      *
      * @return  true : running, false : stopped
@@ -81,12 +60,15 @@ public class MyTimerCounter implements Parcelable, ITimerCounter
     }
 
     @Override
-    public void timeStamp()
+    public long timeStamp()
     {
+        long timeToSet = 0;
         if (!isTimerStopped)
         {
-            elapsedTime.add(SystemClock.elapsedRealtime());
+            timeToSet = SystemClock.elapsedRealtime();
+            elapsedTime.add(timeToSet);
         }
+        return (timeToSet);
     }
 
     @Override
@@ -166,6 +148,18 @@ public class MyTimerCounter implements Parcelable, ITimerCounter
             e.printStackTrace();
         }
         return (currentTime - startTime);
+    }
+
+    @Override
+    public long getStartTime()
+    {
+        return (startTime);
+    }
+
+    @Override
+    public long getStopTime()
+    {
+        return (stopTime);
     }
 
     @Override

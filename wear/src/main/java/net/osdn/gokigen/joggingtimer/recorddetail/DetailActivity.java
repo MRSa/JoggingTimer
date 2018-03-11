@@ -9,10 +9,13 @@ import android.util.Log;
 
 import net.osdn.gokigen.joggingtimer.R;
 
-public class DetailActivity extends WearableActivity
+public class DetailActivity extends WearableActivity implements RecordDetailSetup.IDatabaseReadyNotify
 {
     private final String TAG = toString();
     public static final String INTENT_EXTRA_DATA_ID = "Detail.dataId";
+
+    private RecordDetailAdapter detailAdapter = null;
+    private RecordDetailSetup setupper = null;
 
     /**
      *
@@ -31,7 +34,7 @@ public class DetailActivity extends WearableActivity
         try
         {
             WearableRecyclerView view = findViewById(R.id.recycler_detail_view);
-            RecordDetailAdapter adapter = new RecordDetailAdapter();
+            detailAdapter = new RecordDetailAdapter();
             WearableLinearLayoutManager layoutManager = new WearableLinearLayoutManager(this);
 
             view.setCircularScrollingGestureEnabled(getResources().getConfiguration().isScreenRound());
@@ -40,11 +43,12 @@ public class DetailActivity extends WearableActivity
 
             view.addItemDecoration(dividerDecoration);
             view.setLayoutManager(layoutManager);
-            view.setAdapter(adapter);
+            view.setAdapter(detailAdapter);
         }
         catch (Exception e)
         {
             e.printStackTrace();
+            detailAdapter = null;
         }
     }
 
@@ -73,15 +77,7 @@ public class DetailActivity extends WearableActivity
     protected void onResume()
     {
         super.onResume();
-        try
-        {
-            int dataId = getIntent().getIntExtra(INTENT_EXTRA_DATA_ID, -1);
-            Log.v(TAG, "onResume() " + dataId);
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
+        Log.v(TAG, "onResume() ");
     }
 
     /**
@@ -102,7 +98,18 @@ public class DetailActivity extends WearableActivity
     public void onStart()
     {
         super.onStart();
-        Log.v(TAG, "onStart()");
+        try
+        {
+            long indexId = getIntent().getLongExtra(INTENT_EXTRA_DATA_ID, -1);
+            Log.v(TAG, "onResume() " + indexId);
+
+            setupper = new RecordDetailSetup(this, indexId, this, detailAdapter);
+            setupper.setup();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -114,6 +121,20 @@ public class DetailActivity extends WearableActivity
     {
         super.onStop();
         Log.v(TAG, "onStop()");
+
+        try
+        {
+            if (setupper != null)
+            {
+                setupper.closeDatabase();
+                setupper = null;
+            }
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        System.gc();
     }
 
     /**
@@ -147,5 +168,15 @@ public class DetailActivity extends WearableActivity
     {
         super.onUpdateAmbient();
         Log.v(TAG, "onUpdateAmbient()");
+    }
+
+    /**
+     *
+     *
+     */
+    @Override
+    public void databaseSetupFinished(boolean result)
+    {
+        Log.v(TAG, "databaseSetupFinished() : " + result);
     }
 }

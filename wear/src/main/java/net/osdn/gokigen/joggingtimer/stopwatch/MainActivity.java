@@ -13,8 +13,13 @@ import android.widget.TextView;
 
 import net.osdn.gokigen.joggingtimer.R;
 import net.osdn.gokigen.joggingtimer.recordlist.ListActivity;
+import net.osdn.gokigen.joggingtimer.utilities.TimeStringConvert;
 
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 /**
  *
@@ -80,6 +85,7 @@ public class MainActivity extends WearableActivity implements IClickCallback, My
         Intent intent = getIntent();
         String action = intent.getAction();
         Log.v(TAG, "onResume() : " + action);
+
         boolean isStartTimer = false;
         if (action != null)
         {
@@ -291,27 +297,71 @@ public class MainActivity extends WearableActivity implements IClickCallback, My
      */
     private void startTimer()
     {
-        ITimerCounter timerCounter = counter;
-        if (timerCounter != null)
+        try
         {
-            if (timerCounter.isStarted())
+            ITimerCounter timerCounter = counter;
+            if (timerCounter != null)
             {
-                // チャタリング防止（ラップタイムとして、３秒以内は記録しないようにする）
-                if (timerCounter.getCurrentElapsedTime() > 3000)
+                if (timerCounter.isStarted())
                 {
-                    timerCounter.timeStamp();
-                    controller.vibrate(50);
+                    Log.v(TAG, "startTimer() LAP TIME");
+                    // チャタリング防止（ラップタイムとして、３秒以内は記録しないようにする）
+                    if (timerCounter.getCurrentElapsedTime() > 3000)
+                    {
+                        long lapTime = timerCounter.timeStamp();
+                        controller.vibrate(50);
+                        controller.getDataEntry().appendTimeData(lapTime);
+                    }
                 }
+                else
+                {
+                    Log.v(TAG, "startTimer() START");
+                    timerCounter.start();
+                    MyTimerTrigger trigger = new MyTimerTrigger(this, 100, timerCounter);
+                    trigger.startTimer();
+                    controller.vibrate(120);
+
+                    Date date = new Date();
+                    SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
+                    String title = sdf1.format(date);
+                    controller.getDataEntry().createIndex(title, "", 0, timerCounter.getStartTime());
+                }
+                updateTimerLabel();
             }
-            else
-            {
-                timerCounter.start();
-                MyTimerTrigger trigger = new MyTimerTrigger(this, 100, timerCounter);
-                trigger.startTimer();
-                controller.vibrate(120);
-            }
-            updateTimerLabel();
         }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     *
+     *
+     */
+    private boolean stopTimer()
+    {
+        boolean ret = false;
+        try
+        {
+            ITimerCounter timerCounter = counter;
+            if (timerCounter != null)
+            {
+                if (timerCounter.isStarted())
+                {
+                    timerCounter.stop();
+                    controller.vibrate(120);
+                    controller.getDataEntry().finishTimeData(timerCounter.getStartTime(), timerCounter.getStopTime());
+                    ret = true;
+                }
+                updateTimerLabel();
+            }
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        return (ret);
     }
 
     /**
@@ -359,19 +409,7 @@ public class MainActivity extends WearableActivity implements IClickCallback, My
     @Override
     public boolean pushedBtn2()
     {
-        boolean ret = false;
-        ITimerCounter timerCounter = counter;
-        if (timerCounter != null)
-        {
-            if (timerCounter.isStarted())
-            {
-                timerCounter.stop();
-                controller.vibrate(120);
-                ret = true;
-            }
-            updateTimerLabel();
-        }
-        return (ret);
+        return (stopTimer());
     }
 
     @Override
@@ -411,7 +449,7 @@ public class MainActivity extends WearableActivity implements IClickCallback, My
         if (timerCounter != null)
         {
             long time1 = timerCounter.getPastTime();
-            CharSequence str1 = MyTimerCounter.getTimeString(time1);
+            CharSequence str1 = TimeStringConvert.getTimeString(time1);
 
             CharSequence str2 = "";
             if (timerCounter.isStarted())
@@ -420,7 +458,7 @@ public class MainActivity extends WearableActivity implements IClickCallback, My
                 int lapCount = timerCounter.getElapsedCount();
                 if ((time2 >= 100) && (lapCount > 1))
                 {
-                    str2 =  "[" + lapCount + "] " + MyTimerCounter.getTimeString(time2);
+                    str2 =  "[" + lapCount + "] " + TimeStringConvert.getTimeString(time2);
                 }
             }
 
@@ -468,7 +506,7 @@ public class MainActivity extends WearableActivity implements IClickCallback, My
             {
                 // ラップが１つとれた場合
                 long time = (elapsedTimes.get(indexSize - 1) - elapsedTimes.get(indexSize - 2));
-                String elapsedTime = "[" + (timerCounter.getElapsedCount() - 1) + "] " + MyTimerCounter.getTimeString(time);
+                String elapsedTime = "[" + (timerCounter.getElapsedCount() - 1) + "] " + TimeStringConvert.getTimeString(time);
                 area1.setText(elapsedTime);
                 area1.invalidate();
                 area2.setText(dummy);
@@ -482,8 +520,8 @@ public class MainActivity extends WearableActivity implements IClickCallback, My
                 // ラップが３つとれた場合
                 long time1 = (elapsedTimes.get(indexSize - 2) - elapsedTimes.get(indexSize - 3));
                 long time2 = (elapsedTimes.get(indexSize - 1) - elapsedTimes.get(indexSize - 2));
-                String elapsedTime1 = "[" +  (timerCounter.getElapsedCount() - 2) + "] " + MyTimerCounter.getTimeString(time1);
-                String elapsedTime2 = "[" +  (timerCounter.getElapsedCount() - 1) + "] " + MyTimerCounter.getTimeString(time2);
+                String elapsedTime1 = "[" +  (timerCounter.getElapsedCount() - 2) + "] " + TimeStringConvert.getTimeString(time1);
+                String elapsedTime2 = "[" +  (timerCounter.getElapsedCount() - 1) + "] " + TimeStringConvert.getTimeString(time2);
                 area1.setText(elapsedTime1);
                 area1.invalidate();
                 area2.setText(elapsedTime2);
@@ -497,9 +535,9 @@ public class MainActivity extends WearableActivity implements IClickCallback, My
             long time1 = (elapsedTimes.get(indexSize - 3) - elapsedTimes.get(indexSize - 4));
             long time2 = (elapsedTimes.get(indexSize - 2) - elapsedTimes.get(indexSize - 3));
             long time3 = (elapsedTimes.get(indexSize - 1) - elapsedTimes.get(indexSize - 2));
-            String elapsedTime1 = "[" +  (timerCounter.getElapsedCount() - 3) + "] " + MyTimerCounter.getTimeString(time1);
-            String elapsedTime2 = "[" +  (timerCounter.getElapsedCount() - 2) + "] " + MyTimerCounter.getTimeString(time2);
-            String elapsedTime3 = "[" +  (timerCounter.getElapsedCount() - 1) + "] " + MyTimerCounter.getTimeString(time3);
+            String elapsedTime1 = "[" +  (timerCounter.getElapsedCount() - 3) + "] " + TimeStringConvert.getTimeString(time1);
+            String elapsedTime2 = "[" +  (timerCounter.getElapsedCount() - 2) + "] " + TimeStringConvert.getTimeString(time2);
+            String elapsedTime3 = "[" +  (timerCounter.getElapsedCount() - 1) + "] " + TimeStringConvert.getTimeString(time3);
             area1.setText(elapsedTime1);
             area1.invalidate();
             area2.setText(elapsedTime2);

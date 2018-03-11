@@ -13,10 +13,15 @@ import net.osdn.gokigen.joggingtimer.R;
 import net.osdn.gokigen.joggingtimer.recorddetail.DetailActivity;
 import net.osdn.gokigen.joggingtimer.utilities.ConfirmationDialog;
 
-public class ListActivity extends WearableActivity implements IDetailLauncher
+/**
+ *
+ *
+ */
+public class ListActivity extends WearableActivity implements IDetailLauncher, RecordSummarySetup.IDatabaseReadyNotify
 {
     private final String TAG = toString();
     private RecordSummaryAdapter summaryAdapter = null;
+    private RecordSummarySetup setupper = null;
 
     /**
      *
@@ -35,7 +40,7 @@ public class ListActivity extends WearableActivity implements IDetailLauncher
         try
         {
             WearableRecyclerView view = findViewById(R.id.recycler_list_view);
-            summaryAdapter = new RecordSummaryAdapter(this);
+            summaryAdapter = new RecordSummaryAdapter();
             WearableLinearLayoutManager layoutManager = new WearableLinearLayoutManager(this);
 
             view.setCircularScrollingGestureEnabled(getResources().getConfiguration().isScreenRound());
@@ -45,6 +50,7 @@ public class ListActivity extends WearableActivity implements IDetailLauncher
             view.addItemDecoration(dividerDecoration);
             view.setLayoutManager(layoutManager);
             view.setAdapter(summaryAdapter);
+
         }
         catch (Exception e)
         {
@@ -100,6 +106,15 @@ public class ListActivity extends WearableActivity implements IDetailLauncher
     {
         super.onStart();
         Log.v(TAG, "onStart()");
+        try
+        {
+            setupper = new RecordSummarySetup(this, this, this, summaryAdapter);
+            setupper.setup();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -111,6 +126,19 @@ public class ListActivity extends WearableActivity implements IDetailLauncher
     {
         super.onStop();
         Log.v(TAG, "onStop()");
+        try
+        {
+            if (setupper != null)
+            {
+                setupper.closeDatabase();
+                setupper = null;
+            }
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        System.gc();
     }
 
     /**
@@ -146,8 +174,12 @@ public class ListActivity extends WearableActivity implements IDetailLauncher
         Log.v(TAG, "onUpdateAmbient()");
     }
 
+    /**
+     *
+     *
+     */
     @Override
-    public void launchDetail(int recordId)
+    public void launchDetail(long recordId)
     {
         Log.v(TAG, "launchDetail() id:" + recordId);
         try
@@ -162,6 +194,10 @@ public class ListActivity extends WearableActivity implements IDetailLauncher
         }
     }
 
+    /**
+     *
+     *
+     */
     @Override
     public void deleteRecord(@NonNull DataRecord targetRecord)
     {
@@ -190,5 +226,15 @@ public class ListActivity extends WearableActivity implements IDetailLauncher
         {
             e.printStackTrace();
         }
+    }
+
+    /**
+     *
+     *
+     */
+    @Override
+    public void databaseSetupFinished(boolean result)
+    {
+        Log.v(TAG, "databaseSetupFinished() : " + result);
     }
 }

@@ -8,7 +8,7 @@ public interface ITimerCounter
     boolean isReset();
     void start();
     void stop();
-    void timeStamp();
+    long timeStamp();
     void reset();
 
     List<Long> getTimerList();
@@ -17,4 +17,6 @@ public interface ITimerCounter
     long getLastElapsedTime();
     long getCurrentElapsedTime();
 
+    long getStartTime();
+    long getStopTime();
 }

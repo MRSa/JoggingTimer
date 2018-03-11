@@ -9,7 +9,7 @@ public final class TimeEntryIndex
     /* Inner class that defines the table contents */
     public static class EntryIndex implements BaseColumns
     {
-        public static final String TABLE_NAME = "index";
+        public static final String TABLE_NAME = "time_data_index";
         public static final String COLUMN_NAME_TITLE = "title";               // text(string)
         public static final String COLUMN_NAME_MEMO  = "memo";                // text(string)
         public static final String COLUMN_NAME_ICON_ID = "icon_id";          // integer(int)

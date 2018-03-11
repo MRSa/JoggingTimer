@@ -13,4 +13,6 @@ public interface IWearableActivityControl
     void exitApplication(WearableActivity activity);
 
     void vibrate(int duration);
+
+    IDataEntry getDataEntry();
 }
