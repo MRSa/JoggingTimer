@@ -196,7 +196,7 @@ public class MainActivity extends WearableActivity implements IClickCallback, My
 
             if (timerCounter.isStarted())
             {
-                bgColor = Color.CYAN;
+                bgColor = Color.BLACK;
                 insetLayout.setBackgroundColor(bgColor);
                 insetLayout.invalidate();
 
@@ -222,7 +222,7 @@ public class MainActivity extends WearableActivity implements IClickCallback, My
             }
             else if (timerCounter.isReset())
             {
-                bgColor = Color.WHITE;
+                bgColor = Color.BLACK;
                 insetLayout.setBackgroundColor(bgColor);
                 insetLayout.invalidate();
 
@@ -248,7 +248,7 @@ public class MainActivity extends WearableActivity implements IClickCallback, My
             }
             else
             {
-                bgColor = Color.rgb(250, 80, 80);
+                bgColor = Color.BLACK;
                 insetLayout.setBackgroundColor(bgColor);
                 insetLayout.invalidate();
 
@@ -377,6 +377,9 @@ public class MainActivity extends WearableActivity implements IClickCallback, My
             {
                 // 停止中は、記録一覧を呼び出す
                 launchListActivity();
+
+                // ぶるぶる
+                controller.vibrate(35);
             }
         }
         updateTimerLabel();
@@ -440,6 +443,10 @@ public class MainActivity extends WearableActivity implements IClickCallback, My
         }
     }
 
+    /**
+     *
+     *
+     */
     private void updateMainSubCounter()
     {
         TextView main = findViewById(R.id.main_counter);
@@ -478,7 +485,10 @@ public class MainActivity extends WearableActivity implements IClickCallback, My
         }
     }
 
-
+    /**
+     *
+     *
+     */
     private void updateElapsedTimes()
     {
         String dummy = "";

@@ -108,7 +108,7 @@ public class RecordDetailSetup  implements ITimeEntryDatabaseCallback
                             long overallTime = entryTime - startTime;
                             long differenceTime = (lapTime) - (previousLapTime - morePreviousTime);
                             String lapTimeString = "[" + index + "] " + TimeStringConvert.getTimeString(lapTime).toString();
-                            String overallTimeString = TimeStringConvert.getTimeString(overallTime).toString() + "(" + TimeStringConvert.getDiffTimeString(differenceTime).toString() +") ";
+                            String overallTimeString = TimeStringConvert.getTimeString(overallTime).toString() + " (" + TimeStringConvert.getDiffTimeString(differenceTime).toString() +") ";
                             operation.addRecord(new DetailRecord(dataId, iconId, lapTimeString, overallTimeString));
                             morePreviousTime = previousLapTime;
                             previousLapTime = entryTime;
