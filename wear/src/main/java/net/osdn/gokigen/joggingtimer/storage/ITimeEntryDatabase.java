@@ -14,6 +14,8 @@ public interface ITimeEntryDatabase
     Cursor getAllIndexData();
     Cursor getAllDetailData(long indexId);
 
+    void deleteTimeEntryData(long indexId);
+
     void createIndexData(String title, String memo, int icon, long startTime);
     void appendTimeData(long indexId, long lapTime);
     void finishTimeData(long indexId, long startTime, long endTime);

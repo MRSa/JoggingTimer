@@ -120,6 +120,22 @@ class RecordSummarySetup implements ITimeEntryDatabaseCallback
     /**
      *
      */
+    void deleteTimeEntryData(long indexId)
+    {
+        Log.v(TAG, "deleteTimeEntryData() : " + indexId);
+        try
+        {
+            database.deleteTimeEntryData(indexId);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     *
+     */
     void closeDatabase()
     {
         try

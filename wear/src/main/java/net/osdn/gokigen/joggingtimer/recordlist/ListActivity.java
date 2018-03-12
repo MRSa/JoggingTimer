@@ -217,7 +217,26 @@ public class ListActivity extends WearableActivity implements IDetailLauncher, R
                     Log.v(TAG, "Delete Record Execute [" + title + "]" + " pos:" + positionId);
                     if (summaryAdapter != null)
                     {
-                        summaryAdapter.removeItem(positionId);
+                        final long indexId = summaryAdapter.removeItem(positionId);
+                        try
+                        {
+                            Thread thread = new Thread(new Runnable()
+                            {
+                                @Override
+                                public void run()
+                                {
+                                    if (indexId >= 0)
+                                    {
+                                        setupper.deleteTimeEntryData(indexId);
+                                    }
+                                }
+                            });
+                            thread.start();
+                        }
+                        catch (Exception e)
+                        {
+                            e.printStackTrace();
+                        }
                     }
                 }
             });

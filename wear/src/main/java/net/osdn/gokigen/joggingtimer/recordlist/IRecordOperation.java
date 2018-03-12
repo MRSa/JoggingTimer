@@ -9,6 +9,6 @@ public interface IRecordOperation
     void addRecord(DataRecord record);
     void clearRecord();
 
-    void removeItem(int position);
+    long removeItem(int position);
     void dataSetChangeFinished();
 }

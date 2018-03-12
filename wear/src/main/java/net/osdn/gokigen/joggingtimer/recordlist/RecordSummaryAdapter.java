@@ -111,11 +111,13 @@ public class RecordSummaryAdapter extends RecyclerView.Adapter<RecordHolder> imp
      *
      */
     @Override
-    public void removeItem(int position)
+    public long removeItem(int position)
     {
+        long indexId = list.get(position).getDataId();
         list.remove(position);
         notifyItemRemoved(position);
         notifyItemRangeChanged(position, list.size());
+        return (indexId);
     }
 
     /**

@@ -29,6 +29,11 @@ public class DataRecord implements View.OnClickListener, View.OnLongClickListene
         this.launcher = launcher;
     }
 
+    long getDataId()
+    {
+        return (dataId);
+    }
+
     void setPositionId(int positionId)
     {
         this.positionId = positionId;

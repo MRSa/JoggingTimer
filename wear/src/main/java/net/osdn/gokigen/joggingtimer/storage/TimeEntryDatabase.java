@@ -10,6 +10,8 @@ import android.util.Log;
 import net.osdn.gokigen.joggingtimer.storage.contract.TimeEntryData;
 import net.osdn.gokigen.joggingtimer.storage.contract.TimeEntryIndex;
 
+import static android.provider.BaseColumns._ID;
+
 /**
  *
  *
@@ -75,6 +77,15 @@ class TimeEntryDatabase implements ITimeEntryDatabase
     public Cursor getAllDetailData(long indexId)
     {
         return (db.rawQuery("SELECT * FROM " + TimeEntryData.EntryData.TABLE_NAME + " WHERE " + TimeEntryData.EntryData.COLUMN_NAME_INDEX_ID + " = " + indexId + " ORDER BY " + TimeEntryData.EntryData.COLUMN_NAME_TIME_ENTRY, null));
+    }
+
+    @Override
+    public void deleteTimeEntryData(long indexId)
+    {
+        int delRecord = db.delete(TimeEntryData.EntryData.TABLE_NAME, TimeEntryData.EntryData.COLUMN_NAME_INDEX_ID + " = " + indexId, null);
+        int delIndex = db.delete(TimeEntryIndex.EntryIndex.TABLE_NAME, _ID + " = " + indexId, null);
+
+        Log.v(TAG, "deleteTimeEntryData()  index : " + indexId + "Recs. [" + delIndex + "] (" + delRecord + ")");
     }
 
     @Override
