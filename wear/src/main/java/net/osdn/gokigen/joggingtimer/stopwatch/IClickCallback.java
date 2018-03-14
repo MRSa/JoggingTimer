@@ -1,5 +1,7 @@
 package net.osdn.gokigen.joggingtimer.stopwatch;
 
+import java.util.ArrayList;
+
 public interface IClickCallback
 {
     void clickedCounter();
@@ -10,5 +12,7 @@ public interface IClickCallback
     boolean pushedBtn1();
     boolean pushedBtn2();
     boolean pushedBtn3();
+
+    void dataIsReloaded(ArrayList<Long> list);
 
 }

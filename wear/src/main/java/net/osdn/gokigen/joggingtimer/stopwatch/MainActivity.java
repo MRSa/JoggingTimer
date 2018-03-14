@@ -16,8 +16,8 @@ import net.osdn.gokigen.joggingtimer.R;
 import net.osdn.gokigen.joggingtimer.recordlist.ListActivity;
 import net.osdn.gokigen.joggingtimer.utilities.TimeStringConvert;
 
-
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -320,6 +320,7 @@ public class MainActivity extends WearableActivity implements IClickCallback, My
                     timerCounter.start();
                     MyTimerTrigger trigger = new MyTimerTrigger(this, 100, timerCounter);
                     trigger.startTimer();
+                    controller.timerStarted(true);
                     controller.vibrate(120);
 
                     Date date = new Date();
@@ -351,6 +352,7 @@ public class MainActivity extends WearableActivity implements IClickCallback, My
                 if (timerCounter.isStarted())
                 {
                     timerCounter.stop();
+                    controller.timerStarted(false);
                     controller.vibrate(120);
                     controller.getDataEntry().finishTimeData(timerCounter.getStartTime(), timerCounter.getStopTime());
                     ret = true;
@@ -420,6 +422,35 @@ public class MainActivity extends WearableActivity implements IClickCallback, My
     public boolean pushedBtn3()
     {
         return (false);
+    }
+
+    @Override
+    public void dataIsReloaded(ArrayList<Long> list)
+    {
+        ITimerCounter timerCounter = counter;
+        if ((timerCounter != null)&&(list != null))
+        {
+            try
+            {
+                timerCounter.reloadTimerCounter(list.get(0), list);
+
+                MyTimerTrigger trigger = new MyTimerTrigger(this, 100, timerCounter);
+                trigger.startTimer();
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+        }
+
+        runOnUiThread(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                updateTimerLabel();
+            }
+        });
     }
 
     /**
@@ -581,17 +612,39 @@ public class MainActivity extends WearableActivity implements IClickCallback, My
      *
      */
     @Override
-    public boolean dispatchKeyEvent(KeyEvent e)
+    protected void onUserLeaveHint ()
     {
-        Log.v(TAG, "dispatchKeyEvent() : " + e.getAction() + " " + e.getKeyCode());
+        Log.v(TAG, "onUserLeaveHint() " );
+        // ハードキー（ホームボタン）が押されたとき、これがひろえるが...
+    }
 
-        // DOWNとUPが取得できるのでログの2重表示防止のため
-        if (e.getAction() == KeyEvent.ACTION_DOWN)
+    /*
+     *
+     *
+     */
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event)
+    {
+        Log.v(TAG, "onKeyDown() : " + event.getAction() + " (" + event.getKeyCode() + ")" + keyCode);
+        if (event.getRepeatCount() == 0)
         {
-            //キーコード表示
-            Log.d("KeyCode","KeyCode:"+ e.getKeyCode());
+            if (keyCode == KeyEvent.KEYCODE_STEM_1)
+            {
+                startTimer();
+                return (true);
+            }
+            else if (keyCode == KeyEvent.KEYCODE_STEM_2)
+            {
+                startTimer();
+                return (true);
+            }
+            else if (keyCode == KeyEvent.KEYCODE_STEM_3)
+            {
+                startTimer();
+                return (true);
+            }
         }
-        return (super.dispatchKeyEvent(e));
+        return (super.onKeyDown(keyCode, event));
     }
 
     /*

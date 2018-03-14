@@ -204,4 +204,17 @@ public class MyTimerCounter implements Parcelable, ITimerCounter
             e.printStackTrace();
         }
     }
+
+    /**
+     *
+     *
+     */
+    public void reloadTimerCounter(long startTime, ArrayList<Long> timelist)
+    {
+        this.startTime = startTime;
+        elapsedTime = null;
+        elapsedTime = new ArrayList<>(timelist);
+        stopTime = 0;
+        isTimerStopped = false;
+    }
 }

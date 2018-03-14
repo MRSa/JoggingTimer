@@ -1,9 +1,13 @@
 package net.osdn.gokigen.joggingtimer.stopwatch;
 
 import android.Manifest;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.os.PowerManager;
 import android.os.Vibrator;
+import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.wearable.activity.WearableActivity;
@@ -15,6 +19,9 @@ import net.osdn.gokigen.joggingtimer.R;
 import net.osdn.gokigen.joggingtimer.storage.ITimeEntryDatabase;
 import net.osdn.gokigen.joggingtimer.storage.ITimeEntryDatabaseCallback;
 import net.osdn.gokigen.joggingtimer.storage.TimeEntryDatabaseFactory;
+import net.osdn.gokigen.joggingtimer.storage.contract.TimeEntryData;
+
+import java.util.ArrayList;
 
 import static android.content.Context.POWER_SERVICE;
 import static android.content.Context.VIBRATOR_SERVICE;
@@ -27,6 +34,10 @@ import static android.content.Context.VIBRATOR_SERVICE;
 class WearableActivityController implements IWearableActivityControl, ITimeEntryDatabaseCallback, IDataEntry
 {
     private final String TAG = toString();
+    private final String PREF_KEY_TIMER_STARTED = "TMR_START";
+    private final String PREF_KEY_TIMER_INDEXID = "TMR_INDEX";
+
+    private SharedPreferences preferences = null;
     private final ButtonClickListener clickListener = new ButtonClickListener();
     private ITimeEntryDatabase database = null;
     private boolean isReadyDatabase = false;
@@ -44,6 +55,7 @@ class WearableActivityController implements IWearableActivityControl, ITimeEntry
     @Override
     public void setup(WearableActivity activity, IClickCallback callback)
     {
+        this.preferences = PreferenceManager.getDefaultSharedPreferences(activity);
         setupPermissions(activity);
         setupHardwares(activity);
         setupScreen(activity);
@@ -113,7 +125,6 @@ class WearableActivityController implements IWearableActivityControl, ITimeEntry
                         // 既存のデータベースを消去する場合、、、
                         TimeEntryDatabaseFactory.deleteDatabase(activity);
                     }
-
                     database.prepare();
                 }
                 catch (Exception e)
@@ -246,10 +257,45 @@ class WearableActivityController implements IWearableActivityControl, ITimeEntry
     }
 
     @Override
+    public void timerStarted(boolean isStarted)
+    {
+        try
+        {
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.putBoolean(PREF_KEY_TIMER_STARTED, isStarted);
+            editor.apply();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
     public void prepareFinished(boolean isReady)
     {
         Log.v(TAG, "database prepareFinished() : " + isReady);
         isReadyDatabase = isReady;
+
+        try
+        {
+            boolean isStarted = preferences.getBoolean(PREF_KEY_TIMER_STARTED, false);
+            recordingIndexId = preferences.getLong(PREF_KEY_TIMER_INDEXID, -1);
+            if ((isStarted)&&(recordingIndexId >= 0)&&(isReadyDatabase))
+            {
+                ArrayList<Long> list = new ArrayList<>();
+                Cursor cursor = database.getAllDetailData(recordingIndexId);
+                while (cursor.moveToNext())
+                {
+                    list.add(cursor.getLong(cursor.getColumnIndex(TimeEntryData.EntryData.COLUMN_NAME_TIME_ENTRY)));
+                }
+                clickListener.dataIsReloaded(list);
+            }
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
     }
 
 
@@ -257,21 +303,33 @@ class WearableActivityController implements IWearableActivityControl, ITimeEntry
     public void timeEntryFinished(OperationType operationType, boolean result, long indexId, long dataId)
     {
         Log.v(TAG, "database timeEntryFinished() : " + result + "  [" + indexId + "] " + dataId);
-        if (result)
-        {
-            recordingIndexId = indexId;
-        }
     }
 
     @Override
     public void dataEntryFinished(OperationType operationType, boolean result, long id, String title)
     {
         Log.v(TAG, "database dataEntryFinished() : " + result + "  [" + id + "] " + title);
-        if (result)
+        if ((result)&&(operationType == OperationType.CREATED))
         {
-            recordingIndexId = id;
+            setIndexId(id);
         }
     }
+
+    private void setIndexId(long id)
+    {
+        try
+        {
+            recordingIndexId = id;
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.putLong(PREF_KEY_TIMER_INDEXID, recordingIndexId);
+            editor.apply();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+
 
     @Override
     public void createIndex(final String title, final String memo, final int icon, final long startTime)

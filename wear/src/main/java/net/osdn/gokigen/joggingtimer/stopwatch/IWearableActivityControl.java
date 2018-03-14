@@ -15,4 +15,6 @@ public interface IWearableActivityControl
     void vibrate(int duration);
 
     IDataEntry getDataEntry();
+
+    void timerStarted(boolean isStarted);
 }
