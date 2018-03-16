@@ -10,6 +10,7 @@ public class IconIdProvider
 {
     private static int iconIds[] = {
             R.drawable.ic_label_outline_black_24dp	,
+            R.drawable.ic_done_black_24dp,
             R.drawable.ic_info_outline_black_24dp	,
             R.drawable.ic_warning_black_24dp	,
             R.drawable.ic_thumb_down_black_24dp	,

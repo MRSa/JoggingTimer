@@ -129,6 +129,7 @@ public class MainActivity extends WearableActivity implements IClickCallback, My
     {
         super.onStart();
         Log.v(TAG, "onStart()");
+        controller.setupDatabase(this, false);
     }
 
     /**

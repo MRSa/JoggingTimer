@@ -2,7 +2,6 @@ package net.osdn.gokigen.joggingtimer.stopwatch;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import android.os.Parcel;
 import android.os.Parcelable;

@@ -1,7 +1,6 @@
 package net.osdn.gokigen.joggingtimer.stopwatch;
 
 import android.Manifest;
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -59,7 +58,7 @@ class WearableActivityController implements IWearableActivityControl, ITimeEntry
         setupPermissions(activity);
         setupHardwares(activity);
         setupScreen(activity);
-        setupDatabase(activity, false); // chhange true if when databaese file should be cleared.
+        //setupDatabase(activity, false); // chhange true if when databaese file should be cleared.
         setupListeners(activity, callback);
     }
 
@@ -111,7 +110,8 @@ class WearableActivityController implements IWearableActivityControl, ITimeEntry
      *   データベースのセットアップ
      *
      */
-    private void setupDatabase(final WearableActivity activity, final boolean isInitialize)
+    @Override
+    public void setupDatabase(final WearableActivity activity, final boolean isInitialize)
     {
         database = new TimeEntryDatabaseFactory(activity, this).getEntryDatabase();
         Thread thread = new Thread(new Runnable() {
