@@ -164,7 +164,7 @@ public class MainActivity extends WearableActivity implements IClickCallback, My
     {
         super.onExitAmbient();
         Log.v(TAG, "onExitAmbient()");
-        updateTimerLabel();
+        //updateTimerLabel();
     }
 
     /**
@@ -617,6 +617,18 @@ public class MainActivity extends WearableActivity implements IClickCallback, My
     {
         Log.v(TAG, "onUserLeaveHint() " );
         // ハードキー（ホームボタン）が押されたとき、これがひろえるが...
+    }
+
+    /*
+     *
+     *
+     */
+    @Override
+    public boolean dispatchKeyEvent(KeyEvent event)
+    {
+        Log.v(TAG, "dispatchKeyEvent() : " + event.getAction() + " (" + event.getKeyCode() + ")");
+
+        return (super.dispatchKeyEvent(event));
     }
 
     /*

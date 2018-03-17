@@ -4,7 +4,6 @@ import android.Manifest;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
-import android.os.PowerManager;
 import android.os.Vibrator;
 import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityCompat;
@@ -22,7 +21,6 @@ import net.osdn.gokigen.joggingtimer.storage.contract.TimeEntryData;
 
 import java.util.ArrayList;
 
-import static android.content.Context.POWER_SERVICE;
 import static android.content.Context.VIBRATOR_SERVICE;
 
 /**
@@ -43,7 +41,7 @@ class WearableActivityController implements IWearableActivityControl, ITimeEntry
     private long recordingIndexId = -1;
 
     private Vibrator vibrator = null;
-    private PowerManager powerManager = null;
+    //private PowerManager powerManager = null;
 
 
     WearableActivityController()
@@ -89,8 +87,8 @@ class WearableActivityController implements IWearableActivityControl, ITimeEntry
         // バイブレータをつかまえる
         vibrator = (Vibrator) activity.getSystemService(VIBRATOR_SERVICE);
 
-        // パワーマネージャをつかまえる
-        powerManager = (PowerManager) activity.getSystemService(POWER_SERVICE);
+        //// パワーマネージャをつかまえる
+        //powerManager = (PowerManager) activity.getSystemService(POWER_SERVICE);
     }
 
     /**
@@ -210,20 +208,7 @@ class WearableActivityController implements IWearableActivityControl, ITimeEntry
     public void exitApplication(WearableActivity activity)
     {
         Log.v(TAG, "exitApplication()");
-
-        // パワーマネージャを確認し、interactive modeではない場合は、ライブビューも止めず、カメラの電源も切らない
-        if ((powerManager != null)&&(!powerManager.isInteractive()))
-        {
-            Log.v(TAG, "not interactive, keep database.");
-            return;
-        }
-
         closeDatabase();
-
-
-        //finish();
-        //finishAndRemoveTask();
-        //android.os.Process.killProcess(android.os.Process.myPid());
     }
 
     @Override
