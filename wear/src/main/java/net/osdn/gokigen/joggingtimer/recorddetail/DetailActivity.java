@@ -4,18 +4,23 @@ import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.wear.widget.WearableLinearLayoutManager;
 import android.support.wear.widget.WearableRecyclerView;
+import android.support.wear.widget.drawer.WearableActionDrawerView;
 import android.support.wearable.activity.WearableActivity;
 import android.util.Log;
+import android.view.MenuItem;
+import android.widget.Toast;
 
 import net.osdn.gokigen.joggingtimer.R;
 
-public class DetailActivity extends WearableActivity implements RecordDetailSetup.IDatabaseReadyNotify
+public class DetailActivity extends WearableActivity implements RecordDetailSetup.IDatabaseReadyNotify, MenuItem.OnMenuItemClickListener
 {
     private final String TAG = toString();
     public static final String INTENT_EXTRA_DATA_ID = "Detail.dataId";
 
     private RecordDetailAdapter detailAdapter = null;
     private RecordDetailSetup setupper = null;
+
+    private WearableActionDrawerView actionDrawerView = null;
 
     /**
      *
@@ -50,6 +55,12 @@ public class DetailActivity extends WearableActivity implements RecordDetailSetu
             e.printStackTrace();
             detailAdapter = null;
         }
+
+        // Bottom Action Drawer
+        actionDrawerView = findViewById(R.id.bottom_action_drawer);
+        actionDrawerView.getController().peekDrawer();
+        actionDrawerView.setOnMenuItemClickListener(this);
+
     }
 
     /**
@@ -178,5 +189,58 @@ public class DetailActivity extends WearableActivity implements RecordDetailSetu
     public void databaseSetupFinished(boolean result)
     {
         Log.v(TAG, "databaseSetupFinished() : " + result);
+    }
+
+    /**
+     *
+     *
+     */
+    @Override
+    public boolean onMenuItemClick(MenuItem item)
+    {
+        Log.v(TAG, "onMenuItemClick(): " + item);
+
+        boolean ret = false;
+        final int itemId = item.getItemId();
+        String toastMessage = "";
+        switch (itemId)
+        {
+            case R.id.menu_edit_title:
+                // タイトルの編集
+                toastMessage = getString(R.string.action_edit_title);
+                ret = true;
+                break;
+
+            case R.id.menu_set_reference:
+                // 現在のデータを基準値を設定する
+                toastMessage = getString(R.string.action_set_reference);
+                ret = true;
+                break;
+
+            case R.id.menu_set_icon:
+                // アイコンセレクタを表示して、設定する
+                toastMessage = "SET ICON.(TBD)";
+                break;
+
+            default:
+                // 何もしない
+                break;
+        }
+        try
+        {
+            actionDrawerView.getController().closeDrawer();
+
+            if (toastMessage.length() > 0)
+            {
+                Toast toast = Toast.makeText(getApplicationContext(), toastMessage, Toast.LENGTH_SHORT);
+                toast.show();
+            }
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
+        return (ret);
     }
 }

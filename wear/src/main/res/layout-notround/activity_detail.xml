@@ -1,31 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<android.support.wear.widget.drawer.WearableDrawerLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/detail_drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/time_list"
-    android:orientation="vertical"
-    android:scrollbarAlwaysDrawVerticalTrack="true">
+    android:background="@color/black"
+    tools:context="net.osdn.gokigen.joggingtimer.recorddetail.DetailActivity">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/detail_title_area"
-        android:text="@string/result_detail"
-        android:textAlignment="center"
-        android:clickable="true"
-        android:focusable="true"
-        android:visibility="visible"
-        />
-    <android.support.wear.widget.WearableRecyclerView
+    <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/recycler_detail_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scrollbars="vertical"
-        >
+        android:id="@+id/time_list"
+        android:orientation="vertical"
+        android:scrollbarAlwaysDrawVerticalTrack="true">
 
-    </android.support.wear.widget.WearableRecyclerView>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/detail_title_area"
+            android:text="@string/result_detail"
+            android:textAlignment="center"
+            android:clickable="true"
+            android:focusable="true"
+            android:visibility="visible"
+            />
+        <android.support.wear.widget.WearableRecyclerView
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/recycler_detail_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="vertical"
+            >
 
+        </android.support.wear.widget.WearableRecyclerView>
+    </LinearLayout>
 
-</LinearLayout>
+    <android.support.wear.widget.drawer.WearableNavigationDrawerView
+        android:id="@+id/top_navigation_drawer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/grey"
+        android:visibility="gone"
+        app:navigationStyle="multiPage" />
+
+    <android.support.wear.widget.drawer.WearableActionDrawerView
+        android:id="@+id/bottom_action_drawer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/grey"
+        android:visibility="visible"
+        app:actionMenu="@menu/selector_detail" />
+
+</android.support.wear.widget.drawer.WearableDrawerLayout>

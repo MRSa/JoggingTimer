@@ -10,8 +10,16 @@ public class IconIdProvider
 {
     private static int iconIds[] = {
             R.drawable.ic_label_outline_black_24dp	,
+            R.drawable.ic_bookmark_border_black_24dp,
+            R.drawable.ic_content_paste_black_24dp,
+            R.drawable.ic_lightbulb_outline_black_24dp,
             R.drawable.ic_done_black_24dp,
+            R.drawable.ic_bookmark_black_24dp,
+            R.drawable.ic_book_black_24dp,
+            R.drawable.ic_receipt_black_24dp,
             R.drawable.ic_info_outline_black_24dp	,
+            R.drawable.ic_check_circle_black_24dp,
+            R.drawable.ic_info_black_24dp,
             R.drawable.ic_warning_black_24dp	,
             R.drawable.ic_thumb_down_black_24dp	,
             R.drawable.ic_thumb_up_black_24dp	,
@@ -46,7 +54,6 @@ public class IconIdProvider
             R.drawable.ic_beach_access_black_24dp,
             R.drawable.ic_fitness_center_black_24dp,
             R.drawable.ic_golf_course_black_24dp,
-            R.drawable.ic_android_black_24dp,
     };
 
     public static int getIconResourceId(int id)

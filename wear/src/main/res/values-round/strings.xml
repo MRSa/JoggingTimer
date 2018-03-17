@@ -8,4 +8,7 @@
     <string name="dialog_message_delete">DELETE OK? </string>
     <string name="dialog_positive_execute">OK</string>
     <string name="dialog_negative_cancel">Cancel</string>
+    <string name="action_edit_title">Edit Title</string>
+    <string name="action_change_icon">Change Icon</string>
+    <string name="action_set_reference">Set Reference Data</string>
 </resources>
