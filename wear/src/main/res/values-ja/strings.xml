@@ -10,7 +10,9 @@
     <string name="dialog_message_delete">削除します </string>
     <string name="dialog_positive_execute">OK</string>
     <string name="dialog_negative_cancel">Cancel</string>
-    <string name="action_edit_title">タイトル編集</string>
+    <string name="dialog_title_hint">Set Title</string>
+    <string name="dialog_message_data_edit">記録情報の編集</string>
+    <string name="action_edit_title">記録情報の編集</string>
     <string name="action_change_icon">アイコンの変更</string>
     <string name="action_set_reference">基準値に設定</string>
 </resources>

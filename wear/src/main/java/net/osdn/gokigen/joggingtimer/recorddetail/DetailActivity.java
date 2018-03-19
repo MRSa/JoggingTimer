@@ -11,8 +11,9 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import net.osdn.gokigen.joggingtimer.R;
+import net.osdn.gokigen.joggingtimer.utilities.DataEditDialog;
 
-public class DetailActivity extends WearableActivity implements RecordDetailSetup.IDatabaseReadyNotify, MenuItem.OnMenuItemClickListener
+public class DetailActivity extends WearableActivity implements RecordDetailSetup.IDatabaseReadyNotify, MenuItem.OnMenuItemClickListener, DataEditDialog.Callback
 {
     private final String TAG = toString();
     public static final String INTENT_EXTRA_DATA_ID = "Detail.dataId";
@@ -207,7 +208,8 @@ public class DetailActivity extends WearableActivity implements RecordDetailSetu
         {
             case R.id.menu_edit_title:
                 // タイトルの編集
-                toastMessage = getString(R.string.action_edit_title);
+                DataEditDialog dialog = new DataEditDialog(this);
+                dialog.show(R.drawable.ic_android_black_24dp, "", this);
                 ret = true;
                 break;
 
@@ -215,11 +217,6 @@ public class DetailActivity extends WearableActivity implements RecordDetailSetu
                 // 現在のデータを基準値を設定する
                 toastMessage = getString(R.string.action_set_reference);
                 ret = true;
-                break;
-
-            case R.id.menu_set_icon:
-                // アイコンセレクタを表示して、設定する
-                toastMessage = "SET ICON.(TBD)";
                 break;
 
             default:
@@ -242,5 +239,33 @@ public class DetailActivity extends WearableActivity implements RecordDetailSetu
         }
 
         return (ret);
+    }
+
+    @Override
+    public void dataEdited(int iconId, String title)
+    {
+        Log.v(TAG, "iconId : " + iconId + " title : '"+ title +"'");
+        try {
+            WearableRecyclerView view = findViewById(R.id.recycler_detail_view);
+            view.postInvalidate();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void cancelled()
+    {
+        try
+        {
+            WearableRecyclerView view = findViewById(R.id.recycler_detail_view);
+            view.postInvalidate();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
     }
 }
