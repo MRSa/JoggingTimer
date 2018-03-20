@@ -22,6 +22,8 @@ class TimeEntryDatabase implements ITimeEntryDatabase
     private final String TAG = toString();
     private final TimeEntryDataOpenHelper dbHelper;
     private final ITimeEntryDatabaseCallback callback;
+    private static final int REFERENCE_ICON_ID = 2;
+    private static final int DEFAULT_ICON_ID = 0;
     private SQLiteDatabase db = null;
     //private SQLiteDatabase writeDb = null;
     //private SQLiteDatabase readDb = null;
@@ -86,6 +88,55 @@ class TimeEntryDatabase implements ITimeEntryDatabase
         int delIndex = db.delete(TimeEntryIndex.EntryIndex.TABLE_NAME, _ID + " = " + indexId, null);
 
         Log.v(TAG, "deleteTimeEntryData()  index : " + indexId + "Recs. [" + delIndex + "] (" + delRecord + ")");
+    }
+
+    /**
+     *
+     *
+     */
+    @Override
+    public void updateIndexData(long indexId, String title, int icon)
+    {
+        try
+        {
+            if ((title != null)&&(!title.isEmpty()))
+            {
+                ContentValues titleValues = new ContentValues();
+                titleValues.put(TimeEntryIndex.EntryIndex.COLUMN_NAME_TITLE, title);
+                db.update(TimeEntryIndex.EntryIndex.TABLE_NAME, titleValues, _ID + " = " + indexId, null);
+            }
+
+            ContentValues iconValues = new ContentValues();
+            iconValues.put(TimeEntryIndex.EntryIndex.COLUMN_NAME_ICON_ID, icon);
+            db.update(TimeEntryIndex.EntryIndex.TABLE_NAME, iconValues, _ID + " = " + indexId, null);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     *
+     *
+     */
+    @Override
+    public void setReferenceIndexData(long indexId)
+    {
+        try
+        {
+            ContentValues clearValues = new ContentValues();
+            clearValues.put(TimeEntryIndex.EntryIndex.COLUMN_NAME_ICON_ID, DEFAULT_ICON_ID);
+            db.update(TimeEntryIndex.EntryIndex.TABLE_NAME, clearValues, TimeEntryIndex.EntryIndex.COLUMN_NAME_ICON_ID + " = " + REFERENCE_ICON_ID, null);
+
+            ContentValues referenceValues = new ContentValues();
+            referenceValues.put(TimeEntryIndex.EntryIndex.COLUMN_NAME_ICON_ID, REFERENCE_ICON_ID);
+            db.update(TimeEntryIndex.EntryIndex.TABLE_NAME, referenceValues, _ID + " = " + indexId, null);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
     }
 
     @Override

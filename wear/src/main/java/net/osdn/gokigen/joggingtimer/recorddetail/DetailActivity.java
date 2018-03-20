@@ -197,6 +197,39 @@ public class DetailActivity extends WearableActivity implements RecordDetailSetu
      *
      */
     @Override
+    public void updatedIndexData(final boolean isIconOnly)
+    {
+        Log.v(TAG, "selectedReferenceData() : " + isIconOnly);
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                try
+                {
+                    String title;
+                    if (isIconOnly)
+                    {
+                        title = getString(R.string.action_set_reference);
+                    }
+                    else
+                    {
+                        title = getString(R.string.action_edited_data);
+                    }
+                    Toast toast = Toast.makeText(getApplicationContext(), title, Toast.LENGTH_SHORT);
+                    toast.show();
+                }
+                catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
+    /**
+     *
+     *
+     */
+    @Override
     public boolean onMenuItemClick(MenuItem item)
     {
         Log.v(TAG, "onMenuItemClick(): " + item);
@@ -214,8 +247,8 @@ public class DetailActivity extends WearableActivity implements RecordDetailSetu
                 break;
 
             case R.id.menu_set_reference:
-                // 現在のデータを基準値を設定する
-                toastMessage = getString(R.string.action_set_reference);
+                // 現在のデータを基準値として設定する
+                setupper.setReferenceData();
                 ret = true;
                 break;
 
@@ -246,6 +279,7 @@ public class DetailActivity extends WearableActivity implements RecordDetailSetu
     {
         Log.v(TAG, "iconId : " + iconId + " title : '"+ title +"'");
         try {
+            setupper.setIndexData(title, iconId);
             WearableRecyclerView view = findViewById(R.id.recycler_detail_view);
             view.postInvalidate();
         }

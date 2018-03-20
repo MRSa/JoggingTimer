@@ -15,4 +15,5 @@
     <string name="action_edit_title">記録情報の編集</string>
     <string name="action_change_icon">アイコンの変更</string>
     <string name="action_set_reference">基準値に設定</string>
+    <string name="action_edited_data">更新しました</string>
 </resources>

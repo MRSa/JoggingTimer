@@ -135,6 +135,37 @@ public class RecordDetailSetup  implements ITimeEntryDatabaseCallback
         thread.start();
     }
 
+    /**
+     *
+     *
+     */
+    void setIndexData(final String title, final int icon)
+    {
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                database.updateIndexData(indexId, title, icon);
+                callback.updatedIndexData(false);
+            }
+        });
+        thread.start();
+    }
+
+    /**
+     *
+     *
+     */
+    void setReferenceData()
+    {
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                database.setReferenceIndexData(indexId);
+                callback.updatedIndexData(true);
+            }
+        });
+        thread.start();
+    }
 
     /**
      *
@@ -177,5 +208,6 @@ public class RecordDetailSetup  implements ITimeEntryDatabaseCallback
     interface IDatabaseReadyNotify
     {
         void databaseSetupFinished(boolean result);
+        void updatedIndexData(boolean isIconOnly);
     }
 }

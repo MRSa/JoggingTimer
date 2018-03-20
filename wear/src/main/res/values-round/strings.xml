@@ -13,4 +13,5 @@
     <string name="action_edit_title">Edit Title/Icon</string>
     <string name="action_change_icon">Change Icon</string>
     <string name="action_set_reference">Set Reference Data</string>
+    <string name="action_edited_data">Data Updated</string>
 </resources>

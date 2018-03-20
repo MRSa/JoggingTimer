@@ -85,6 +85,16 @@ public class ListActivity extends WearableActivity implements IDetailLauncher, R
     {
         super.onResume();
         Log.v(TAG, "onResume()");
+        try
+        {
+            setupper = new RecordSummarySetup(this, this, this, summaryAdapter);
+            setupper.setup();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
     }
 
     /**
@@ -95,37 +105,6 @@ public class ListActivity extends WearableActivity implements IDetailLauncher, R
     {
         super.onPause();
         Log.v(TAG, "onPause()");
-    }
-
-    /**
-     *
-     *
-     */
-    @Override
-    public void onStart()
-    {
-        super.onStart();
-        Log.v(TAG, "onStart()");
-        try
-        {
-            setupper = new RecordSummarySetup(this, this, this, summaryAdapter);
-            setupper.setup();
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     *
-     *
-     */
-    @Override
-    public void onStop()
-    {
-        super.onStop();
-        Log.v(TAG, "onStop()");
         try
         {
             if (setupper != null)
@@ -139,6 +118,28 @@ public class ListActivity extends WearableActivity implements IDetailLauncher, R
             e.printStackTrace();
         }
         System.gc();
+    }
+
+    /**
+     *
+     *
+     */
+    @Override
+    public void onStart()
+    {
+        super.onStart();
+        Log.v(TAG, "onStart()");
+    }
+
+    /**
+     *
+     *
+     */
+    @Override
+    public void onStop()
+    {
+        super.onStop();
+        Log.v(TAG, "onStop()");
     }
 
     /**

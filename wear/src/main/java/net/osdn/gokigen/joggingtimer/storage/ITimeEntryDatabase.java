@@ -16,6 +16,8 @@ public interface ITimeEntryDatabase
 
     void deleteTimeEntryData(long indexId);
 
+    void setReferenceIndexData(long indexId);
+    void updateIndexData(long indexId, String title, int icon);
     void createIndexData(String title, String memo, int icon, long startTime);
     void appendTimeData(long indexId, long lapTime);
     void finishTimeData(long indexId, long startTime, long endTime);
