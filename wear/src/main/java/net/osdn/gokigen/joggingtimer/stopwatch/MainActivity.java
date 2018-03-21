@@ -485,7 +485,9 @@ public class MainActivity extends WearableActivity implements IClickCallback, My
         if (timerCounter != null)
         {
             List<Long> elapsedTimes = timerCounter.getTimerList();
+            List<Long> referenceTimes = timerCounter.getReferenceTimeList();
             int indexSize = elapsedTimes.size();
+            int referenceSize = referenceTimes.size();
             if (indexSize <= 1)
             {
                 // ラップの記録がないので表示しません
@@ -501,7 +503,12 @@ public class MainActivity extends WearableActivity implements IClickCallback, My
             {
                 // ラップが１つとれた場合
                 long time = (elapsedTimes.get(indexSize - 1) - elapsedTimes.get(indexSize - 2));
+                long refTime = (referenceSize >= indexSize) ? (referenceTimes.get(indexSize - 1) - referenceTimes.get(indexSize - 2)) : 0;
                 String elapsedTime = "[" + (timerCounter.getElapsedCount() - 1) + "] " + TimeStringConvert.getTimeString(time);
+                if (refTime > 0)
+                {
+                    elapsedTime = elapsedTime + " ( " + TimeStringConvert.getDiffTimeString( time - refTime) + " )";
+                }
                 area1.setText(elapsedTime);
                 area1.invalidate();
                 area2.setText(dummy);
@@ -510,13 +517,24 @@ public class MainActivity extends WearableActivity implements IClickCallback, My
                 area3.invalidate();
                 return;
             }
+
             if (indexSize <= 3)
             {
                 // ラップが３つとれた場合
                 long time1 = (elapsedTimes.get(indexSize - 2) - elapsedTimes.get(indexSize - 3));
+                long refTime1 = (referenceSize >= (indexSize - 1)) ? (referenceTimes.get(indexSize - 2) - referenceTimes.get(indexSize - 3)) : 0;
                 long time2 = (elapsedTimes.get(indexSize - 1) - elapsedTimes.get(indexSize - 2));
+                long refTime2 = (referenceSize >= indexSize) ? (referenceTimes.get(indexSize - 1) - referenceTimes.get(indexSize - 2)) : 0;
                 String elapsedTime1 = "[" +  (timerCounter.getElapsedCount() - 2) + "] " + TimeStringConvert.getTimeString(time1);
+                if (refTime1 > 0)
+                {
+                    elapsedTime1 = elapsedTime1 + " ( " + TimeStringConvert.getDiffTimeString( time1 - refTime1) + " )";
+                }
                 String elapsedTime2 = "[" +  (timerCounter.getElapsedCount() - 1) + "] " + TimeStringConvert.getTimeString(time2);
+                if (refTime2 > 0)
+                {
+                    elapsedTime2 = elapsedTime2 + " ( " + TimeStringConvert.getDiffTimeString( time2 - refTime2) + " )";
+                }
                 area1.setText(elapsedTime1);
                 area1.invalidate();
                 area2.setText(elapsedTime2);
@@ -528,11 +546,32 @@ public class MainActivity extends WearableActivity implements IClickCallback, My
 
             // ラップが４つ以上ある場合
             long time1 = (elapsedTimes.get(indexSize - 3) - elapsedTimes.get(indexSize - 4));
+            long refTime1 = (referenceSize >= (indexSize - 2)) ? (referenceTimes.get(indexSize - 3) - referenceTimes.get(indexSize - 4)) : 0;
+
             long time2 = (elapsedTimes.get(indexSize - 2) - elapsedTimes.get(indexSize - 3));
+            long refTime2 = (referenceSize >= (indexSize - 1)) ? (referenceTimes.get(indexSize - 2) - referenceTimes.get(indexSize - 3)) : 0;
+
             long time3 = (elapsedTimes.get(indexSize - 1) - elapsedTimes.get(indexSize - 2));
+            long refTime3 = (referenceSize >= indexSize) ? (referenceTimes.get(indexSize - 1) - referenceTimes.get(indexSize - 2)) : 0;
+
             String elapsedTime1 = "[" +  (timerCounter.getElapsedCount() - 3) + "] " + TimeStringConvert.getTimeString(time1);
+            if (refTime1 > 0)
+            {
+                elapsedTime1 = elapsedTime1 + " ( " + TimeStringConvert.getDiffTimeString( time1 - refTime1) + " )";
+            }
+
             String elapsedTime2 = "[" +  (timerCounter.getElapsedCount() - 2) + "] " + TimeStringConvert.getTimeString(time2);
+            if (refTime2 > 0)
+            {
+                elapsedTime2 = elapsedTime2 + " ( " + TimeStringConvert.getDiffTimeString( time2 - refTime2) + " )";
+            }
+
             String elapsedTime3 = "[" +  (timerCounter.getElapsedCount() - 1) + "] " + TimeStringConvert.getTimeString(time3);
+            if (refTime3 > 0)
+            {
+                elapsedTime3 = elapsedTime3 + " ( " + TimeStringConvert.getDiffTimeString( time3 - refTime3) + " )";
+            }
+
             area1.setText(elapsedTime1);
             area1.invalidate();
             area2.setText(elapsedTime2);
