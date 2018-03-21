@@ -26,7 +26,7 @@ import java.util.Locale;
  *
  *
  */
-public class MainActivity extends WearableActivity implements IClickCallback, MyTimerTrigger.ITimeoutReceiver
+public class MainActivity extends WearableActivity implements IClickCallback, MyTimerTrigger.ITimeoutReceiver, MyTimerCounter.ICounterStatusNotify
 {
     private final String TAG = toString();
     private final IWearableActivityControl controller = new WearableActivityController();
@@ -44,34 +44,10 @@ public class MainActivity extends WearableActivity implements IClickCallback, My
 
         setContentView(R.layout.activity_main);
 
-        controller.setup(this, this);
+        controller.setup(this, this, counter);
 
         // Enables Always-on
         setAmbientEnabled();
-    }
-
-    /**
-     *
-     */
-    @Override
-    protected void onSaveInstanceState(Bundle outState)
-    {
-        super.onSaveInstanceState(outState);
-
-        /* ここで状態を保存 */
-        outState.putParcelable("timerCounter", counter);
-    }
-
-    /**
-     *
-     */
-    @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState)
-    {
-        super.onRestoreInstanceState(savedInstanceState);
-
-        /* ここで保存した状態を読み出して設定 */
-        counter = savedInstanceState.getParcelable("timerCounter");
     }
 
     /**
@@ -103,6 +79,8 @@ public class MainActivity extends WearableActivity implements IClickCallback, My
                 }
             }
         }
+        controller.setupReferenceData();
+
         if (isStartTimer)
         {
             // start a timer!
@@ -129,6 +107,9 @@ public class MainActivity extends WearableActivity implements IClickCallback, My
     {
         super.onStart();
         Log.v(TAG, "onStart()");
+
+        // データベースのセットアップ
+        counter.setCallback(this);
         controller.setupDatabase(this, false);
     }
 
@@ -327,7 +308,7 @@ public class MainActivity extends WearableActivity implements IClickCallback, My
                     Date date = new Date();
                     SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
                     String title = sdf1.format(date);
-                    controller.getDataEntry().createIndex(title, "", 0, timerCounter.getStartTime());
+                    controller.getDataEntry().createIndex(title, timerCounter.getStartTime());
                 }
                 updateTimerLabel();
             }
@@ -423,35 +404,6 @@ public class MainActivity extends WearableActivity implements IClickCallback, My
     public boolean pushedBtn3()
     {
         return (false);
-    }
-
-    @Override
-    public void dataIsReloaded(ArrayList<Long> list)
-    {
-        ITimerCounter timerCounter = counter;
-        if ((timerCounter != null)&&(list != null))
-        {
-            try
-            {
-                timerCounter.reloadTimerCounter(list.get(0), list);
-
-                MyTimerTrigger trigger = new MyTimerTrigger(this, 100, timerCounter);
-                trigger.startTimer();
-            }
-            catch (Exception e)
-            {
-                e.printStackTrace();
-            }
-        }
-
-        runOnUiThread(new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                updateTimerLabel();
-            }
-        });
     }
 
     /**
@@ -658,6 +610,36 @@ public class MainActivity extends WearableActivity implements IClickCallback, My
             }
         }
         return (super.onKeyDown(keyCode, event));
+    }
+
+    @Override
+    public void counterStatusChanged(boolean forceStartTimer)
+    {
+        if (forceStartTimer)
+        {
+            try
+            {
+                ITimerCounter timerCounter = counter;
+                if (timerCounter != null)
+                {
+                    MyTimerTrigger trigger = new MyTimerTrigger(this, 100, timerCounter);
+                    trigger.startTimer();
+                }
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+        }
+
+        runOnUiThread(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                updateTimerLabel();
+            }
+        });
     }
 
     /*

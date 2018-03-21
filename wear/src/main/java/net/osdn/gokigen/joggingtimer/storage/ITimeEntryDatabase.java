@@ -13,6 +13,7 @@ public interface ITimeEntryDatabase
 
     Cursor getAllIndexData();
     Cursor getAllDetailData(long indexId);
+    Cursor getAllReferenceDetailData();
 
     void deleteTimeEntryData(long indexId);
 

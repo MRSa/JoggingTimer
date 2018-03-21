@@ -7,8 +7,6 @@ import android.view.View;
 
 import net.osdn.gokigen.joggingtimer.R;
 
-import java.util.ArrayList;
-
 /**
  *
  *
@@ -74,15 +72,6 @@ public class ButtonClickListener implements View.OnClickListener, View.OnLongCli
             }
         }
         return (ret);
-    }
-
-    /**
-     *   中継...格好悪い...
-     *
-     */
-    void dataIsReloaded(ArrayList<Long> list)
-    {
-        callback.dataIsReloaded(list);
     }
 
     @Override

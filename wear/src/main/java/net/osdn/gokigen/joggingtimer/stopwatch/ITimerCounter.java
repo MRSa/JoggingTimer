@@ -1,6 +1,5 @@
 package net.osdn.gokigen.joggingtimer.stopwatch;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public interface ITimerCounter
@@ -13,6 +12,7 @@ public interface ITimerCounter
     void reset();
 
     List<Long> getTimerList();
+    List<Long> getReferenceTimeList();
     int getElapsedCount();
     long getPastTime();
     long getLastElapsedTime();
@@ -21,5 +21,5 @@ public interface ITimerCounter
     long getStartTime();
     long getStopTime();
 
-    void reloadTimerCounter(long startTime, ArrayList<Long> timelist);
+    void setCallback(MyTimerCounter.ICounterStatusNotify callback);
 }

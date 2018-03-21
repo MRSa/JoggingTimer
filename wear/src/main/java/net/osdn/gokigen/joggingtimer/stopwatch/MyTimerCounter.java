@@ -3,20 +3,23 @@ package net.osdn.gokigen.joggingtimer.stopwatch;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-import android.os.SystemClock;
+import android.support.annotation.NonNull;
+import android.util.Log;
 
 /**
  *    My Timer counter
  *
  */
-public class MyTimerCounter implements Parcelable, ITimerCounter
+public class MyTimerCounter implements ITimerCounter, IDatabaseReloadCallback
 {
+    private final String TAG = toString();
+    //private static final long COUNTER_UPPERLIMIT = (80 / (1000 * 60 * 60));  // 80h
     private boolean isTimerStopped = true;
+    private ICounterStatusNotify callback = null;
     private long startTime = 0;
     private long stopTime = 0;
     private List<Long> elapsedTime = null;
+    private List<Long> referenceTime = null;
 
     MyTimerCounter()
     {
@@ -50,11 +53,12 @@ public class MyTimerCounter implements Parcelable, ITimerCounter
     {
         if (isTimerStopped)
         {
-            startTime = SystemClock.elapsedRealtime();
+            startTime = System.currentTimeMillis();
             stopTime = 0;
             elapsedTime.clear();
             elapsedTime.add(startTime);
             isTimerStopped = false;
+            Log.v(TAG, "start() startTime : " + startTime);
         }
     }
 
@@ -64,7 +68,7 @@ public class MyTimerCounter implements Parcelable, ITimerCounter
         long timeToSet = 0;
         if (!isTimerStopped)
         {
-            timeToSet = SystemClock.elapsedRealtime();
+            timeToSet = System.currentTimeMillis();
             elapsedTime.add(timeToSet);
         }
         return (timeToSet);
@@ -75,7 +79,7 @@ public class MyTimerCounter implements Parcelable, ITimerCounter
     {
         if (!isTimerStopped)
         {
-            stopTime = SystemClock.elapsedRealtime();
+            stopTime = System.currentTimeMillis();
             elapsedTime.add(stopTime);
             isTimerStopped = true;
         }
@@ -99,6 +103,12 @@ public class MyTimerCounter implements Parcelable, ITimerCounter
     }
 
     @Override
+    public List<Long> getReferenceTimeList()
+    {
+        return (referenceTime);
+    }
+
+    @Override
     public int getElapsedCount()
     {
         return (elapsedTime.size());
@@ -107,7 +117,7 @@ public class MyTimerCounter implements Parcelable, ITimerCounter
     @Override
     public long getPastTime()
     {
-        long currentTime = SystemClock.elapsedRealtime();
+        long currentTime = System.currentTimeMillis();
         if (isTimerStopped)
         {
             if (elapsedTime.size() == 0)
@@ -137,7 +147,7 @@ public class MyTimerCounter implements Parcelable, ITimerCounter
     @Override
     public long getCurrentElapsedTime()
     {
-        long currentTime = SystemClock.elapsedRealtime();
+        long currentTime = System.currentTimeMillis();
         try
         {
             return (currentTime - (elapsedTime.get(elapsedTime.size() - 1)));
@@ -162,41 +172,28 @@ public class MyTimerCounter implements Parcelable, ITimerCounter
     }
 
     @Override
-    public int describeContents()
+    public void setCallback(ICounterStatusNotify callback)
     {
-        return 0;
+        this.callback = callback;
     }
 
     @Override
-    public void writeToParcel(Parcel dest, int flags)
-    {
-        dest.writeInt(isTimerStopped ? 1 : 0);
-        dest.writeLong(startTime);
-        dest.writeLong(stopTime);
-        dest.writeList(elapsedTime);
-    }
-
-    public static final Parcelable.Creator<MyTimerCounter> CREATOR = new Parcelable.Creator<MyTimerCounter>()
-    {
-        public MyTimerCounter createFromParcel(Parcel in)
-        {
-            return (new MyTimerCounter(in));
-        }
-
-        public MyTimerCounter[] newArray(int size)
-        {
-            return (new MyTimerCounter[size]);
-        }
-    };
-
-    private MyTimerCounter(Parcel in)
+    public void dataIsReloaded(@NonNull  ArrayList<Long> timelist)
     {
         try
         {
-            isTimerStopped = (in.readInt() == 1);
-            startTime = in.readLong();
-            stopTime = in.readLong();
-            in.readList(elapsedTime, Long.class.getClassLoader());
+            long startTime = timelist.get(0);
+            long pastTime = System.currentTimeMillis() - startTime;
+            Log.v(TAG, "pastTime : " + pastTime);
+            this.startTime = startTime;
+            elapsedTime = null;
+            elapsedTime = new ArrayList<>(timelist);
+            stopTime = 0;
+            isTimerStopped = false;
+            if (callback != null)
+            {
+                callback.counterStatusChanged(true);
+            }
         }
         catch (Exception e)
         {
@@ -204,16 +201,30 @@ public class MyTimerCounter implements Parcelable, ITimerCounter
         }
     }
 
-    /**
-     *
-     *
-     */
-    public void reloadTimerCounter(long startTime, ArrayList<Long> timelist)
+    @Override
+    public void referenceDataIsReloaded(ArrayList<Long> timelist)
     {
-        this.startTime = startTime;
-        elapsedTime = null;
-        elapsedTime = new ArrayList<>(timelist);
-        stopTime = 0;
-        isTimerStopped = false;
+        try
+        {
+            referenceTime = null;
+            if (timelist != null)
+            {
+                referenceTime = new ArrayList<>(timelist);
+                if (callback != null)
+                {
+                    callback.counterStatusChanged(false);
+                }
+                Log.v(TAG, "reference lap time : " + referenceTime.size());
+            }
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    public interface ICounterStatusNotify
+    {
+        void counterStatusChanged(boolean forceStartTimer);
     }
 }

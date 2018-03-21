@@ -72,13 +72,24 @@ class TimeEntryDatabase implements ITimeEntryDatabase
     @Override
     public Cursor getAllIndexData()
     {
-        return (db.rawQuery("SELECT * FROM " + TimeEntryIndex.EntryIndex.TABLE_NAME + " ORDER BY " + TimeEntryIndex.EntryIndex.COLUMN_NAME_START_TIME, null));
+        return (db.rawQuery("SELECT * FROM " + TimeEntryIndex.EntryIndex.TABLE_NAME + " ORDER BY " + TimeEntryIndex.EntryIndex.COLUMN_NAME_START_TIME + " DESC", null));
     }
 
     @Override
     public Cursor getAllDetailData(long indexId)
     {
         return (db.rawQuery("SELECT * FROM " + TimeEntryData.EntryData.TABLE_NAME + " WHERE " + TimeEntryData.EntryData.COLUMN_NAME_INDEX_ID + " = " + indexId + " ORDER BY " + TimeEntryData.EntryData.COLUMN_NAME_TIME_ENTRY, null));
+    }
+
+    @Override
+    public Cursor getAllReferenceDetailData()
+    {
+        String queryString = "SELECT * FROM " + TimeEntryIndex.EntryIndex.TABLE_NAME + " INNER JOIN " + TimeEntryData.EntryData.TABLE_NAME +
+                " ON " + TimeEntryIndex.EntryIndex.TABLE_NAME + "." + TimeEntryIndex.EntryIndex._ID + " = " + TimeEntryData.EntryData.TABLE_NAME+ "." + TimeEntryData.EntryData.COLUMN_NAME_INDEX_ID +
+                " WHERE " + TimeEntryIndex.EntryIndex.TABLE_NAME+ "." + TimeEntryIndex.EntryIndex.COLUMN_NAME_ICON_ID + " = " + REFERENCE_ICON_ID +
+                " ORDER BY " + TimeEntryData.EntryData.TABLE_NAME+ "." + TimeEntryData.EntryData.COLUMN_NAME_TIME_ENTRY;
+        //Log.v(TAG, "Query : " + queryString);
+        return (db.rawQuery(queryString, null));
     }
 
     @Override

@@ -37,22 +37,23 @@ class WearableActivityController implements IWearableActivityControl, ITimeEntry
     private SharedPreferences preferences = null;
     private final ButtonClickListener clickListener = new ButtonClickListener();
     private ITimeEntryDatabase database = null;
+    private IDatabaseReloadCallback dbCallback = null;
     private boolean isReadyDatabase = false;
+    private boolean pendingLoadReference = false;
     private long recordingIndexId = -1;
 
     private Vibrator vibrator = null;
     //private PowerManager powerManager = null;
 
 
-    WearableActivityController()
-    {
+    WearableActivityController() {
         Log.v(TAG, "WearableActivityController()");
     }
 
     @Override
-    public void setup(WearableActivity activity, IClickCallback callback)
-    {
+    public void setup(WearableActivity activity, IClickCallback callback, IDatabaseReloadCallback dbCallback) {
         this.preferences = PreferenceManager.getDefaultSharedPreferences(activity);
+        this.dbCallback = dbCallback;
         setupPermissions(activity);
         setupHardwares(activity);
         setupScreen(activity);
@@ -64,11 +65,9 @@ class WearableActivityController implements IWearableActivityControl, ITimeEntry
      *
      *
      */
-    private void setupPermissions(WearableActivity activity)
-    {
-        if ((ContextCompat.checkSelfPermission(activity, Manifest.permission.VIBRATE) != PackageManager.PERMISSION_GRANTED)||
-                (ContextCompat.checkSelfPermission(activity, Manifest.permission.WAKE_LOCK) != PackageManager.PERMISSION_GRANTED))
-        {
+    private void setupPermissions(WearableActivity activity) {
+        if ((ContextCompat.checkSelfPermission(activity, Manifest.permission.VIBRATE) != PackageManager.PERMISSION_GRANTED) ||
+                (ContextCompat.checkSelfPermission(activity, Manifest.permission.WAKE_LOCK) != PackageManager.PERMISSION_GRANTED)) {
             ActivityCompat.requestPermissions(activity,
                     new String[]{
                             Manifest.permission.VIBRATE,
@@ -82,8 +81,7 @@ class WearableActivityController implements IWearableActivityControl, ITimeEntry
      *
      *
      */
-    private void setupHardwares(WearableActivity activity)
-    {
+    private void setupHardwares(WearableActivity activity) {
         // バイブレータをつかまえる
         vibrator = (Vibrator) activity.getSystemService(VIBRATOR_SERVICE);
 
@@ -95,38 +93,29 @@ class WearableActivityController implements IWearableActivityControl, ITimeEntry
      *
      *
      */
-    private void setupScreen(WearableActivity activity)
-    {
+    private void setupScreen(WearableActivity activity) {
         TextView mTextView = activity.findViewById(R.id.text);
-        if (mTextView != null)
-        {
+        if (mTextView != null) {
             mTextView.setText(R.string.app_name);
         }
     }
 
     /**
-     *   データベースのセットアップ
-     *
+     * データベースのセットアップ
      */
     @Override
-    public void setupDatabase(final WearableActivity activity, final boolean isInitialize)
-    {
+    public void setupDatabase(final WearableActivity activity, final boolean isInitialize) {
         database = new TimeEntryDatabaseFactory(activity, this).getEntryDatabase();
         Thread thread = new Thread(new Runnable() {
             @Override
-            public void run()
-            {
-                try
-                {
-                    if (isInitialize)
-                    {
+            public void run() {
+                try {
+                    if (isInitialize) {
                         // 既存のデータベースを消去する場合、、、
                         TimeEntryDatabaseFactory.deleteDatabase(activity);
                     }
                     database.prepare();
-                }
-                catch (Exception e)
-                {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
@@ -135,13 +124,10 @@ class WearableActivityController implements IWearableActivityControl, ITimeEntry
     }
 
     /**
-     *   リスナのセットアップ
-     *
+     * リスナのセットアップ
      */
-    private void setupListeners(WearableActivity activity, IClickCallback callback)
-    {
-        try
-        {
+    private void setupListeners(WearableActivity activity, IClickCallback callback) {
+        try {
             clickListener.setCallback(callback);
             ImageButton btn1 = activity.findViewById(R.id.btn1);
             btn1.setOnClickListener(clickListener);
@@ -158,9 +144,7 @@ class WearableActivityController implements IWearableActivityControl, ITimeEntry
             TextView main = activity.findViewById(R.id.main_counter);
             main.setOnClickListener(clickListener);
             main.setOnLongClickListener(clickListener);
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -169,24 +153,18 @@ class WearableActivityController implements IWearableActivityControl, ITimeEntry
      *
      *
      */
-    private void closeDatabase()
-    {
+    private void closeDatabase() {
         Log.v(TAG, "closeDatabase()");
         Thread thread = new Thread(new Runnable() {
             @Override
-            public void run()
-            {
+            public void run() {
                 // DBのクローズ実行
-                if (isReadyDatabase)
-                {
+                if (isReadyDatabase) {
                     isReadyDatabase = false;
-                    try
-                    {
+                    try {
                         Log.v(TAG, "closeDatabase() EXECUTE...");
                         database.close();
-                    }
-                    catch (Exception e)
-                    {
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
@@ -195,29 +173,20 @@ class WearableActivityController implements IWearableActivityControl, ITimeEntry
         thread.start();
     }
 
-    private int convertIconId(int iconId)
-    {
-        return (iconId);
-    }
-
     /**
      *
      *
      */
     @Override
-    public void exitApplication(WearableActivity activity)
-    {
+    public void exitApplication(WearableActivity activity) {
         Log.v(TAG, "exitApplication()");
         closeDatabase();
     }
 
     @Override
-    public void vibrate(final int duration)
-    {
-        try
-        {
-            if ((vibrator == null)||(!vibrator.hasVibrator()))
-            {
+    public void vibrate(final int duration) {
+        try {
+            if ((vibrator == null) || (!vibrator.hasVibrator())) {
                 return;
             }
 
@@ -228,27 +197,41 @@ class WearableActivityController implements IWearableActivityControl, ITimeEntry
                 }
             });
             thread.start();
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     @Override
-    public IDataEntry getDataEntry()
-    {
+    public IDataEntry getDataEntry() {
         return (this);
     }
 
     @Override
-    public void timerStarted(boolean isStarted)
-    {
-        try
-        {
+    public void timerStarted(boolean isStarted) {
+        try {
             SharedPreferences.Editor editor = preferences.edit();
             editor.putBoolean(PREF_KEY_TIMER_STARTED, isStarted);
             editor.apply();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void setupReferenceData()
+    {
+        try
+        {
+            if (isReadyDatabase)
+            {
+                loadReferenceData();
+                pendingLoadReference = false;
+            }
+            else
+            {
+                pendingLoadReference = true;
+            }
         }
         catch (Exception e)
         {
@@ -262,11 +245,21 @@ class WearableActivityController implements IWearableActivityControl, ITimeEntry
         Log.v(TAG, "database prepareFinished() : " + isReady);
         isReadyDatabase = isReady;
 
-        try
-        {
+        try {
             boolean isStarted = preferences.getBoolean(PREF_KEY_TIMER_STARTED, false);
             recordingIndexId = preferences.getLong(PREF_KEY_TIMER_INDEXID, -1);
-            if ((isStarted)&&(recordingIndexId >= 0)&&(isReadyDatabase))
+
+            Log.v(TAG, "isStarted : " + isStarted + "  indexId : " + recordingIndexId);
+
+            // load reference data
+            if (pendingLoadReference)
+            {
+                loadReferenceData();
+                pendingLoadReference = false;
+            }
+
+            // load current lap time list
+            if ((isStarted) && (recordingIndexId >= 0) && (isReadyDatabase))
             {
                 ArrayList<Long> list = new ArrayList<>();
                 Cursor cursor = database.getAllDetailData(recordingIndexId);
@@ -274,7 +267,7 @@ class WearableActivityController implements IWearableActivityControl, ITimeEntry
                 {
                     list.add(cursor.getLong(cursor.getColumnIndex(TimeEntryData.EntryData.COLUMN_NAME_TIME_ENTRY)));
                 }
-                clickListener.dataIsReloaded(list);
+                dbCallback.dataIsReloaded(list);
             }
         }
         catch (Exception e)
@@ -283,6 +276,27 @@ class WearableActivityController implements IWearableActivityControl, ITimeEntry
         }
     }
 
+    private void loadReferenceData()
+    {
+        // load reference data
+        try
+        {
+            ArrayList<Long> refList = null;
+            Cursor cursor = database.getAllReferenceDetailData();
+            if (cursor != null) {
+                refList = new ArrayList<>();
+                while (cursor.moveToNext())
+                {
+                    refList.add(cursor.getLong(cursor.getColumnIndex(TimeEntryData.EntryData.COLUMN_NAME_TIME_ENTRY)));
+                }
+            }
+            dbCallback.referenceDataIsReloaded(refList);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
 
     @Override
     public void timeEntryFinished(OperationType operationType, boolean result, long indexId, long dataId)
@@ -317,8 +331,10 @@ class WearableActivityController implements IWearableActivityControl, ITimeEntry
 
 
     @Override
-    public void createIndex(final String title, final String memo, final int icon, final long startTime)
+    public void createIndex(final String title, final long startTime)
     {
+        final String memo = "";
+        final int icon = 0;
         Log.v(TAG, "createIndex() " + title + " " + startTime);
         Thread thread = new Thread(new Runnable() {
             @Override
@@ -328,7 +344,7 @@ class WearableActivityController implements IWearableActivityControl, ITimeEntry
                 {
                     try
                     {
-                        database.createIndexData(title, memo, convertIconId(icon), startTime);
+                        database.createIndexData(title, memo, icon, startTime);
                     }
                     catch (Exception e)
                     {

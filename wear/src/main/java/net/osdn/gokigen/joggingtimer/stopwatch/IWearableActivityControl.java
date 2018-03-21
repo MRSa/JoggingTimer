@@ -9,7 +9,7 @@ import android.support.wearable.activity.WearableActivity;
  */
 public interface IWearableActivityControl
 {
-    void setup(WearableActivity activity, IClickCallback callback);
+    void setup(WearableActivity activity, IClickCallback callback, IDatabaseReloadCallback dbCallback);
     void setupDatabase(WearableActivity activity, boolean isReset);
     void exitApplication(WearableActivity activity);
 
@@ -18,4 +18,5 @@ public interface IWearableActivityControl
     IDataEntry getDataEntry();
 
     void timerStarted(boolean isStarted);
+    void setupReferenceData();
 }
