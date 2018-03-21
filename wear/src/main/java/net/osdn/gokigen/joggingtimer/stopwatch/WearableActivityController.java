@@ -126,8 +126,10 @@ class WearableActivityController implements IWearableActivityControl, ITimeEntry
     /**
      * リスナのセットアップ
      */
-    private void setupListeners(WearableActivity activity, IClickCallback callback) {
-        try {
+    private void setupListeners(WearableActivity activity, IClickCallback callback)
+    {
+        try
+        {
             clickListener.setCallback(callback);
             ImageButton btn1 = activity.findViewById(R.id.btn1);
             btn1.setOnClickListener(clickListener);
@@ -144,7 +146,38 @@ class WearableActivityController implements IWearableActivityControl, ITimeEntry
             TextView main = activity.findViewById(R.id.main_counter);
             main.setOnClickListener(clickListener);
             main.setOnLongClickListener(clickListener);
-        } catch (Exception e) {
+
+            TextView sub1 = activity.findViewById(R.id.sub_counter1);
+            sub1.setOnClickListener(clickListener);
+            sub1.setOnLongClickListener(clickListener);
+
+            TextView sub2 = activity.findViewById(R.id.sub_counter2);
+            sub2.setOnClickListener(clickListener);
+            sub2.setOnLongClickListener(clickListener);
+
+            TextView sub3 = activity.findViewById(R.id.sub_counter3);
+            sub3.setOnClickListener(clickListener);
+            sub3.setOnLongClickListener(clickListener);
+
+            TextView sub4 = activity.findViewById(R.id.sub_counter4);
+            sub4.setOnClickListener(clickListener);
+            sub4.setOnLongClickListener(clickListener);
+
+            TextView sub5 = activity.findViewById(R.id.sub_counter5);
+            sub5.setOnClickListener(clickListener);
+            sub5.setOnLongClickListener(clickListener);
+
+            TextView sub6 = activity.findViewById(R.id.sub_counter6);
+            sub6.setOnClickListener(clickListener);
+            sub6.setOnLongClickListener(clickListener);
+
+            LapTimeGraphView graphView = activity.findViewById(R.id.graph_area);
+            graphView.setOnClickListener(clickListener);
+            graphView.setOnLongClickListener(clickListener);
+            graphView.setOnTouchListener(clickListener);
+        }
+        catch (Exception e)
+        {
             e.printStackTrace();
         }
     }

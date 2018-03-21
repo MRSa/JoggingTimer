@@ -36,8 +36,8 @@
             android:background="@color/black"
             android:tint="@color/white"
             android:layout_gravity="bottom"
-            android:layout_width="36dp"
-            android:layout_height="35dp"
+            android:layout_width="45dp"
+            android:layout_height="40dp"
             android:layout_alignParentStart="true"
             android:layout_alignParentBottom="true"
             android:clickable="true"
@@ -50,8 +50,8 @@
 
         <ImageButton
             android:id="@+id/btn3"
-            android:layout_width="36dp"
-            android:layout_height="35dp"
+            android:layout_width="45dp"
+            android:layout_height="40dp"
             android:layout_alignParentBottom="true"
             android:layout_gravity="bottom"
             android:layout_toEndOf="@+id/btn2"
@@ -70,7 +70,7 @@
             android:tint="@color/white"
             android:layout_gravity="bottom"
             android:layout_width="80dp"
-            android:layout_height="36dp"
+            android:layout_height="40dp"
             android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
             android:clickable="true"
@@ -88,90 +88,105 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAlignment="textEnd"
+            android:focusable="true"
+            android:clickable="true"
             android:layout_alignStart="@id/main_counter"
             android:layout_below="@id/main_counter"
             android:textSize="8pt"
             android:text="@string/blank" />
 
-        <LinearLayout
+        <ScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/black"
-            android:id="@+id/lap_time_area"
-            android:orientation="vertical"
-            android:scrollbarAlwaysDrawVerticalTrack="true"
-            android:layout_below="@id/sub_counter1">
+            android:layout_below="@id/sub_counter1"
+            android:layout_above="@id/btn1">
 
-            <View
-                android:id="@+id/graph_area"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/black"
-                android:clickable="true"
-                android:focusable="true"
-                android:visibility="gone"
-                />
-
-            <TextView
-                android:id="@+id/sub_counter2"
-                android:textColor="@color/white"
-                android:background="@color/black"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textAlignment="textStart"
-                android:clickable="true"
-                android:focusable="true"
-                android:textSize="9pt"
-                android:visibility="visible"
-                android:text="@string/blank" />
-
-            <TextView
-                android:id="@+id/sub_counter3"
-                android:textColor="@color/white"
                 android:background="@color/black"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textAlignment="textStart"
-                android:clickable="true"
-                android:focusable="true"
-                android:textSize="9pt"
-                android:visibility="visible"
-                android:text="@string/blank" />
+                android:id="@+id/lap_time_area"
+                android:orientation="vertical"
+                android:scrollbarAlwaysDrawVerticalTrack="true">
 
-            <TextView
-                android:id="@+id/sub_counter4"
-                android:textColor="@color/white"
-                android:background="@color/black"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textAlignment="textStart"
-                android:clickable="true"
-                android:focusable="true"
-                android:textSize="9pt"
-                android:visibility="visible"
-                android:text="@string/blank" />
-            <!--
-                        <TextView
-                            android:id="@+id/sub_counter5"
-                            android:background="@color/black"
-                            android:textColor="@color/white"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:textAlignment="textStart"
-                            android:textSize="7pt"
-                            android:text="@string/blank" />
+                <net.osdn.gokigen.joggingtimer.stopwatch.LapTimeGraphView
+                    android:id="@+id/graph_area"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/black"
+                    android:gravity="center"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:visibility="gone"
+                    />
 
-                        <TextView
-                            android:id="@+id/sub_counter6"
-                            android:background="@color/black"
-                            android:textColor="@color/white"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:textAlignment="textStart"
-                            android:textSize="7pt"
-                            android:text="@string/blank" />
-            -->
-        </LinearLayout>
+                <TextView
+                    android:id="@+id/sub_counter2"
+                    android:textColor="@color/white"
+                    android:background="@color/black"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAlignment="textStart"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:textSize="9pt"
+                    android:visibility="visible"
+                    android:text="@string/blank" />
+
+                <TextView
+                    android:id="@+id/sub_counter3"
+                    android:textColor="@color/white"
+                    android:background="@color/black"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAlignment="textStart"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:textSize="9pt"
+                    android:visibility="visible"
+                    android:text="@string/blank" />
+
+                <TextView
+                    android:id="@+id/sub_counter4"
+                    android:textColor="@color/white"
+                    android:background="@color/black"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAlignment="textStart"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:textSize="9pt"
+                    android:visibility="visible"
+                    android:text="@string/blank" />
+
+                <TextView
+                    android:id="@+id/sub_counter5"
+                    android:textColor="@color/white"
+                    android:background="@color/black"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAlignment="textStart"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:textSize="9pt"
+                    android:visibility="visible"
+                    android:text="@string/blank" />
+
+                <TextView
+                    android:id="@+id/sub_counter6"
+                    android:textColor="@color/white"
+                    android:background="@color/black"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAlignment="textStart"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:textSize="9pt"
+                    android:visibility="visible"
+                    android:text="@string/blank" />
+
+            </LinearLayout>
+        </ScrollView>
 
         <View
             android:id="@+id/background"

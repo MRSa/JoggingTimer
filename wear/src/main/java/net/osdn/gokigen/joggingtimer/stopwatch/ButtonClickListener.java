@@ -3,6 +3,7 @@ package net.osdn.gokigen.joggingtimer.stopwatch;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 
 import net.osdn.gokigen.joggingtimer.R;
@@ -11,7 +12,7 @@ import net.osdn.gokigen.joggingtimer.R;
  *
  *
  */
-public class ButtonClickListener implements View.OnClickListener, View.OnLongClickListener, Parcelable
+public class ButtonClickListener implements View.OnClickListener, View.OnLongClickListener, View.OnTouchListener, Parcelable
 {
     private final String TAG = toString();
     private IClickCallback callback = null;
@@ -48,6 +49,10 @@ public class ButtonClickListener implements View.OnClickListener, View.OnLongCli
             {
                 callback.clickedCounter();
             }
+            else if ((id == R.id.graph_area)||(id == R.id.sub_counter2)||(id == R.id.sub_counter3)||(id == R.id.sub_counter4)||(id == R.id.sub_counter1))
+            {
+                callback.clickedArea();
+            }
         }
     }
 
@@ -69,6 +74,10 @@ public class ButtonClickListener implements View.OnClickListener, View.OnLongCli
             else if (id == R.id.btn3)
             {
                 ret = callback.pushedBtn3();
+            }
+            else if ((id == R.id.graph_area)||(id == R.id.sub_counter2)||(id == R.id.sub_counter3)||(id == R.id.sub_counter4)||(id == R.id.sub_counter1))
+            {
+                ret = callback.pushedArea();
             }
         }
         return (ret);
@@ -109,5 +118,11 @@ public class ButtonClickListener implements View.OnClickListener, View.OnLongCli
         {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public boolean onTouch(View v, MotionEvent event)
+    {
+        return (v.performClick());
     }
 }

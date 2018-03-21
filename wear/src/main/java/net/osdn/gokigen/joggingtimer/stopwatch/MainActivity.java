@@ -17,7 +17,6 @@ import net.osdn.gokigen.joggingtimer.recordlist.ListActivity;
 import net.osdn.gokigen.joggingtimer.utilities.TimeStringConvert;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -32,6 +31,7 @@ public class MainActivity extends WearableActivity implements IClickCallback, My
     private final IWearableActivityControl controller = new WearableActivityController();
     private MyTimerCounter counter = new MyTimerCounter();
     private boolean isCounterLapTime = false;
+    private boolean isLaptimeView = false;
 
     /**
      *
@@ -86,6 +86,9 @@ public class MainActivity extends WearableActivity implements IClickCallback, My
             // start a timer!
             startTimer();
         }
+
+        // 表示ビューの切り替え
+        changeGraphicView(isLaptimeView);
     }
 
     /**
@@ -162,100 +165,97 @@ public class MainActivity extends WearableActivity implements IClickCallback, My
     /**
      *
      */
-    public void updateTimerLabel()
+    private void updateTimerLabel()
     {
         ITimerCounter timerCounter = counter;
-        if (timerCounter != null)
+        if (timerCounter == null)
         {
-            int bgColor;
-            BoxInsetLayout insetLayout = findViewById(R.id.box_inset_layout);
-            RelativeLayout layout = findViewById(R.id.relative_main_layout);
-
-            ImageButton btn1 = findViewById(R.id.btn1);
-            ImageButton btn2 = findViewById(R.id.btn2);
-            ImageButton btn3 = findViewById(R.id.btn3);
-
-            updateMainSubCounter();
-
-            if (timerCounter.isStarted())
-            {
-                bgColor = Color.BLACK;
-                insetLayout.setBackgroundColor(bgColor);
-                insetLayout.invalidate();
-
-                layout.setBackgroundColor(bgColor);
-                layout.invalidate();
-
-                btn1.setImageResource(R.drawable.ic_flag_black_24dp);
-                btn1.setBackgroundColor(bgColor);
-                btn1.setVisibility(View.VISIBLE);
-                btn1.invalidate();
-
-                btn2.setImageResource(R.drawable.ic_stop_black_24dp);
-                btn2.setBackgroundColor(bgColor);
-                btn2.setVisibility(View.VISIBLE);
-                btn2.invalidate();
-
-                btn3.setImageResource(R.drawable.ic_block_black_24dp);
-                btn3.setBackgroundColor(bgColor);
-                btn3.setVisibility(View.INVISIBLE);
-                btn3.invalidate();
-
-                updateElapsedTimes();
-            }
-            else if (timerCounter.isReset())
-            {
-                bgColor = Color.BLACK;
-                insetLayout.setBackgroundColor(bgColor);
-                insetLayout.invalidate();
-
-                layout.setBackgroundColor(bgColor);
-                layout.invalidate();
-
-                btn1.setImageResource(R.drawable.ic_play_arrow_black_24dp);
-                btn1.setBackgroundColor(bgColor);
-                btn1.setVisibility(View.VISIBLE);
-                btn1.invalidate();
-
-                btn2.setImageResource(R.drawable.ic_format_list_bulleted_black_24dp);
-                btn2.setBackgroundColor(bgColor);
-                btn2.setVisibility(View.VISIBLE);
-                btn2.invalidate();
-
-                btn3.setImageResource(R.drawable.ic_refresh_black_24dp);
-                btn3.setBackgroundColor(bgColor);
-                btn3.setVisibility(View.INVISIBLE);
-                btn3.invalidate();
-
-                updateElapsedTimes();
-            }
-            else
-            {
-                bgColor = Color.BLACK;
-                insetLayout.setBackgroundColor(bgColor);
-                insetLayout.invalidate();
-
-                layout.setBackgroundColor(bgColor);
-                layout.invalidate();
-
-                btn1.setImageResource(R.drawable.ic_play_arrow_black_24dp);
-                btn1.setVisibility(View.VISIBLE);
-                btn1.setBackgroundColor(bgColor);
-                btn1.invalidate();
-
-                btn2.setImageResource(R.drawable.ic_format_list_bulleted_black_24dp);
-                btn2.setVisibility(View.VISIBLE);
-                btn2.setBackgroundColor(bgColor);
-                btn2.invalidate();
-
-                btn3.setImageResource(R.drawable.ic_refresh_black_24dp);
-                btn3.setVisibility(View.VISIBLE);
-                btn3.setBackgroundColor(bgColor);
-                btn3.invalidate();
-
-                updateElapsedTimes();
-            }
+            return;
         }
+
+        int bgColor;
+        BoxInsetLayout insetLayout = findViewById(R.id.box_inset_layout);
+        RelativeLayout layout = findViewById(R.id.relative_main_layout);
+
+        ImageButton btn1 = findViewById(R.id.btn1);
+        ImageButton btn2 = findViewById(R.id.btn2);
+        ImageButton btn3 = findViewById(R.id.btn3);
+
+        updateMainSubCounter();
+
+        if (timerCounter.isStarted())
+        {
+            bgColor = Color.BLACK;
+            insetLayout.setBackgroundColor(bgColor);
+            insetLayout.invalidate();
+
+            layout.setBackgroundColor(bgColor);
+            layout.invalidate();
+
+            btn1.setImageResource(R.drawable.ic_flag_black_24dp);
+            btn1.setBackgroundColor(bgColor);
+            btn1.setVisibility(View.VISIBLE);
+            btn1.invalidate();
+
+            btn2.setImageResource(R.drawable.ic_stop_black_24dp);
+            btn2.setBackgroundColor(bgColor);
+            btn2.setVisibility(View.VISIBLE);
+            btn2.invalidate();
+
+            btn3.setImageResource(R.drawable.ic_block_black_24dp);
+            btn3.setBackgroundColor(bgColor);
+            btn3.setVisibility(View.INVISIBLE);
+            btn3.invalidate();
+        }
+        else if (timerCounter.isReset())
+        {
+            bgColor = Color.BLACK;
+            insetLayout.setBackgroundColor(bgColor);
+            insetLayout.invalidate();
+
+            layout.setBackgroundColor(bgColor);
+            layout.invalidate();
+
+            btn1.setImageResource(R.drawable.ic_play_arrow_black_24dp);
+            btn1.setBackgroundColor(bgColor);
+            btn1.setVisibility(View.VISIBLE);
+            btn1.invalidate();
+
+            btn2.setImageResource(R.drawable.ic_format_list_bulleted_black_24dp);
+            btn2.setBackgroundColor(bgColor);
+            btn2.setVisibility(View.VISIBLE);
+            btn2.invalidate();
+
+            btn3.setImageResource(R.drawable.ic_refresh_black_24dp);
+            btn3.setBackgroundColor(bgColor);
+            btn3.setVisibility(View.INVISIBLE);
+            btn3.invalidate();
+        }
+        else
+        {
+            bgColor = Color.BLACK;
+            insetLayout.setBackgroundColor(bgColor);
+            insetLayout.invalidate();
+
+            layout.setBackgroundColor(bgColor);
+            layout.invalidate();
+
+            btn1.setImageResource(R.drawable.ic_play_arrow_black_24dp);
+            btn1.setVisibility(View.VISIBLE);
+            btn1.setBackgroundColor(bgColor);
+            btn1.invalidate();
+
+            btn2.setImageResource(R.drawable.ic_format_list_bulleted_black_24dp);
+            btn2.setVisibility(View.VISIBLE);
+            btn2.setBackgroundColor(bgColor);
+            btn2.invalidate();
+
+            btn3.setImageResource(R.drawable.ic_refresh_black_24dp);
+            btn3.setVisibility(View.VISIBLE);
+            btn3.setBackgroundColor(bgColor);
+            btn3.invalidate();
+        }
+        updateElapsedTimes();
     }
 
     @Override
@@ -389,6 +389,13 @@ public class MainActivity extends WearableActivity implements IClickCallback, My
     }
 
     @Override
+    public void clickedArea()
+    {
+        Log.v(TAG, "clickedArea()");
+
+    }
+
+    @Override
     public boolean pushedBtn1()
     {
         return (false);
@@ -404,6 +411,16 @@ public class MainActivity extends WearableActivity implements IClickCallback, My
     public boolean pushedBtn3()
     {
         return (false);
+    }
+
+    @Override
+    public boolean pushedArea()
+    {
+        //isLaptimeView = !isLaptimeView;
+        Log.v(TAG, "pushedArea() : " + isLaptimeView);
+        changeGraphicView(isLaptimeView);
+        updateTimerLabel();
+        return (true);
     }
 
     /**
@@ -442,7 +459,6 @@ public class MainActivity extends WearableActivity implements IClickCallback, My
         {
             long time1 = timerCounter.getPastTime();
             CharSequence str1 = TimeStringConvert.getTimeString(time1);
-
             CharSequence str2 = "";
             if (timerCounter.isStarted())
             {
@@ -476,10 +492,40 @@ public class MainActivity extends WearableActivity implements IClickCallback, My
      */
     private void updateElapsedTimes()
     {
+        if (isLaptimeView)
+        {
+           updateElapsedTimesGraph();
+        }
+        else
+        {
+            updateElapsedTimesText();
+        }
+    }
+
+    /**
+     *
+     *
+     */
+    private void updateElapsedTimesGraph()
+    {
+        Log.v(TAG, "updateElapsedTimesGraph()");
+
+        LapTimeGraphView view = findViewById(R.id.graph_area);
+        view.invalidate();
+    }
+
+    /**
+     *
+     *
+     */
+    private void updateElapsedTimesText()
+    {
         String dummy = "";
         TextView area1 = findViewById(R.id.sub_counter2);
         TextView area2 = findViewById(R.id.sub_counter3);
         TextView area3 = findViewById(R.id.sub_counter4);
+        TextView area4 = findViewById(R.id.sub_counter5);
+        TextView area5 = findViewById(R.id.sub_counter6);
 
         ITimerCounter timerCounter = counter;
         if (timerCounter != null)
@@ -497,6 +543,10 @@ public class MainActivity extends WearableActivity implements IClickCallback, My
                 area2.invalidate();
                 area3.setText(dummy);
                 area3.invalidate();
+                area4.setText(dummy);
+                area4.invalidate();
+                area5.setText(dummy);
+                area5.invalidate();
                 return;
             }
             if (indexSize <= 2)
@@ -515,6 +565,10 @@ public class MainActivity extends WearableActivity implements IClickCallback, My
                 area2.invalidate();
                 area3.setText(dummy);
                 area3.invalidate();
+                area4.setText(dummy);
+                area4.invalidate();
+                area5.setText(dummy);
+                area5.invalidate();
                 return;
             }
 
@@ -541,35 +595,151 @@ public class MainActivity extends WearableActivity implements IClickCallback, My
                 area2.invalidate();
                 area3.setText(dummy);
                 area3.invalidate();
+                area4.setText(dummy);
+                area4.invalidate();
+                area5.setText(dummy);
+                area5.invalidate();
                 return;
             }
 
-            // ラップが４つ以上ある場合
-            long time1 = (elapsedTimes.get(indexSize - 3) - elapsedTimes.get(indexSize - 4));
-            long refTime1 = (referenceSize >= (indexSize - 2)) ? (referenceTimes.get(indexSize - 3) - referenceTimes.get(indexSize - 4)) : 0;
+            if (indexSize <= 4)
+            {
+                // ラップが４つとれた場合
+                long time1 = (elapsedTimes.get(indexSize - 3) - elapsedTimes.get(indexSize - 4));
+                long refTime1 = (referenceSize >= (indexSize - 2)) ? (referenceTimes.get(indexSize - 3) - referenceTimes.get(indexSize - 4)) : 0;
 
-            long time2 = (elapsedTimes.get(indexSize - 2) - elapsedTimes.get(indexSize - 3));
-            long refTime2 = (referenceSize >= (indexSize - 1)) ? (referenceTimes.get(indexSize - 2) - referenceTimes.get(indexSize - 3)) : 0;
+                long time2 = (elapsedTimes.get(indexSize - 2) - elapsedTimes.get(indexSize - 3));
+                long refTime2 = (referenceSize >= (indexSize - 1)) ? (referenceTimes.get(indexSize - 2) - referenceTimes.get(indexSize - 3)) : 0;
 
-            long time3 = (elapsedTimes.get(indexSize - 1) - elapsedTimes.get(indexSize - 2));
-            long refTime3 = (referenceSize >= indexSize) ? (referenceTimes.get(indexSize - 1) - referenceTimes.get(indexSize - 2)) : 0;
+                long time3 = (elapsedTimes.get(indexSize - 1) - elapsedTimes.get(indexSize - 2));
+                long refTime3 = (referenceSize >= indexSize) ? (referenceTimes.get(indexSize - 1) - referenceTimes.get(indexSize - 2)) : 0;
 
-            String elapsedTime1 = "[" +  (timerCounter.getElapsedCount() - 3) + "] " + TimeStringConvert.getTimeString(time1);
+                String elapsedTime1 = "[" +  (timerCounter.getElapsedCount() - 3) + "] " + TimeStringConvert.getTimeString(time1);
+                if (refTime1 > 0)
+                {
+                    elapsedTime1 = elapsedTime1 + " ( " + TimeStringConvert.getDiffTimeString( time1 - refTime1) + " )";
+                }
+
+                String elapsedTime2 = "[" +  (timerCounter.getElapsedCount() - 2) + "] " + TimeStringConvert.getTimeString(time2);
+                if (refTime2 > 0)
+                {
+                    elapsedTime2 = elapsedTime2 + " ( " + TimeStringConvert.getDiffTimeString( time2 - refTime2) + " )";
+                }
+
+                String elapsedTime3 = "[" +  (timerCounter.getElapsedCount() - 1) + "] " + TimeStringConvert.getTimeString(time3);
+                if (refTime3 > 0)
+                {
+                    elapsedTime3 = elapsedTime3 + " ( " + TimeStringConvert.getDiffTimeString( time3 - refTime3) + " )";
+                }
+                area1.setText(elapsedTime1);
+                area1.invalidate();
+                area2.setText(elapsedTime2);
+                area2.invalidate();
+                area3.setText(elapsedTime3);
+                area3.invalidate();
+                area4.setText(dummy);
+                area4.invalidate();
+                area5.setText(dummy);
+                area5.invalidate();
+                return;
+            }
+
+            if (indexSize <= 5)
+            {
+                // ラップが５つとれた場合
+                long time1 = (elapsedTimes.get(indexSize - 4) - elapsedTimes.get(indexSize - 5));
+                long refTime1 = (referenceSize >= (indexSize - 3)) ? (referenceTimes.get(indexSize - 4) - referenceTimes.get(indexSize - 5)) : 0;
+
+                long time2 = (elapsedTimes.get(indexSize - 3) - elapsedTimes.get(indexSize - 4));
+                long refTime2 = (referenceSize >= (indexSize - 2)) ? (referenceTimes.get(indexSize - 3) - referenceTimes.get(indexSize - 4)) : 0;
+
+                long time3 = (elapsedTimes.get(indexSize - 2) - elapsedTimes.get(indexSize - 3));
+                long refTime3 = (referenceSize >= indexSize) ? (referenceTimes.get(indexSize - 2) - referenceTimes.get(indexSize - 3)) : 0;
+
+                long time4 = (elapsedTimes.get(indexSize - 1) - elapsedTimes.get(indexSize - 2));
+                long refTime4 = (referenceSize >= indexSize) ? (referenceTimes.get(indexSize - 1) - referenceTimes.get(indexSize - 2)) : 0;
+
+                String elapsedTime1 = "[" +  (timerCounter.getElapsedCount() - 4) + "] " + TimeStringConvert.getTimeString(time1);
+                if (refTime1 > 0)
+                {
+                    elapsedTime1 = elapsedTime1 + " ( " + TimeStringConvert.getDiffTimeString( time1 - refTime1) + " )";
+                }
+
+                String elapsedTime2 = "[" +  (timerCounter.getElapsedCount() - 3) + "] " + TimeStringConvert.getTimeString(time2);
+                if (refTime2 > 0)
+                {
+                    elapsedTime2 = elapsedTime2 + " ( " + TimeStringConvert.getDiffTimeString( time2 - refTime2) + " )";
+                }
+
+                String elapsedTime3 = "[" +  (timerCounter.getElapsedCount() - 2) + "] " + TimeStringConvert.getTimeString(time3);
+                if (refTime3 > 0)
+                {
+                    elapsedTime3 = elapsedTime3 + " ( " + TimeStringConvert.getDiffTimeString( time3 - refTime3) + " )";
+                }
+
+                String elapsedTime4 = "[" +  (timerCounter.getElapsedCount() - 1) + "] " + TimeStringConvert.getTimeString(time3);
+                if (refTime4 > 0)
+                {
+                    elapsedTime4 = elapsedTime4 + " ( " + TimeStringConvert.getDiffTimeString( time4 - refTime4) + " )";
+                }
+
+                area1.setText(elapsedTime1);
+                area1.invalidate();
+                area2.setText(elapsedTime2);
+                area2.invalidate();
+                area3.setText(elapsedTime3);
+                area3.invalidate();
+                area4.setText(elapsedTime4);
+                area4.invalidate();
+                area5.setText(dummy);
+                area5.invalidate();
+                return;
+            }
+
+            // ラップが６つ以上ある場合
+            long time1 = (elapsedTimes.get(indexSize - 5) - elapsedTimes.get(indexSize - 6));
+            long refTime1 = (referenceSize >= (indexSize - 4)) ? (referenceTimes.get(indexSize - 5) - referenceTimes.get(indexSize - 6)) : 0;
+
+            long time2 = (elapsedTimes.get(indexSize - 4) - elapsedTimes.get(indexSize - 5));
+            long refTime2 = (referenceSize >= (indexSize - 3)) ? (referenceTimes.get(indexSize - 4) - referenceTimes.get(indexSize - 5)) : 0;
+
+            long time3 = (elapsedTimes.get(indexSize - 3) - elapsedTimes.get(indexSize - 4));
+            long refTime3 = (referenceSize >= indexSize - 2) ? (referenceTimes.get(indexSize - 3) - referenceTimes.get(indexSize - 4)) : 0;
+
+            long time4 = (elapsedTimes.get(indexSize - 2) - elapsedTimes.get(indexSize - 3));
+            long refTime4 = (referenceSize >= indexSize - 1) ? (referenceTimes.get(indexSize - 2) - referenceTimes.get(indexSize - 3)) : 0;
+
+            long time5 = (elapsedTimes.get(indexSize - 1) - elapsedTimes.get(indexSize - 2));
+            long refTime5 = (referenceSize >= indexSize) ? (referenceTimes.get(indexSize - 1) - referenceTimes.get(indexSize - 2)) : 0;
+
+            String elapsedTime1 = "[" +  (timerCounter.getElapsedCount() - 5) + "] " + TimeStringConvert.getTimeString(time1);
             if (refTime1 > 0)
             {
                 elapsedTime1 = elapsedTime1 + " ( " + TimeStringConvert.getDiffTimeString( time1 - refTime1) + " )";
             }
 
-            String elapsedTime2 = "[" +  (timerCounter.getElapsedCount() - 2) + "] " + TimeStringConvert.getTimeString(time2);
+            String elapsedTime2 = "[" +  (timerCounter.getElapsedCount() - 4) + "] " + TimeStringConvert.getTimeString(time2);
             if (refTime2 > 0)
             {
                 elapsedTime2 = elapsedTime2 + " ( " + TimeStringConvert.getDiffTimeString( time2 - refTime2) + " )";
             }
 
-            String elapsedTime3 = "[" +  (timerCounter.getElapsedCount() - 1) + "] " + TimeStringConvert.getTimeString(time3);
+            String elapsedTime3 = "[" +  (timerCounter.getElapsedCount() - 3) + "] " + TimeStringConvert.getTimeString(time3);
             if (refTime3 > 0)
             {
                 elapsedTime3 = elapsedTime3 + " ( " + TimeStringConvert.getDiffTimeString( time3 - refTime3) + " )";
+            }
+
+            String elapsedTime4 = "[" +  (timerCounter.getElapsedCount() - 2) + "] " + TimeStringConvert.getTimeString(time4);
+            if (refTime4 > 0)
+            {
+                elapsedTime4 = elapsedTime4 + " ( " + TimeStringConvert.getDiffTimeString( time4 - refTime4) + " )";
+            }
+
+            String elapsedTime5 = "[" +  (timerCounter.getElapsedCount() - 1) + "] " + TimeStringConvert.getTimeString(time5);
+            if (refTime5 > 0)
+            {
+                elapsedTime5 = elapsedTime5 + " ( " + TimeStringConvert.getDiffTimeString( time5 - refTime5) + " )";
             }
 
             area1.setText(elapsedTime1);
@@ -578,6 +748,10 @@ public class MainActivity extends WearableActivity implements IClickCallback, My
             area2.invalidate();
             area3.setText(elapsedTime3);
             area3.invalidate();
+            area4.setText(elapsedTime4);
+            area4.invalidate();
+            area5.setText(elapsedTime5);
+            area5.invalidate();
         }
     }
 
@@ -622,7 +796,7 @@ public class MainActivity extends WearableActivity implements IClickCallback, My
         return (super.dispatchKeyEvent(event));
     }
 
-    /*
+    /**
      *
      *
      */
@@ -651,6 +825,10 @@ public class MainActivity extends WearableActivity implements IClickCallback, My
         return (super.onKeyDown(keyCode, event));
     }
 
+    /**
+     *
+     *
+     */
     @Override
     public void counterStatusChanged(boolean forceStartTimer)
     {
@@ -679,6 +857,40 @@ public class MainActivity extends WearableActivity implements IClickCallback, My
                 updateTimerLabel();
             }
         });
+    }
+
+    /**
+     *
+     *
+     */
+    private void changeGraphicView(boolean isGraphics)
+    {
+        try
+        {
+            TextView area1 = findViewById(R.id.sub_counter2);
+            TextView area2 = findViewById(R.id.sub_counter3);
+            TextView area3 = findViewById(R.id.sub_counter4);
+            LapTimeGraphView graphView = findViewById(R.id.graph_area);
+            if (isGraphics)
+            {
+                graphView.setITimerCounter(counter);
+                graphView.setVisibility(View.VISIBLE);
+                area1.setVisibility(View.GONE);
+                area2.setVisibility(View.GONE);
+                area3.setVisibility(View.GONE);
+            }
+            else
+            {
+                graphView.setVisibility(View.GONE);
+                area1.setVisibility(View.VISIBLE);
+                area2.setVisibility(View.VISIBLE);
+                area3.setVisibility(View.VISIBLE);
+            }
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
     }
 
     /*
