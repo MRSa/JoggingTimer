@@ -4,11 +4,12 @@ package net.osdn.gokigen.joggingtimer.stopwatch;
  *
  *
  */
-class MyTimerTrigger
+class MyTimerTrigger implements ITimerStopTrigger
 {
     private final ITimeoutReceiver triggerReceiver;
     private final long duration;
     private final ITimerCounter timerCounter;
+    private boolean forceStop = false;
 
     MyTimerTrigger(ITimeoutReceiver triggerReceiver, long duration, ITimerCounter timerCounter)
     {
@@ -35,8 +36,9 @@ class MyTimerTrigger
                         {
                             triggerReceiver.timeout();
                         }
-                    } while (timerCounter.isStarted());
+                    } while ((timerCounter.isStarted())&&(!forceStop));
                 }
+                forceStop = false;
             }
         });
         try
@@ -47,6 +49,12 @@ class MyTimerTrigger
         {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void forceStop()
+    {
+        forceStop = true;
     }
 
     public interface ITimeoutReceiver

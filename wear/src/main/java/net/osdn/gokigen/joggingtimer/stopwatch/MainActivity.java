@@ -32,6 +32,7 @@ public class MainActivity extends WearableActivity implements IClickCallback, My
     private MyTimerCounter counter = new MyTimerCounter();
     private boolean isCounterLapTime = false;
     private boolean isLaptimeView = false;
+    private ITimerStopTrigger stopTrigger = null;
 
     /**
      *
@@ -125,6 +126,10 @@ public class MainActivity extends WearableActivity implements IClickCallback, My
     {
         super.onStop();
         Log.v(TAG, "onStop()");
+        if (stopTrigger != null)
+        {
+            stopTrigger.forceStop();
+        }
         controller.exitApplication(this);
     }
 
@@ -302,6 +307,7 @@ public class MainActivity extends WearableActivity implements IClickCallback, My
                     timerCounter.start();
                     MyTimerTrigger trigger = new MyTimerTrigger(this, 100, timerCounter);
                     trigger.startTimer();
+                    stopTrigger = trigger;
                     controller.timerStarted(true);
                     controller.vibrate(120);
 
@@ -416,7 +422,7 @@ public class MainActivity extends WearableActivity implements IClickCallback, My
     @Override
     public boolean pushedArea()
     {
-        //isLaptimeView = !isLaptimeView;
+        isLaptimeView = !isLaptimeView;
         Log.v(TAG, "pushedArea() : " + isLaptimeView);
         changeGraphicView(isLaptimeView);
         updateTimerLabel();
@@ -841,6 +847,7 @@ public class MainActivity extends WearableActivity implements IClickCallback, My
                 {
                     MyTimerTrigger trigger = new MyTimerTrigger(this, 100, timerCounter);
                     trigger.startTimer();
+                    stopTrigger = trigger;
                 }
             }
             catch (Exception e)
