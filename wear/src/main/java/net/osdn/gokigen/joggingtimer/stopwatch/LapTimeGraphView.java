@@ -60,7 +60,6 @@ public class LapTimeGraphView extends View
     private void initComponent(Context context)
     {
         Log.v(TAG, "initComponent()");
-
         setWillNotDraw(false);
     }
 
@@ -71,29 +70,92 @@ public class LapTimeGraphView extends View
     @Override
     protected void onDraw(Canvas canvas)
     {
-        Log.v(TAG, "onDraw()");
         super.onDraw(canvas);
 
+        // 背景の表示
         drawBackground(canvas);
+
+        // 基準の値表示
+        drawReferenceLap(canvas);
+
+        // 現在の値表示
+        drawCurrentLap(canvas);
+
+        // メッセージの表示
+        drawMessage(canvas);
 
         counter++;
     }
 
+    /**
+     *
+     *
+     */
     private void drawBackground(Canvas canvas)
     {
-        Log.v(TAG, "drawBackground() : " + canvas.getWidth() + "x" + canvas.getHeight() + " " + counter);
-
         int width = canvas.getWidth();
         int height = canvas.getHeight();
 
         Rect rect = new Rect(0,0, width, height);
         Paint paint = new Paint();
-        paint.setColor(Color.GRAY);
+        paint.setColor(Color.BLUE);
+        paint.setStyle(Paint.Style.FILL);
         canvas.drawRect(rect, paint);
 
-        paint.setColor(Color.WHITE);
-        canvas.drawText(width + "x" + height + " " + counter, 0, 0, paint);
+        canvas.drawText(width + "x" + height, width / 2 , height / 2, paint);
+    }
 
+    /**
+     *
+     *
+     */
+    private void drawReferenceLap(Canvas canvas)
+    {
+        int width = canvas.getWidth();
+        int height = canvas.getHeight();
+        Rect rect = new Rect(0,0, width, height);
+        Paint paint = new Paint();
+
+        paint.setColor(Color.WHITE);
+        paint.setStyle(Paint.Style.STROKE);
+        paint.setStrokeWidth(0.0f);
+        paint.setAntiAlias(true);
+        canvas.drawRect(rect, paint);
+
+    }
+
+
+    /**
+     *
+     *
+     */
+    private void drawCurrentLap(Canvas canvas)
+    {
+    }
+
+
+    /**
+     *
+     *
+     */
+    private void drawMessage(Canvas canvas)
+    {
+        int width = canvas.getWidth();
+        int height = canvas.getHeight();
+        Rect rect = new Rect(0,0, width, height);
+        Paint paint = new Paint();
+
+        paint.setColor(Color.WHITE);
+        paint.setStyle(Paint.Style.STROKE);
+        paint.setStrokeWidth(0.0f);
+        paint.setAntiAlias(true);
+        canvas.drawRect(rect, paint);
+
+
+        String message = width + "x" + height;
+        float textWidth = paint.measureText(message);
+
+        canvas.drawText(width + "x" + height, ((width / 2) - (textWidth / 2)) , height / 2, paint);
     }
 
     /**

@@ -9,7 +9,9 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import net.osdn.gokigen.joggingtimer.R;
@@ -878,10 +880,14 @@ public class MainActivity extends WearableActivity implements IClickCallback, My
             TextView area2 = findViewById(R.id.sub_counter3);
             TextView area3 = findViewById(R.id.sub_counter4);
             LapTimeGraphView graphView = findViewById(R.id.graph_area);
+            ScrollView scr = findViewById(R.id.scroll_area);
+            LinearLayout lap = findViewById(R.id.lap_time_area);
             if (isGraphics)
             {
                 graphView.setITimerCounter(counter);
                 graphView.setVisibility(View.VISIBLE);
+                scr.setVisibility(View.GONE);
+                lap.setVisibility(View.GONE);
                 area1.setVisibility(View.GONE);
                 area2.setVisibility(View.GONE);
                 area3.setVisibility(View.GONE);
@@ -889,6 +895,8 @@ public class MainActivity extends WearableActivity implements IClickCallback, My
             else
             {
                 graphView.setVisibility(View.GONE);
+                scr.setVisibility(View.VISIBLE);
+                lap.setVisibility(View.VISIBLE);
                 area1.setVisibility(View.VISIBLE);
                 area2.setVisibility(View.VISIBLE);
                 area3.setVisibility(View.VISIBLE);
