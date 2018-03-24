@@ -160,13 +160,19 @@ public class MyTimerCounter implements ITimerCounter, IDatabaseReloadCallback
     }
 
     @Override
+    public List<Long> getReferenceLapTimeList()
+    {
+        return (referenceTime);
+    }
+
+    @Override
     public void setCallback(ICounterStatusNotify callback)
     {
         this.callback = callback;
     }
 
     @Override
-    public void dataIsReloaded(@NonNull  ArrayList<Long> timelist)
+    public void dataIsReloaded(@NonNull ArrayList<Long> timelist)
     {
         try
         {

@@ -1,5 +1,7 @@
 package net.osdn.gokigen.joggingtimer.stopwatch;
 
+import java.util.List;
+
 public interface ITimerCounter
 {
     boolean isStarted();
@@ -17,6 +19,7 @@ public interface ITimerCounter
     long getStartTime();
     long getStopTime();
 
+    List<Long> getReferenceLapTimeList();
     long getReferenceLapTime(int position);
 
     void setCallback(MyTimerCounter.ICounterStatusNotify callback);

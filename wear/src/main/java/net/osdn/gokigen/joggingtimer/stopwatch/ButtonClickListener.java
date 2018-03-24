@@ -117,7 +117,6 @@ public class ButtonClickListener implements View.OnClickListener, View.OnLongCli
     {
         try
         {
-            //
             Log.v(TAG, " in : " + in.toString());
         }
         catch (Exception e)
@@ -129,6 +128,12 @@ public class ButtonClickListener implements View.OnClickListener, View.OnLongCli
     @Override
     public boolean onTouch(View v, MotionEvent event)
     {
-        return (v.performClick());
+        int id = v.getId();
+        if (id == R.id.graph_area)
+        {
+            Log.v(TAG, "onTouch()");
+            return (v.performClick());
+        }
+        return (false);
     }
 }

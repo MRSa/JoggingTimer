@@ -5,11 +5,14 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.graphics.RectF;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 
 import net.osdn.gokigen.joggingtimer.stopwatch.ITimerCounter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -17,9 +20,11 @@ import net.osdn.gokigen.joggingtimer.stopwatch.ITimerCounter;
  */
 public class LapTimeGraphView extends View
 {
-    private final String TAG = toString();
     private ITimerCounter timerCounter = null;
     private long counter = 0;
+    private long maxReferenceTime = 0;
+    private int referenceCount = 0;
+    private List<Long> refLapTimeList = null;
 
     /**
      *   コンストラクタ
@@ -41,11 +46,6 @@ public class LapTimeGraphView extends View
         initComponent(context);
     }
 
-    public void setITimerCounter(ITimerCounter counter)
-    {
-        timerCounter = counter;
-    }
-
     /**
      *   コンストラクタ
      *
@@ -61,8 +61,17 @@ public class LapTimeGraphView extends View
      */
     private void initComponent(Context context)
     {
-        Log.v(TAG, "initComponent()");
         setWillNotDraw(false);
+    }
+
+    /**
+     *
+     *
+     */
+    public void setITimerCounter(ITimerCounter counter)
+    {
+        timerCounter = counter;
+        parseReferenceTimeList();
     }
 
     /**
@@ -100,11 +109,9 @@ public class LapTimeGraphView extends View
 
         Rect rect = new Rect(0,0, width, height);
         Paint paint = new Paint();
-        paint.setColor(Color.BLUE);
+        paint.setColor(Color.BLACK);
         paint.setStyle(Paint.Style.FILL);
         canvas.drawRect(rect, paint);
-
-        canvas.drawText(width + "x" + height, width / 2 , height / 2, paint);
     }
 
     /**
@@ -113,17 +120,31 @@ public class LapTimeGraphView extends View
      */
     private void drawReferenceLap(Canvas canvas)
     {
-        int width = canvas.getWidth();
-        int height = canvas.getHeight();
-        Rect rect = new Rect(0,0, width, height);
-        Paint paint = new Paint();
+        if ((refLapTimeList == null)||(refLapTimeList.size() <= 0))
+        {
+            return;
+        }
 
-        paint.setColor(Color.WHITE);
+        float width = canvas.getWidth();
+        float height = canvas.getHeight();
+
+        Paint paint = new Paint();
+        paint.setColor(Color.BLUE);
         paint.setStyle(Paint.Style.STROKE);
+        paint.setStyle(Paint.Style.FILL);
         paint.setStrokeWidth(0.0f);
         paint.setAntiAlias(true);
-        canvas.drawRect(rect, paint);
 
+        float boxWidthUnit = width / refLapTimeList.size();
+        float boxHeightUnit = height / (maxReferenceTime * 1.2f);
+
+        float startX = 0.0f;
+        for (Long time : refLapTimeList)
+        {
+            RectF barRect = new RectF(startX, (height - boxHeightUnit * time), (startX + boxWidthUnit), height);
+            canvas.drawRect(barRect, paint);
+            startX = startX + boxWidthUnit;
+        }
     }
 
 
@@ -133,6 +154,7 @@ public class LapTimeGraphView extends View
      */
     private void drawCurrentLap(Canvas canvas)
     {
+
     }
 
 
@@ -153,17 +175,48 @@ public class LapTimeGraphView extends View
         paint.setAntiAlias(true);
         canvas.drawRect(rect, paint);
 
-
-        String message = width + "x" + height;
+        String message = width + "x" + height + "  [" + referenceCount + "] " + maxReferenceTime;
         float textWidth = paint.measureText(message);
 
-        canvas.drawText(width + "x" + height, ((width / 2) - (textWidth / 2)) , height / 2, paint);
+        canvas.drawText(message, ((width / 2) - (textWidth / 2)) , height / 2, paint);
     }
 
     /**
      *
      *
      */
+    private void parseReferenceTimeList()
+    {
+        if (timerCounter == null)
+        {
+            return;
+        }
+        refLapTimeList = null;
+
+        List<Long> refTimeList = timerCounter.getReferenceLapTimeList();
+        referenceCount = refTimeList.size();
+        maxReferenceTime = 0;
+        if (referenceCount <= 1)
+        {
+            return;
+        }
+        refLapTimeList = new ArrayList<>();
+        long prevTime = refTimeList.get(0);
+        for (Long time : refTimeList)
+        {
+            long currTime = time - prevTime;
+            if (currTime > 0)
+            {
+                refLapTimeList.add(currTime);
+            }
+            if (currTime > maxReferenceTime)
+            {
+                maxReferenceTime = currTime;
+            }
+            prevTime = time;
+        }
+    }
+
     @Override
     public boolean performClick()
     {
