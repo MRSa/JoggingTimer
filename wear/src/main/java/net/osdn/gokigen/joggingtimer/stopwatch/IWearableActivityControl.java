@@ -1,6 +1,6 @@
 package net.osdn.gokigen.joggingtimer.stopwatch;
 
-        import android.support.wearable.activity.WearableActivity;
+import android.support.wearable.activity.WearableActivity;
 
 /**
  *

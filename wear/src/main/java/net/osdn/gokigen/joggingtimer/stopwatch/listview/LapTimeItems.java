@@ -1,4 +1,4 @@
-package net.osdn.gokigen.joggingtimer.stopwatch;
+package net.osdn.gokigen.joggingtimer.stopwatch.listview;
 
 import net.osdn.gokigen.joggingtimer.utilities.TimeStringConvert;
 
@@ -8,13 +8,13 @@ import java.util.Locale;
  *
  *
  */
-class LapTimeItems
+public class LapTimeItems
 {
     private String lapCount = "";
     private String mainText = "";
     private String subText = "";
 
-    LapTimeItems(long lapCount, long mainText, long subText)
+    public LapTimeItems(long lapCount, long mainText, long subText)
     {
         this.lapCount = String.format(Locale.US,"%02d", lapCount);
         this.mainText = TimeStringConvert.getTimeString(mainText).toString();

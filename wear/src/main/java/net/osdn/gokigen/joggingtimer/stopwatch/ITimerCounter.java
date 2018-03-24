@@ -1,7 +1,5 @@
 package net.osdn.gokigen.joggingtimer.stopwatch;
 
-import java.util.List;
-
 public interface ITimerCounter
 {
     boolean isStarted();

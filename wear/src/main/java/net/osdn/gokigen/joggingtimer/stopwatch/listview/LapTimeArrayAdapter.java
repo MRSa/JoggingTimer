@@ -1,4 +1,4 @@
-package net.osdn.gokigen.joggingtimer.stopwatch;
+package net.osdn.gokigen.joggingtimer.stopwatch.listview;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -19,7 +19,7 @@ public class LapTimeArrayAdapter  extends ArrayAdapter<LapTimeItems> implements 
     /**
      *
      */
-    LapTimeArrayAdapter(@NonNull Context context, int resource)
+    public LapTimeArrayAdapter(@NonNull Context context, int resource)
     {
         super(context, resource);
         this.resourceId = resource;

@@ -1,5 +1,4 @@
-package net.osdn.gokigen.joggingtimer.stopwatch;
-
+package net.osdn.gokigen.joggingtimer.stopwatch.listview;
 
 public interface ILapTimeHolder
 {

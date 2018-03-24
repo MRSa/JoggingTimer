@@ -1,4 +1,4 @@
-package net.osdn.gokigen.joggingtimer.stopwatch;
+package net.osdn.gokigen.joggingtimer.stopwatch.graphview;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -8,6 +8,8 @@ import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
+
+import net.osdn.gokigen.joggingtimer.stopwatch.ITimerCounter;
 
 /**
  *

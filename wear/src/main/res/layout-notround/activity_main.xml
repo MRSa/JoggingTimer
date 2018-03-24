@@ -95,7 +95,7 @@
             android:textSize="8pt"
             android:text="@string/blank" />
 
-        <net.osdn.gokigen.joggingtimer.stopwatch.LapTimeGraphView
+        <net.osdn.gokigen.joggingtimer.stopwatch.graphview.LapTimeGraphView
             android:id="@+id/graph_area"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
