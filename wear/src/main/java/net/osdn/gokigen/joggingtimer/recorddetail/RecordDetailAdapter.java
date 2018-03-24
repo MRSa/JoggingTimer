@@ -93,7 +93,7 @@ public class RecordDetailAdapter  extends RecyclerView.Adapter<DetailHolder>  im
     {
         try
         {
-            holder.setIconId(list.get(position).getIconId());
+            holder.setLapCount(list.get(position).getLapCount());
             holder.setMainText(list.get(position).getTitle());
             holder.setSubText(list.get(position).getDetail());
             holder.setOnClickListener(list.get(position));

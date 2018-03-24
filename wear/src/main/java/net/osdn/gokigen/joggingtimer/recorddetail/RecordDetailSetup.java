@@ -92,7 +92,6 @@ public class RecordDetailSetup  implements ITimeEntryDatabaseCallback
                     while (cursor.moveToNext())
                     {
                         long dataId = cursor.getLong(cursor.getColumnIndex(_ID));
-                        int iconId = IconIdProvider.getIconResourceId(cursor.getInt(cursor.getColumnIndex(COLUMN_NAME_ICON_ID)));
                         long entryTime = cursor.getLong(cursor.getColumnIndex(TimeEntryData.EntryData.COLUMN_NAME_TIME_ENTRY));
 
                         if (index == 0)
@@ -107,9 +106,10 @@ public class RecordDetailSetup  implements ITimeEntryDatabaseCallback
                             long lapTime = entryTime - previousLapTime;
                             long overallTime = entryTime - startTime;
                             long differenceTime = (lapTime) - (previousLapTime - morePreviousTime);
-                            String lapTimeString = "[" + index + "] " + TimeStringConvert.getTimeString(lapTime).toString();
+                            String lapCount = " " + index;
+                            String lapTimeString = TimeStringConvert.getTimeString(lapTime).toString();
                             String overallTimeString = TimeStringConvert.getTimeString(overallTime).toString() + " (" + TimeStringConvert.getDiffTimeString(differenceTime).toString() +") ";
-                            operation.addRecord(new DetailRecord(dataId, iconId, lapTimeString, overallTimeString));
+                            operation.addRecord(new DetailRecord(dataId, lapCount, lapTimeString, overallTimeString));
                             morePreviousTime = previousLapTime;
                             previousLapTime = entryTime;
                         }

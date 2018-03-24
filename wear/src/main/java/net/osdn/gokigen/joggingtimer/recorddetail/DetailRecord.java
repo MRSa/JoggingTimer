@@ -11,29 +11,24 @@ public class DetailRecord implements View.OnClickListener
 {
     private final String TAG = toString();
     private final long dataId;
-    private int iconId = 0;
+    private String lapCount = "";
     private String title = "";
     private String detail = "";
 
     /**
      *
      */
-    DetailRecord(long dataId, int iconId, String title, String detail)
+    DetailRecord(long dataId, String lapCount, String title, String detail)
     {
         this.dataId = dataId;
-        this.iconId = iconId;
+        this.lapCount = lapCount;
         this.title = title;
         this.detail = detail;
     }
 
-    void setIconId(int iconId)
+    String getLapCount()
     {
-        this.iconId = iconId;
-    }
-
-    int getIconId()
-    {
-        return (iconId);
+        return (lapCount);
     }
 
     String getTitle()
@@ -49,7 +44,7 @@ public class DetailRecord implements View.OnClickListener
     @Override
     public void onClick(View v)
     {
-        Log.v(TAG, "Clicked : [" + dataId + "] " + title + " " + detail);
+        Log.v(TAG, "Clicked : [" + dataId + "] (" + lapCount + ") " + title + " " + detail);
 
     }
 }

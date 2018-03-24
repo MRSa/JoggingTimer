@@ -10,14 +10,14 @@ import net.osdn.gokigen.joggingtimer.R;
 class DetailHolder  extends RecyclerView.ViewHolder
 {
     private final View itemView;
-    private ImageView iconView = null;
+    private TextView lapView = null;
     private TextView mainText = null;
     private TextView subText = null;
 
     DetailHolder(View itemView)
     {
         super(itemView);
-        iconView = itemView.findViewById(R.id.detail_icon);
+        lapView = itemView.findViewById(R.id.detail_lap_count);
         mainText = itemView.findViewById(R.id.label1);
         subText = itemView.findViewById(R.id.label2);
         this.itemView = itemView;
@@ -28,12 +28,9 @@ class DetailHolder  extends RecyclerView.ViewHolder
         itemView.setOnClickListener(listener);
     }
 
-    void setIconId(int iconId)
+    void setLapCount(String message)
     {
-        if (iconId != 0)
-        {
-            iconView.setImageResource(iconId);
-        }
+        lapView.setText(message);
     }
 
     void setMainText(String message)
