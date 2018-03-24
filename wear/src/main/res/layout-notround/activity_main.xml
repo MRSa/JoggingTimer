@@ -114,6 +114,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/sub_counter1"
             android:layout_above="@id/btn1"
+            android:transcriptMode="alwaysScroll"
             android:visibility="visible"
             />
 <!--

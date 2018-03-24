@@ -1,6 +1,6 @@
 package net.osdn.gokigen.joggingtimer.stopwatch;
 
-import android.support.wearable.activity.WearableActivity;
+        import android.support.wearable.activity.WearableActivity;
 
 /**
  *
@@ -18,5 +18,7 @@ public interface IWearableActivityControl
     IDataEntry getDataEntry();
 
     void timerStarted(boolean isStarted);
+    void addTimeStamp(long count, long lapTime, long diffTime);
+    void clearTimeStamp();
     void setupReferenceData();
 }

@@ -9,10 +9,8 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import net.osdn.gokigen.joggingtimer.R;
@@ -21,7 +19,6 @@ import net.osdn.gokigen.joggingtimer.utilities.TimeStringConvert;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 
 /**
@@ -34,7 +31,8 @@ public class MainActivity extends WearableActivity implements IClickCallback, My
     private final IWearableActivityControl controller = new WearableActivityController();
     private MyTimerCounter counter = new MyTimerCounter();
     private boolean isCounterLapTime = false;
-    private boolean isLaptimeView = true;
+    private boolean isLaptimeView = false;
+    private int currentLapCount = 0;
     private ITimerStopTrigger stopTrigger = null;
 
     /**
@@ -297,11 +295,17 @@ public class MainActivity extends WearableActivity implements IClickCallback, My
                 {
                     Log.v(TAG, "startTimer() LAP TIME");
                     // チャタリング防止（ラップタイムとして、３秒以内は記録しないようにする）
-                    if (timerCounter.getCurrentElapsedTime() > 3000)
+                    long currentElapsedTime = timerCounter.getCurrentElapsedTime();
+                    if (currentElapsedTime > 3000)
                     {
+                        currentLapCount++;
                         long lapTime = timerCounter.timeStamp();
+                        long refLapTime = timerCounter.getReferenceLapTime(currentLapCount);
+                        long diffTime = (refLapTime == 0) ? 0 :  (currentElapsedTime - refLapTime);
                         controller.vibrate(50);
                         controller.getDataEntry().appendTimeData(lapTime);
+                        controller.addTimeStamp(currentLapCount, currentElapsedTime, diffTime);
+                        //Log.v(TAG, " [[[ " + currentLapCount + " lap: " + currentElapsedTime + " diff:" + diffTime + " (" + refLapTime + ") ]]]");
                     }
                 }
                 else
@@ -310,6 +314,7 @@ public class MainActivity extends WearableActivity implements IClickCallback, My
                     timerCounter.start();
                     MyTimerTrigger trigger = new MyTimerTrigger(this, 100, timerCounter);
                     trigger.startTimer();
+                    currentLapCount = 0;
                     stopTrigger = trigger;
                     controller.timerStarted(true);
                     controller.vibrate(120);
@@ -392,6 +397,8 @@ public class MainActivity extends WearableActivity implements IClickCallback, My
             {
                 timerCounter.reset();
                 controller.vibrate(50);
+                controller.clearTimeStamp();
+                currentLapCount = 0;
             }
             updateTimerLabel();
         }
@@ -529,241 +536,7 @@ public class MainActivity extends WearableActivity implements IClickCallback, My
      */
     private void updateElapsedTimesText()
     {
-/*
-        String dummy = "";
-        TextView area1 = findViewById(R.id.sub_counter2);
-        TextView area2 = findViewById(R.id.sub_counter3);
-        TextView area3 = findViewById(R.id.sub_counter4);
-        TextView area4 = findViewById(R.id.sub_counter5);
-        TextView area5 = findViewById(R.id.sub_counter6);
-
-        ITimerCounter timerCounter = counter;
-        if (timerCounter != null)
-        {
-            List<Long> elapsedTimes = timerCounter.getTimerList();
-            List<Long> referenceTimes = timerCounter.getReferenceTimeList();
-            int indexSize = elapsedTimes.size();
-            int referenceSize = referenceTimes.size();
-            if (indexSize <= 1)
-            {
-                // ラップの記録がないので表示しません
-                area1.setText(dummy);
-                area1.invalidate();
-                area2.setText(dummy);
-                area2.invalidate();
-                area3.setText(dummy);
-                area3.invalidate();
-                area4.setText(dummy);
-                area4.invalidate();
-                area5.setText(dummy);
-                area5.invalidate();
-                return;
-            }
-            if (indexSize <= 2)
-            {
-                // ラップが１つとれた場合
-                long time = (elapsedTimes.get(indexSize - 1) - elapsedTimes.get(indexSize - 2));
-                long refTime = (referenceSize >= indexSize) ? (referenceTimes.get(indexSize - 1) - referenceTimes.get(indexSize - 2)) : 0;
-                String elapsedTime = "[" + (timerCounter.getElapsedCount() - 1) + "] " + TimeStringConvert.getTimeString(time);
-                if (refTime > 0)
-                {
-                    elapsedTime = elapsedTime + " ( " + TimeStringConvert.getDiffTimeString( time - refTime) + " )";
-                }
-                area1.setText(elapsedTime);
-                area1.invalidate();
-                area2.setText(dummy);
-                area2.invalidate();
-                area3.setText(dummy);
-                area3.invalidate();
-                area4.setText(dummy);
-                area4.invalidate();
-                area5.setText(dummy);
-                area5.invalidate();
-                return;
-            }
-
-            if (indexSize <= 3)
-            {
-                // ラップが３つとれた場合
-                long time1 = (elapsedTimes.get(indexSize - 2) - elapsedTimes.get(indexSize - 3));
-                long refTime1 = (referenceSize >= (indexSize - 1)) ? (referenceTimes.get(indexSize - 2) - referenceTimes.get(indexSize - 3)) : 0;
-                long time2 = (elapsedTimes.get(indexSize - 1) - elapsedTimes.get(indexSize - 2));
-                long refTime2 = (referenceSize >= indexSize) ? (referenceTimes.get(indexSize - 1) - referenceTimes.get(indexSize - 2)) : 0;
-                String elapsedTime1 = "[" +  (timerCounter.getElapsedCount() - 2) + "] " + TimeStringConvert.getTimeString(time1);
-                if (refTime1 > 0)
-                {
-                    elapsedTime1 = elapsedTime1 + " ( " + TimeStringConvert.getDiffTimeString( time1 - refTime1) + " )";
-                }
-                String elapsedTime2 = "[" +  (timerCounter.getElapsedCount() - 1) + "] " + TimeStringConvert.getTimeString(time2);
-                if (refTime2 > 0)
-                {
-                    elapsedTime2 = elapsedTime2 + " ( " + TimeStringConvert.getDiffTimeString( time2 - refTime2) + " )";
-                }
-                area1.setText(elapsedTime1);
-                area1.invalidate();
-                area2.setText(elapsedTime2);
-                area2.invalidate();
-                area3.setText(dummy);
-                area3.invalidate();
-                area4.setText(dummy);
-                area4.invalidate();
-                area5.setText(dummy);
-                area5.invalidate();
-                return;
-            }
-
-            if (indexSize <= 4)
-            {
-                // ラップが４つとれた場合
-                long time1 = (elapsedTimes.get(indexSize - 3) - elapsedTimes.get(indexSize - 4));
-                long refTime1 = (referenceSize >= (indexSize - 2)) ? (referenceTimes.get(indexSize - 3) - referenceTimes.get(indexSize - 4)) : 0;
-
-                long time2 = (elapsedTimes.get(indexSize - 2) - elapsedTimes.get(indexSize - 3));
-                long refTime2 = (referenceSize >= (indexSize - 1)) ? (referenceTimes.get(indexSize - 2) - referenceTimes.get(indexSize - 3)) : 0;
-
-                long time3 = (elapsedTimes.get(indexSize - 1) - elapsedTimes.get(indexSize - 2));
-                long refTime3 = (referenceSize >= indexSize) ? (referenceTimes.get(indexSize - 1) - referenceTimes.get(indexSize - 2)) : 0;
-
-                String elapsedTime1 = "[" +  (timerCounter.getElapsedCount() - 3) + "] " + TimeStringConvert.getTimeString(time1);
-                if (refTime1 > 0)
-                {
-                    elapsedTime1 = elapsedTime1 + " ( " + TimeStringConvert.getDiffTimeString( time1 - refTime1) + " )";
-                }
-
-                String elapsedTime2 = "[" +  (timerCounter.getElapsedCount() - 2) + "] " + TimeStringConvert.getTimeString(time2);
-                if (refTime2 > 0)
-                {
-                    elapsedTime2 = elapsedTime2 + " ( " + TimeStringConvert.getDiffTimeString( time2 - refTime2) + " )";
-                }
-
-                String elapsedTime3 = "[" +  (timerCounter.getElapsedCount() - 1) + "] " + TimeStringConvert.getTimeString(time3);
-                if (refTime3 > 0)
-                {
-                    elapsedTime3 = elapsedTime3 + " ( " + TimeStringConvert.getDiffTimeString( time3 - refTime3) + " )";
-                }
-                area1.setText(elapsedTime1);
-                area1.invalidate();
-                area2.setText(elapsedTime2);
-                area2.invalidate();
-                area3.setText(elapsedTime3);
-                area3.invalidate();
-                area4.setText(dummy);
-                area4.invalidate();
-                area5.setText(dummy);
-                area5.invalidate();
-                return;
-            }
-
-            if (indexSize <= 5)
-            {
-                // ラップが５つとれた場合
-                long time1 = (elapsedTimes.get(indexSize - 4) - elapsedTimes.get(indexSize - 5));
-                long refTime1 = (referenceSize >= (indexSize - 3)) ? (referenceTimes.get(indexSize - 4) - referenceTimes.get(indexSize - 5)) : 0;
-
-                long time2 = (elapsedTimes.get(indexSize - 3) - elapsedTimes.get(indexSize - 4));
-                long refTime2 = (referenceSize >= (indexSize - 2)) ? (referenceTimes.get(indexSize - 3) - referenceTimes.get(indexSize - 4)) : 0;
-
-                long time3 = (elapsedTimes.get(indexSize - 2) - elapsedTimes.get(indexSize - 3));
-                long refTime3 = (referenceSize >= indexSize) ? (referenceTimes.get(indexSize - 2) - referenceTimes.get(indexSize - 3)) : 0;
-
-                long time4 = (elapsedTimes.get(indexSize - 1) - elapsedTimes.get(indexSize - 2));
-                long refTime4 = (referenceSize >= indexSize) ? (referenceTimes.get(indexSize - 1) - referenceTimes.get(indexSize - 2)) : 0;
-
-                String elapsedTime1 = "[" +  (timerCounter.getElapsedCount() - 4) + "] " + TimeStringConvert.getTimeString(time1);
-                if (refTime1 > 0)
-                {
-                    elapsedTime1 = elapsedTime1 + " ( " + TimeStringConvert.getDiffTimeString( time1 - refTime1) + " )";
-                }
-
-                String elapsedTime2 = "[" +  (timerCounter.getElapsedCount() - 3) + "] " + TimeStringConvert.getTimeString(time2);
-                if (refTime2 > 0)
-                {
-                    elapsedTime2 = elapsedTime2 + " ( " + TimeStringConvert.getDiffTimeString( time2 - refTime2) + " )";
-                }
-
-                String elapsedTime3 = "[" +  (timerCounter.getElapsedCount() - 2) + "] " + TimeStringConvert.getTimeString(time3);
-                if (refTime3 > 0)
-                {
-                    elapsedTime3 = elapsedTime3 + " ( " + TimeStringConvert.getDiffTimeString( time3 - refTime3) + " )";
-                }
-
-                String elapsedTime4 = "[" +  (timerCounter.getElapsedCount() - 1) + "] " + TimeStringConvert.getTimeString(time3);
-                if (refTime4 > 0)
-                {
-                    elapsedTime4 = elapsedTime4 + " ( " + TimeStringConvert.getDiffTimeString( time4 - refTime4) + " )";
-                }
-
-                area1.setText(elapsedTime1);
-                area1.invalidate();
-                area2.setText(elapsedTime2);
-                area2.invalidate();
-                area3.setText(elapsedTime3);
-                area3.invalidate();
-                area4.setText(elapsedTime4);
-                area4.invalidate();
-                area5.setText(dummy);
-                area5.invalidate();
-                return;
-            }
-
-            // ラップが６つ以上ある場合
-            long time1 = (elapsedTimes.get(indexSize - 5) - elapsedTimes.get(indexSize - 6));
-            long refTime1 = (referenceSize >= (indexSize - 4)) ? (referenceTimes.get(indexSize - 5) - referenceTimes.get(indexSize - 6)) : 0;
-
-            long time2 = (elapsedTimes.get(indexSize - 4) - elapsedTimes.get(indexSize - 5));
-            long refTime2 = (referenceSize >= (indexSize - 3)) ? (referenceTimes.get(indexSize - 4) - referenceTimes.get(indexSize - 5)) : 0;
-
-            long time3 = (elapsedTimes.get(indexSize - 3) - elapsedTimes.get(indexSize - 4));
-            long refTime3 = (referenceSize >= indexSize - 2) ? (referenceTimes.get(indexSize - 3) - referenceTimes.get(indexSize - 4)) : 0;
-
-            long time4 = (elapsedTimes.get(indexSize - 2) - elapsedTimes.get(indexSize - 3));
-            long refTime4 = (referenceSize >= indexSize - 1) ? (referenceTimes.get(indexSize - 2) - referenceTimes.get(indexSize - 3)) : 0;
-
-            long time5 = (elapsedTimes.get(indexSize - 1) - elapsedTimes.get(indexSize - 2));
-            long refTime5 = (referenceSize >= indexSize) ? (referenceTimes.get(indexSize - 1) - referenceTimes.get(indexSize - 2)) : 0;
-
-            String elapsedTime1 = "[" +  (timerCounter.getElapsedCount() - 5) + "] " + TimeStringConvert.getTimeString(time1);
-            if (refTime1 > 0)
-            {
-                elapsedTime1 = elapsedTime1 + " ( " + TimeStringConvert.getDiffTimeString( time1 - refTime1) + " )";
-            }
-
-            String elapsedTime2 = "[" +  (timerCounter.getElapsedCount() - 4) + "] " + TimeStringConvert.getTimeString(time2);
-            if (refTime2 > 0)
-            {
-                elapsedTime2 = elapsedTime2 + " ( " + TimeStringConvert.getDiffTimeString( time2 - refTime2) + " )";
-            }
-
-            String elapsedTime3 = "[" +  (timerCounter.getElapsedCount() - 3) + "] " + TimeStringConvert.getTimeString(time3);
-            if (refTime3 > 0)
-            {
-                elapsedTime3 = elapsedTime3 + " ( " + TimeStringConvert.getDiffTimeString( time3 - refTime3) + " )";
-            }
-
-            String elapsedTime4 = "[" +  (timerCounter.getElapsedCount() - 2) + "] " + TimeStringConvert.getTimeString(time4);
-            if (refTime4 > 0)
-            {
-                elapsedTime4 = elapsedTime4 + " ( " + TimeStringConvert.getDiffTimeString( time4 - refTime4) + " )";
-            }
-
-            String elapsedTime5 = "[" +  (timerCounter.getElapsedCount() - 1) + "] " + TimeStringConvert.getTimeString(time5);
-            if (refTime5 > 0)
-            {
-                elapsedTime5 = elapsedTime5 + " ( " + TimeStringConvert.getDiffTimeString( time5 - refTime5) + " )";
-            }
-
-            area1.setText(elapsedTime1);
-            area1.invalidate();
-            area2.setText(elapsedTime2);
-            area2.invalidate();
-            area3.setText(elapsedTime3);
-            area3.invalidate();
-            area4.setText(elapsedTime4);
-            area4.invalidate();
-            area5.setText(elapsedTime5);
-            area5.invalidate();
-        }
-*/
+        // Log.v(TAG, "updateElapsedTimesText()");
     }
 
     /**
@@ -784,7 +557,7 @@ public class MainActivity extends WearableActivity implements IClickCallback, My
         }
     }
 
-    /*
+    /**
      *
      *
      */
@@ -795,7 +568,7 @@ public class MainActivity extends WearableActivity implements IClickCallback, My
         // ハードキー（ホームボタン）が押されたとき、これがひろえるが...
     }
 
-    /*
+    /**
      *
      *
      */
@@ -860,7 +633,6 @@ public class MainActivity extends WearableActivity implements IClickCallback, My
                 e.printStackTrace();
             }
         }
-
         runOnUiThread(new Runnable()
         {
             @Override
@@ -881,65 +653,22 @@ public class MainActivity extends WearableActivity implements IClickCallback, My
         {
             LapTimeGraphView graphView = findViewById(R.id.graph_area);
             ListView listView = findViewById(R.id.laptime_list_area);
-
-/*
-            TextView area1 = findViewById(R.id.sub_counter2);
-            TextView area2 = findViewById(R.id.sub_counter3);
-            TextView area3 = findViewById(R.id.sub_counter4);
-            ScrollView scr = findViewById(R.id.scroll_area);
-            LinearLayout lap = findViewById(R.id.lap_time_area);
-*/
             if (isGraphics)
             {
                 graphView.setITimerCounter(counter);
                 graphView.setVisibility(View.VISIBLE);
                 listView.setVisibility(View.GONE);
-/*
-                scr.setVisibility(View.GONE);
-                lap.setVisibility(View.GONE);
-                area1.setVisibility(View.GONE);
-                area2.setVisibility(View.GONE);
-                area3.setVisibility(View.GONE);
-*/
             }
             else
             {
                 graphView.setVisibility(View.GONE);
                 listView.setVisibility(View.VISIBLE);
-/*
-                scr.setVisibility(View.VISIBLE);
-                lap.setVisibility(View.VISIBLE);
-                area1.setVisibility(View.VISIBLE);
-                area2.setVisibility(View.VISIBLE);
-                area3.setVisibility(View.VISIBLE);
-*/
             }
-            controller.vibrate(30);
+            //controller.vibrate(30);
         }
         catch (Exception e)
         {
             e.printStackTrace();
         }
     }
-
-    /*
-     *
-     *
-     */
-/*
-    private String getElapsedTime()
-    {
-        String elapsedTime = "";
-        ITimerCounter timerCounter = counter;
-        if (timerCounter != null)
-        {
-            int count = timerCounter.getElapsedCount();
-            if (count > 0)
-            {
-                elapsedTime = "[" + timerCounter.getElapsedCount() + "] " + MyTimerCounter.getTimeString(timerCounter.getCurrentElapsedTime());
-            }
-        }
-        return (elapsedTime);
-    }
-*/
 }

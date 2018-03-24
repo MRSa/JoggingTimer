@@ -1,6 +1,5 @@
 package net.osdn.gokigen.joggingtimer.stopwatch;
 
-
 /**
  *
  *

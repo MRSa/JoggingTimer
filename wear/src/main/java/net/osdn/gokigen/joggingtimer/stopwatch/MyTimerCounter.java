@@ -97,18 +97,6 @@ public class MyTimerCounter implements ITimerCounter, IDatabaseReloadCallback
     }
 
     @Override
-    public List<Long> getTimerList()
-    {
-        return (elapsedTime);
-    }
-
-    @Override
-    public List<Long> getReferenceTimeList()
-    {
-        return (referenceTime);
-    }
-
-    @Override
     public int getElapsedCount()
     {
         return (elapsedTime.size());
@@ -221,6 +209,29 @@ public class MyTimerCounter implements ITimerCounter, IDatabaseReloadCallback
         {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public long getReferenceLapTime(int position)
+    {
+        try
+        {
+            int location = position + 1;
+            if ((referenceTime == null)||(location < 1)||(referenceTime.size() < location))
+            {
+                return (0);
+            }
+            if (location == 1)
+            {
+                return (referenceTime.get(0));
+            }
+            return (referenceTime.get(location - 1) - referenceTime.get(location - 2));
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        return (0);
     }
 
     public interface ICounterStatusNotify

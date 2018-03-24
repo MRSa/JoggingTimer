@@ -11,8 +11,6 @@ public interface ITimerCounter
     long timeStamp();
     void reset();
 
-    List<Long> getTimerList();
-    List<Long> getReferenceTimeList();
     int getElapsedCount();
     long getPastTime();
     long getLastElapsedTime();
@@ -20,6 +18,8 @@ public interface ITimerCounter
 
     long getStartTime();
     long getStopTime();
+
+    long getReferenceLapTime(int position);
 
     void setCallback(MyTimerCounter.ICounterStatusNotify callback);
 }

@@ -164,27 +164,6 @@ class WearableActivityController implements IWearableActivityControl, ITimeEntry
             lap.setOnClickListener(clickListener);
             lap.setOnLongClickListener(clickListener);
 
-            /*
-            TextView sub2 = activity.findViewById(R.id.sub_counter2);
-            sub2.setOnClickListener(clickListener);
-            sub2.setOnLongClickListener(clickListener);
-
-            TextView sub3 = activity.findViewById(R.id.sub_counter3);
-            sub3.setOnClickListener(clickListener);
-            sub3.setOnLongClickListener(clickListener);
-
-            TextView sub4 = activity.findViewById(R.id.sub_counter4);
-            sub4.setOnClickListener(clickListener);
-            sub4.setOnLongClickListener(clickListener);
-
-            TextView sub5 = activity.findViewById(R.id.sub_counter5);
-            sub5.setOnClickListener(clickListener);
-            sub5.setOnLongClickListener(clickListener);
-
-            TextView sub6 = activity.findViewById(R.id.sub_counter6);
-            sub6.setOnClickListener(clickListener);
-            sub6.setOnLongClickListener(clickListener);
-*/
             LapTimeGraphView graphView = activity.findViewById(R.id.graph_area);
             graphView.setOnClickListener(clickListener);
             graphView.setOnLongClickListener(clickListener);
@@ -201,7 +180,8 @@ class WearableActivityController implements IWearableActivityControl, ITimeEntry
      *
      *
      */
-    private void closeDatabase() {
+    private void closeDatabase()
+    {
         Log.v(TAG, "closeDatabase()");
         Thread thread = new Thread(new Runnable() {
             @Override
@@ -226,15 +206,19 @@ class WearableActivityController implements IWearableActivityControl, ITimeEntry
      *
      */
     @Override
-    public void exitApplication(WearableActivity activity) {
+    public void exitApplication(WearableActivity activity)
+    {
         Log.v(TAG, "exitApplication()");
         closeDatabase();
     }
 
     @Override
-    public void vibrate(final int duration) {
-        try {
-            if ((vibrator == null) || (!vibrator.hasVibrator())) {
+    public void vibrate(final int duration)
+    {
+        try
+        {
+            if ((vibrator == null) || (!vibrator.hasVibrator()))
+            {
                 return;
             }
 
@@ -245,7 +229,9 @@ class WearableActivityController implements IWearableActivityControl, ITimeEntry
                 }
             });
             thread.start();
-        } catch (Exception e) {
+        }
+        catch (Exception e)
+        {
             e.printStackTrace();
         }
     }
@@ -256,13 +242,35 @@ class WearableActivityController implements IWearableActivityControl, ITimeEntry
     }
 
     @Override
-    public void timerStarted(boolean isStarted) {
-        try {
+    public void timerStarted(boolean isStarted)
+    {
+        try
+        {
             SharedPreferences.Editor editor = preferences.edit();
             editor.putBoolean(PREF_KEY_TIMER_STARTED, isStarted);
             editor.apply();
-        } catch (Exception e) {
+        }
+        catch (Exception e)
+        {
             e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void addTimeStamp(long count, long lapTime, long diffTime)
+    {
+        if (lapTimeHolder != null)
+        {
+            lapTimeHolder.addLapTime(new LapTimeItems(count, lapTime, diffTime));
+        }
+    }
+
+    @Override
+    public void clearTimeStamp()
+    {
+        if (lapTimeHolder != null)
+        {
+            lapTimeHolder.clearLapTime();
         }
     }
 
