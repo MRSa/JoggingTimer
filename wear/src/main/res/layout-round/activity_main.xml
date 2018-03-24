@@ -103,6 +103,15 @@
             android:visibility="gone"
             />
 
+        <ListView
+            android:id="@+id/laptime_list_area"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/sub_counter1"
+            android:layout_above="@id/btn1"
+            android:visibility="visible"
+            />
+<!--
         <ScrollView
             android:id="@+id/scroll_area"
             android:layout_width="match_parent"
@@ -185,7 +194,7 @@
 
             </LinearLayout>
         </ScrollView>
-
+-->
     </RelativeLayout>
 </android.support.wear.widget.BoxInsetLayout>
 

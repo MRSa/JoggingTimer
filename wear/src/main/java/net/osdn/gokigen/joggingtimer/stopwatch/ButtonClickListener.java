@@ -49,7 +49,7 @@ public class ButtonClickListener implements View.OnClickListener, View.OnLongCli
             {
                 callback.clickedCounter();
             }
-            else if ((id == R.id.graph_area)||(id == R.id.sub_counter2)||(id == R.id.sub_counter3)||(id == R.id.sub_counter4)||(id == R.id.sub_counter1))
+            else if ((id == R.id.graph_area)||(id == R.id.laptime_list_area)||(id == R.id.sub_counter1))
             {
                 callback.clickedArea();
             }
@@ -75,10 +75,16 @@ public class ButtonClickListener implements View.OnClickListener, View.OnLongCli
             {
                 ret = callback.pushedBtn3();
             }
+            else if ((id == R.id.graph_area)||(id == R.id.laptime_list_area)||(id == R.id.sub_counter1))
+            {
+                callback.pushedArea();
+            }
+/*
             else if ((id == R.id.graph_area)||(id == R.id.sub_counter2)||(id == R.id.sub_counter3)||(id == R.id.sub_counter4)||(id == R.id.sub_counter1))
             {
                 ret = callback.pushedArea();
             }
+*/
         }
         return (ret);
     }

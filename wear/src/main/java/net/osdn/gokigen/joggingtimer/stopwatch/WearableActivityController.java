@@ -11,6 +11,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.wearable.activity.WearableActivity;
 import android.util.Log;
 import android.widget.ImageButton;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import net.osdn.gokigen.joggingtimer.R;
@@ -41,6 +42,7 @@ class WearableActivityController implements IWearableActivityControl, ITimeEntry
     private boolean isReadyDatabase = false;
     private boolean pendingLoadReference = false;
     private long recordingIndexId = -1;
+    private ILapTimeHolder lapTimeHolder = null;
 
     private Vibrator vibrator = null;
     //private PowerManager powerManager = null;
@@ -93,11 +95,18 @@ class WearableActivityController implements IWearableActivityControl, ITimeEntry
      *
      *
      */
-    private void setupScreen(WearableActivity activity) {
+    private void setupScreen(WearableActivity activity)
+    {
         TextView mTextView = activity.findViewById(R.id.text);
         if (mTextView != null) {
             mTextView.setText(R.string.app_name);
         }
+
+        LapTimeArrayAdapter adapter = new LapTimeArrayAdapter(activity.getApplicationContext(), R.layout.column_laptime);
+        adapter.clearLapTime();
+        lapTimeHolder = adapter;
+        ListView lapTimeArea = activity.findViewById(R.id.laptime_list_area);
+        lapTimeArea.setAdapter(adapter);
     }
 
     /**
@@ -151,6 +160,11 @@ class WearableActivityController implements IWearableActivityControl, ITimeEntry
             sub1.setOnClickListener(clickListener);
             sub1.setOnLongClickListener(clickListener);
 
+            ListView lap = activity.findViewById(R.id.laptime_list_area);
+            lap.setOnClickListener(clickListener);
+            lap.setOnLongClickListener(clickListener);
+
+            /*
             TextView sub2 = activity.findViewById(R.id.sub_counter2);
             sub2.setOnClickListener(clickListener);
             sub2.setOnLongClickListener(clickListener);
@@ -170,11 +184,12 @@ class WearableActivityController implements IWearableActivityControl, ITimeEntry
             TextView sub6 = activity.findViewById(R.id.sub_counter6);
             sub6.setOnClickListener(clickListener);
             sub6.setOnLongClickListener(clickListener);
-
+*/
             LapTimeGraphView graphView = activity.findViewById(R.id.graph_area);
             graphView.setOnClickListener(clickListener);
             graphView.setOnLongClickListener(clickListener);
             graphView.setOnTouchListener(clickListener);
+
         }
         catch (Exception e)
         {
