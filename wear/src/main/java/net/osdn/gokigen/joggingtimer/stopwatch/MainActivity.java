@@ -639,7 +639,7 @@ public class MainActivity extends WearableActivity implements IClickCallback, My
      *
      */
     @Override
-    public void counterStatusChanged(boolean forceStartTimer)
+    public void counterStatusChanged(final boolean forceStartTimer)
     {
         ITimerCounter timerCounter = counter;
         if (forceStartTimer)
@@ -664,35 +664,61 @@ public class MainActivity extends WearableActivity implements IClickCallback, My
             }
         }
 
-        // Adapter と TimerCounterの整合性を確認
-        if (timerCounter != null)
-        {
-            try
-            {
-                List<Long> lapTimeList = timerCounter.getLapTimeList();
-                int lapCount = lapTimeList.size();
-                int listCount = controller.getLapTimeCount();
-                if (lapCount != listCount)
-                {
-                    Log.v(TAG, "LAP COUNT IS MISMATCH!!! lap:" + lapCount + " vs list:" + listCount);
-                }
-            }
-            catch (Exception e)
-            {
-                e.printStackTrace();
-            }
-        }
-
-
         runOnUiThread(new Runnable()
         {
             @Override
             public void run()
             {
+                reloadLapTimeList(forceStartTimer);
                 updateTimerLabel();
             }
         });
     }
+
+    /**
+     *
+     *
+     */
+    private void reloadLapTimeList(final boolean forceStartTimer)
+    {
+        ITimerCounter timerCounter = counter;
+        if ((!forceStartTimer)||(timerCounter == null))
+        {
+            return;
+        }
+
+        // Adapter と TimerCounterの整合性を確認
+        try
+        {
+            List<Long> lapTimeList = timerCounter.getLapTimeList();
+            int lapCount = lapTimeList.size();
+            int listCount = controller.getLapTimeCount();
+            if (lapCount != listCount)
+            {
+                Log.v(TAG, "LAP COUNT IS MISMATCH!!! lap:" + lapCount + " vs list:" + listCount);
+                int index = 0;
+                long prevTime = lapTimeList.get(0);
+                for (long lapTime : lapTimeList)
+                {
+                    index++;
+                    if (prevTime != lapTime)
+                    {
+                        long refLapTime = counter.getReferenceLapTime(index - 1);
+                        long curLapTime = lapTime - prevTime;
+                        long calcRefLapTime = (refLapTime == 0) ? 0 : (curLapTime - refLapTime);
+                        controller.addTimeStamp((index - 1), curLapTime, calcRefLapTime);
+                    }
+                    prevTime = lapTime;
+                }
+                currentLapCount = lapCount - 1;
+            }
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+
 
     /**
      *
