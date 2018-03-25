@@ -20,5 +20,7 @@ public interface IWearableActivityControl
     void timerStarted(boolean isStarted);
     void addTimeStamp(long count, long lapTime, long diffTime);
     void clearTimeStamp();
+    int getLapTimeCount();
+
     void setupReferenceData();
 }

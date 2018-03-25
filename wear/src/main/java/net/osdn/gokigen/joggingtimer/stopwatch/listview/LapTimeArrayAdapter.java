@@ -64,6 +64,12 @@ public class LapTimeArrayAdapter  extends ArrayAdapter<LapTimeItems> implements 
     }
 
     @Override
+    public int getLapTimeCount()
+    {
+        return (getCount());
+    }
+
+    @Override
     public void clearLapTime()
     {
         clear();

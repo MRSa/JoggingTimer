@@ -10,6 +10,7 @@ import android.util.AttributeSet;
 import android.view.View;
 
 import net.osdn.gokigen.joggingtimer.stopwatch.ITimerCounter;
+import net.osdn.gokigen.joggingtimer.utilities.TimeStringConvert;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,10 +22,13 @@ import java.util.List;
 public class LapTimeGraphView extends View
 {
     private ITimerCounter timerCounter = null;
-    private long counter = 0;
-    private long maxReferenceTime = 0;
-    private int referenceCount = 0;
+    private boolean isStarted = false;
+    private long maxLaptime = 0;
+    private long lastSystemLaptime = 0;
+    private long currentLapTime = 0;
+    private int totalLaptimeCount = 0;
     private List<Long> refLapTimeList = null;
+    private List<Long> curLapTimeList = null;
 
     /**
      *   コンストラクタ
@@ -62,6 +66,7 @@ public class LapTimeGraphView extends View
     private void initComponent(Context context)
     {
         setWillNotDraw(false);
+        curLapTimeList = new ArrayList<>();
     }
 
     /**
@@ -72,6 +77,50 @@ public class LapTimeGraphView extends View
     {
         timerCounter = counter;
         parseReferenceTimeList();
+        parseLapTime();
+    }
+
+    /**
+     *
+     *
+     */
+    public void notifyStarted(long startTime)
+    {
+        curLapTimeList.clear();
+        lastSystemLaptime = startTime;
+        isStarted = true;
+    }
+
+    /**
+     *
+     *
+     */
+    public void notifyLapTime()
+    {
+        // ラップタイムの取得
+        parseLapTime();
+        isStarted = true;
+    }
+
+    /**
+     *
+     *
+     */
+    public void notifyStopped()
+    {
+        // ラップタイムの取得
+        parseLapTime();
+        isStarted = false;
+    }
+
+    /**
+     *
+     *
+     */
+    public void notifyReset()
+    {
+        curLapTimeList.clear();
+        isStarted = false;
     }
 
     /**
@@ -95,7 +144,6 @@ public class LapTimeGraphView extends View
         // メッセージの表示
         drawMessage(canvas);
 
-        counter++;
     }
 
     /**
@@ -135,8 +183,8 @@ public class LapTimeGraphView extends View
         paint.setStrokeWidth(0.0f);
         paint.setAntiAlias(true);
 
-        float boxWidthUnit = width / refLapTimeList.size();
-        float boxHeightUnit = height / (maxReferenceTime * 1.2f);
+        float boxWidthUnit = width / totalLaptimeCount;
+        float boxHeightUnit = height / (maxLaptime * 1.2f);
 
         float startX = 0.0f;
         for (Long time : refLapTimeList)
@@ -154,9 +202,45 @@ public class LapTimeGraphView extends View
      */
     private void drawCurrentLap(Canvas canvas)
     {
+        if (curLapTimeList == null)
+        {
+            return;
+        }
 
+        float width = canvas.getWidth();
+        float height = canvas.getHeight();
+
+        Paint paint = new Paint();
+        paint.setColor(Color.WHITE);
+        paint.setStyle(Paint.Style.STROKE);
+        paint.setStyle(Paint.Style.FILL);
+        paint.setStrokeWidth(0.0f);
+        paint.setAntiAlias(true);
+
+        float boxWidthUnit = width / totalLaptimeCount;
+        float boxHeightUnit = height / (maxLaptime * 1.2f);
+        float circleRadius = boxWidthUnit / 4.0f;
+
+        float startX = 0.0f;
+        if ((curLapTimeList.size() <= 0)&&(isStarted))
+        {
+            currentLapTime = System.currentTimeMillis() - lastSystemLaptime;
+            canvas.drawCircle((startX + (boxWidthUnit / 2.0f)), (height - boxHeightUnit * currentLapTime), circleRadius, paint);
+            return;
+        }
+
+        for (Long time : curLapTimeList)
+        {
+            canvas.drawCircle((startX + (boxWidthUnit / 2.0f)), (height - boxHeightUnit * time), circleRadius, paint);
+            startX = startX + boxWidthUnit;
+        }
+
+        if (isStarted)
+        {
+            currentLapTime = System.currentTimeMillis() - lastSystemLaptime;
+            canvas.drawCircle((startX + (boxWidthUnit / 2.0f)), (height - boxHeightUnit * currentLapTime), circleRadius, paint);
+        }
     }
-
 
     /**
      *
@@ -166,16 +250,26 @@ public class LapTimeGraphView extends View
     {
         int width = canvas.getWidth();
         int height = canvas.getHeight();
-        Rect rect = new Rect(0,0, width, height);
         Paint paint = new Paint();
 
         paint.setColor(Color.WHITE);
         paint.setStyle(Paint.Style.STROKE);
         paint.setStrokeWidth(0.0f);
         paint.setAntiAlias(true);
-        canvas.drawRect(rect, paint);
+        //canvas.drawRect(rect, paint);
 
-        String message = width + "x" + height + "  [" + referenceCount + "] " + maxReferenceTime;
+        int lapCount = 0;
+        if (curLapTimeList != null)
+        {
+            lapCount = curLapTimeList.size();
+        }
+
+        String lap = "";
+        if (currentLapTime == 0)
+        {
+            lap = TimeStringConvert.getDiffTimeString(currentLapTime).toString();
+        }
+        String message = " [" + lapCount +"/" + totalLaptimeCount + "] " + lap;
         float textWidth = paint.measureText(message);
 
         canvas.drawText(message, ((width / 2) - (textWidth / 2)) , height / 2, paint);
@@ -194,9 +288,9 @@ public class LapTimeGraphView extends View
         refLapTimeList = null;
 
         List<Long> refTimeList = timerCounter.getReferenceLapTimeList();
-        referenceCount = refTimeList.size();
-        maxReferenceTime = 0;
-        if (referenceCount <= 1)
+        totalLaptimeCount = refTimeList.size();
+        maxLaptime = 0;
+        if (totalLaptimeCount <= 1)
         {
             return;
         }
@@ -209,12 +303,57 @@ public class LapTimeGraphView extends View
             {
                 refLapTimeList.add(currTime);
             }
-            if (currTime > maxReferenceTime)
+            if (currTime > maxLaptime)
             {
-                maxReferenceTime = currTime;
+                maxLaptime = currTime;
             }
             prevTime = time;
         }
+    }
+
+    /**
+     *
+     *
+     */
+    private void parseLapTime()
+    {
+        if (timerCounter == null)
+        {
+            return;
+        }
+        List<Long> lapTimeList = timerCounter.getLapTimeList();
+        int lapTimeCount = lapTimeList.size();
+        if (lapTimeCount > totalLaptimeCount)
+        {
+            totalLaptimeCount = lapTimeCount;
+        }
+        if (lapTimeCount < 1)
+        {
+            // 開始前の場合...
+            return;
+        }
+        if (lapTimeCount == 1)
+        {
+            lastSystemLaptime = lapTimeList.get(0);
+            return;
+        }
+
+        curLapTimeList.clear();
+        long prevTime = lapTimeList.get(0);
+        for (Long time : lapTimeList)
+        {
+            long currTime = time - prevTime;
+            if (currTime > 0)
+            {
+                curLapTimeList.add(currTime);
+            }
+            if (currTime > maxLaptime)
+            {
+                maxLaptime = currTime;
+            }
+            prevTime = time;
+        }
+        lastSystemLaptime = prevTime;
     }
 
     @Override

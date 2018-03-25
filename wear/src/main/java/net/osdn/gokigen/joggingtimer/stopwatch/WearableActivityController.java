@@ -291,6 +291,17 @@ class WearableActivityController implements IWearableActivityControl, ITimeEntry
     }
 
     @Override
+    public int getLapTimeCount()
+    {
+        int count = 0;
+        if (lapTimeHolder != null)
+        {
+            count = lapTimeHolder.getLapTimeCount();
+        }
+        return (count);
+    }
+
+    @Override
     public void setupReferenceData()
     {
         try

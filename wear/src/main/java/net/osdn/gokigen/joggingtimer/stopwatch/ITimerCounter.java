@@ -19,6 +19,7 @@ public interface ITimerCounter
     long getStartTime();
     long getStopTime();
 
+    List<Long> getLapTimeList();
     List<Long> getReferenceLapTimeList();
     long getReferenceLapTime(int position);
 
