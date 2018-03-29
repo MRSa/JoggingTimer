@@ -22,5 +22,5 @@
     <string name="time_picker_hour_separator">:</string>
     <string name="time_picker_minute_separator">:</string>
     <string name="time_picker_second_separator"> </string>
-    <string name="information_time_picker">Input LAP and total Time</string>
+    <string name="information_time_picker">Set LAP and total Time</string>
 </resources>

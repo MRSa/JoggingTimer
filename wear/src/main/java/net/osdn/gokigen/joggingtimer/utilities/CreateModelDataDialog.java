@@ -7,6 +7,7 @@ import android.content.res.TypedArray;
 import android.support.annotation.NonNull;
 import android.support.wearable.activity.WearableActivity;
 import android.util.Log;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,7 +44,7 @@ public class CreateModelDataDialog
     public void show(int iconResId, String title, final Callback callback)
     {
         // 確認ダイアログの生成
-        final AlertDialog.Builder alertDialog = new AlertDialog.Builder(activity);
+        final AlertDialog.Builder alertDialog = new AlertDialog.Builder(new ContextThemeWrapper(activity, R.style.wear2_dialog_theme));
 
         // Get the layout inflater
         LayoutInflater inflater = activity.getLayoutInflater();
@@ -57,7 +58,7 @@ public class CreateModelDataDialog
         final NumberPicker second = alertView.findViewById(R.id.number_picker_seconds);
         try
         {
-            titleText.setText(title);
+            //titleText.setText(title);
             lap.setMinValue(1);
             lap.setMaxValue(99);
             hour.setMinValue(0);
@@ -72,8 +73,8 @@ public class CreateModelDataDialog
             e.printStackTrace();
         }
 
-        alertDialog.setIcon(iconResId);
-        alertDialog.setMessage(activity.getString(R.string.information_time_picker));
+        //alertDialog.setIcon(iconResId);
+        //alertDialog.setMessage(activity.getString(R.string.information_time_picker));
         alertDialog.setCancelable(true);
 
         // ボタンを設定する（実行ボタン）
@@ -85,6 +86,7 @@ public class CreateModelDataDialog
                         {
                             Log.v(TAG, "ENTRY [" + lap.getValue() + "] " + hour.getValue() + ":" + minute.getValue() + ":" + second.getValue());
                             callback.dataCrated(lap.getValue(), hour.getValue(), minute.getValue(), second.getValue());
+                            //callback.dataCreateCancelled();
                         }
                         catch (Exception e)
                         {
