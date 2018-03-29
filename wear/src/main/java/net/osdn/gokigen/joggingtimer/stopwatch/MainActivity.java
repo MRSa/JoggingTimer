@@ -697,6 +697,7 @@ public class MainActivity extends WearableActivity implements IClickCallback, My
             {
                 Log.v(TAG, "LAP COUNT IS MISMATCH!!! lap:" + lapCount + " vs list:" + listCount);
                 int index = 0;
+                controller.clearTimeStamp();
                 long prevTime = lapTimeList.get(0);
                 for (long lapTime : lapTimeList)
                 {
