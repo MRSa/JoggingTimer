@@ -1,21 +1,13 @@
 package net.osdn.gokigen.joggingtimer.utilities;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
-import android.content.res.TypedArray;
-import android.support.annotation.NonNull;
 import android.support.wearable.activity.WearableActivity;
 import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.EditText;
 import android.widget.NumberPicker;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 
@@ -38,11 +30,12 @@ public class CreateModelDataDialog
 
     /**
      *
-     * @param iconResId  アイコンリソース
      * @param callback  結果をコールバック
      */
-    public void show(int iconResId, String title, final Callback callback)
+    public void show(boolean isLap, String title, final Callback callback, long defaultValue)
     {
+        Log.v(TAG, "show " + "def. : " + defaultValue);
+
         // 確認ダイアログの生成
         final AlertDialog.Builder alertDialog = new AlertDialog.Builder(new ContextThemeWrapper(activity, R.style.wear2_dialog_theme));
 
@@ -52,15 +45,32 @@ public class CreateModelDataDialog
         alertDialog.setView(alertView);
 
         final TextView titleText = alertView.findViewById(R.id.information_picker);
+        final TextView lapStartText = alertView.findViewById(R.id.lap_start);
+        final TextView lapEndText = alertView.findViewById(R.id.lap_end);
         final NumberPicker lap = alertView.findViewById(R.id.number_picker_lap_count);
         final NumberPicker hour = alertView.findViewById(R.id.number_picker_hours);
         final NumberPicker minute = alertView.findViewById(R.id.number_picker_minutes);
         final NumberPicker second = alertView.findViewById(R.id.number_picker_seconds);
         try
         {
-            //titleText.setText(title);
-            lap.setMinValue(1);
-            lap.setMaxValue(99);
+            if (title != null)
+            {
+                titleText.setText(title);
+            }
+            if (isLap)
+            {
+                lap.setVisibility(View.VISIBLE);
+                lapStartText.setVisibility(View.VISIBLE);
+                lapEndText.setVisibility(View.VISIBLE);
+                lap.setMinValue(1);
+                lap.setMaxValue(99);
+            }
+            else
+            {
+                lap.setVisibility(View.GONE);
+                lapStartText.setVisibility(View.GONE);
+                lapEndText.setVisibility(View.GONE);
+            }
             hour.setMinValue(0);
             hour.setMaxValue(72);
             minute.setMinValue(0);
@@ -73,8 +83,6 @@ public class CreateModelDataDialog
             e.printStackTrace();
         }
 
-        //alertDialog.setIcon(iconResId);
-        //alertDialog.setMessage(activity.getString(R.string.information_time_picker));
         alertDialog.setCancelable(true);
 
         // ボタンを設定する（実行ボタン）
@@ -85,7 +93,7 @@ public class CreateModelDataDialog
                         try
                         {
                             Log.v(TAG, "ENTRY [" + lap.getValue() + "] " + hour.getValue() + ":" + minute.getValue() + ":" + second.getValue());
-                            callback.dataCrated(lap.getValue(), hour.getValue(), minute.getValue(), second.getValue());
+                            callback.dataCreated(lap.getValue(), hour.getValue(), minute.getValue(), second.getValue());
                             //callback.dataCreateCancelled();
                         }
                         catch (Exception e)
@@ -114,7 +122,7 @@ public class CreateModelDataDialog
     // コールバックインタフェース
     public interface Callback
     {
-        void dataCrated(int lap, int hour, int minute, int second); // OKを選択したとき
+        void dataCreated(int lap, int hour, int minute, int second); // OKを選択したとき
         void dataCreateCancelled();  // キャンセルしたとき
     }
 }

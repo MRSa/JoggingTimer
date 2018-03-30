@@ -17,7 +17,7 @@ import java.util.List;
  */
 public class RecordDetailAdapter  extends RecyclerView.Adapter<DetailHolder>  implements IRecordOperation
 {
-    private List<DetailRecord> list = null;
+    private List<DetailRecord> list;
 
     /**
      *

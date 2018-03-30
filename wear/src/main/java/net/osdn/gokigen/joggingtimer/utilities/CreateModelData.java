@@ -2,26 +2,51 @@ package net.osdn.gokigen.joggingtimer.utilities;
 
 import android.util.Log;
 
+import net.osdn.gokigen.joggingtimer.storage.ITimeEntryDatabase;
+
 public class CreateModelData implements CreateModelDataDialog.Callback
 {
     private final String TAG = toString();
+    private final ITimeEntryDatabase database;
 
-
-    public CreateModelData()
+    public CreateModelData(ITimeEntryDatabase database)
     {
+        this.database = database;
 
     }
 
     @Override
-    public void dataCrated(int lap, int hour, int minute, int second)
+    public void dataCreated(final int lap, final int hour, final int minute, final int second)
     {
-        Log.v(TAG, "dataCrated()");
-
+        try
+        {
+            Thread thread = new Thread(new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    try
+                    {
+                        database.createTimeEntryModelData(lap, hour, minute, second, "");
+                    }
+                    catch (Exception e)
+                    {
+                        e.printStackTrace();
+                    }
+                }
+            });
+            thread.start();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void dataCreateCancelled()
     {
+        Log.v(TAG, "dataCreateCancelled()");
 
     }
 }

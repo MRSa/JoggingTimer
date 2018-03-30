@@ -8,11 +8,11 @@ import net.osdn.gokigen.joggingtimer.storage.ITimeEntryDatabase;
 import net.osdn.gokigen.joggingtimer.storage.ITimeEntryDatabaseCallback;
 import net.osdn.gokigen.joggingtimer.storage.TimeEntryDatabaseFactory;
 import net.osdn.gokigen.joggingtimer.storage.contract.TimeEntryData;
-import net.osdn.gokigen.joggingtimer.utilities.IconIdProvider;
+import net.osdn.gokigen.joggingtimer.utilities.CreateModelData;
+import net.osdn.gokigen.joggingtimer.utilities.CreateModelDataDialog;
 import net.osdn.gokigen.joggingtimer.utilities.TimeStringConvert;
 
 import static android.provider.BaseColumns._ID;
-import static net.osdn.gokigen.joggingtimer.storage.contract.TimeEntryData.EntryData.COLUMN_NAME_ICON_ID;
 
 /**
  *
@@ -93,6 +93,7 @@ public class RecordDetailSetup  implements ITimeEntryDatabaseCallback
                     {
                         long dataId = cursor.getLong(cursor.getColumnIndex(_ID));
                         long entryTime = cursor.getLong(cursor.getColumnIndex(TimeEntryData.EntryData.COLUMN_NAME_TIME_ENTRY));
+                        int recordType = cursor.getInt(cursor.getColumnIndex(TimeEntryData.EntryData.COLUMN_NAME_RECORD_TYPE));
 
                         if (index == 0)
                         {
@@ -109,7 +110,7 @@ public class RecordDetailSetup  implements ITimeEntryDatabaseCallback
                             String lapCount = " " + index;
                             String lapTimeString = TimeStringConvert.getTimeString(lapTime).toString();
                             String overallTimeString = TimeStringConvert.getTimeString(overallTime).toString() + " (" + TimeStringConvert.getDiffTimeString(differenceTime).toString() +") ";
-                            operation.addRecord(new DetailRecord(dataId, lapCount, lapTimeString, overallTimeString));
+                            operation.addRecord(new DetailRecord(dataId, recordType, lapCount, lapTimeString, overallTimeString));
                             morePreviousTime = previousLapTime;
                             previousLapTime = entryTime;
                         }
@@ -187,6 +188,13 @@ public class RecordDetailSetup  implements ITimeEntryDatabaseCallback
         //
     }
 
+    @Override
+    public void modelDataEntryFinished(OperationType operationType, boolean result, long indexId, String title)
+    {
+        //
+        Log.v(TAG, "modelDataEntryFinished : " + result + " " + title + " " + indexId);
+    }
+
     /**
      *
      */
@@ -200,6 +208,14 @@ public class RecordDetailSetup  implements ITimeEntryDatabaseCallback
         {
             e.printStackTrace();
         }
+    }
+
+    /**
+     *
+     */
+    CreateModelDataDialog.Callback getCreateModelDataCallback()
+    {
+        return (new CreateModelData(database));
     }
 
     /**

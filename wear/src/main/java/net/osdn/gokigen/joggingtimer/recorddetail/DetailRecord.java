@@ -7,20 +7,22 @@ import android.view.View;
  *
  *
  */
-public class DetailRecord implements View.OnClickListener
+public class DetailRecord implements View.OnClickListener, View.OnLongClickListener
 {
     private final String TAG = toString();
     private final long dataId;
-    private String lapCount = "";
-    private String title = "";
-    private String detail = "";
+    private final int recordType;
+    private String lapCount;
+    private String title;
+    private String detail;
 
     /**
      *
      */
-    DetailRecord(long dataId, String lapCount, String title, String detail)
+    DetailRecord(long dataId, int recordType, String lapCount, String title, String detail)
     {
         this.dataId = dataId;
+        this.recordType = recordType;
         this.lapCount = lapCount;
         this.title = title;
         this.detail = detail;
@@ -46,5 +48,13 @@ public class DetailRecord implements View.OnClickListener
     {
         Log.v(TAG, "Clicked : [" + dataId + "] (" + lapCount + ") " + title + " " + detail);
 
+    }
+
+    @Override
+    public boolean onLongClick(View v)
+    {
+        Log.v(TAG, "LONG Clicked : [" + dataId + "] (" + lapCount + ") " + title + " " + detail + " TYPE : " + recordType);
+
+        return (false);
     }
 }

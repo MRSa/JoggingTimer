@@ -117,6 +117,12 @@ class RecordSummarySetup implements ITimeEntryDatabaseCallback
         //
     }
 
+    @Override
+    public void modelDataEntryFinished(OperationType operationType, boolean result, long indexId, String title)
+    {
+        //
+    }
+
     /**
      *
      */

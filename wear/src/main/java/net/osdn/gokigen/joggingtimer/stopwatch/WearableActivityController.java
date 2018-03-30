@@ -390,6 +390,12 @@ class WearableActivityController implements IWearableActivityControl, ITimeEntry
     }
 
     @Override
+    public void modelDataEntryFinished(OperationType operationType, boolean result, long indexId, String title)
+    {
+        //
+    }
+
+    @Override
     public void dataEntryFinished(OperationType operationType, boolean result, long id, String title)
     {
         Log.v(TAG, "database dataEntryFinished() : " + result + "  [" + id + "] " + title);

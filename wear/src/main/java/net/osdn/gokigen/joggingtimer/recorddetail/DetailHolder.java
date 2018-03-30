@@ -1,8 +1,8 @@
 package net.osdn.gokigen.joggingtimer.recorddetail;
 
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import net.osdn.gokigen.joggingtimer.R;
@@ -10,11 +10,11 @@ import net.osdn.gokigen.joggingtimer.R;
 class DetailHolder  extends RecyclerView.ViewHolder
 {
     private final View itemView;
-    private TextView lapView = null;
-    private TextView mainText = null;
-    private TextView subText = null;
+    private TextView lapView;
+    private TextView mainText;
+    private TextView subText;
 
-    DetailHolder(View itemView)
+    DetailHolder(@NonNull View itemView)
     {
         super(itemView);
         lapView = itemView.findViewById(R.id.detail_lap_count);

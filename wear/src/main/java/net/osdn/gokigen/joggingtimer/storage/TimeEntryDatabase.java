@@ -9,6 +9,7 @@ import android.util.Log;
 
 import net.osdn.gokigen.joggingtimer.storage.contract.TimeEntryData;
 import net.osdn.gokigen.joggingtimer.storage.contract.TimeEntryIndex;
+import net.osdn.gokigen.joggingtimer.utilities.TimeStringConvert;
 
 import static android.provider.BaseColumns._ID;
 
@@ -23,7 +24,10 @@ class TimeEntryDatabase implements ITimeEntryDatabase
     private final TimeEntryDataOpenHelper dbHelper;
     private final ITimeEntryDatabaseCallback callback;
     private static final int REFERENCE_ICON_ID = 2;
+    private static final int MODEL_DATA_ICON_ID = 4;
     private static final int DEFAULT_ICON_ID = 0;
+    private static final long DEFAULT_RECORD_TYPE = 0;
+    private static final long EDITABLE_RECORD_TYPE = 1;
     private SQLiteDatabase db = null;
     //private SQLiteDatabase writeDb = null;
     //private SQLiteDatabase readDb = null;
@@ -153,7 +157,13 @@ class TimeEntryDatabase implements ITimeEntryDatabase
     @Override
     public void createIndexData(String title, String memo, int icon, long startTime)
     {
-        Log.v(TAG, "createIndexData() [" + title +"] " + memo + " " + icon + " " + startTime);
+        long indexId = createIndexDataImpl(true, title, memo, icon, startTime, 0);
+        Log.v(TAG, "createIndexData() [" + title +"] " + memo + " " + icon + " " + startTime + " idx: " + indexId);
+    }
+
+    private long createIndexDataImpl(boolean isCallback, String title, String memo, int icon, long startTime, long duration)
+    {
+        long indexId = -1;
         try
         {
             boolean ret = false;
@@ -162,39 +172,38 @@ class TimeEntryDatabase implements ITimeEntryDatabase
             valuesIndex.put(TimeEntryIndex.EntryIndex.COLUMN_NAME_MEMO, memo);
             valuesIndex.put(TimeEntryIndex.EntryIndex.COLUMN_NAME_ICON_ID, icon);
             valuesIndex.put(TimeEntryIndex.EntryIndex.COLUMN_NAME_START_TIME, startTime);
-            valuesIndex.put(TimeEntryIndex.EntryIndex.COLUMN_NAME_TIME_DURATION, 0);
-            long indexId = db.insert(TimeEntryIndex.EntryIndex.TABLE_NAME, null, valuesIndex);
+            valuesIndex.put(TimeEntryIndex.EntryIndex.COLUMN_NAME_TIME_DURATION, duration);
+            indexId = db.insert(TimeEntryIndex.EntryIndex.TABLE_NAME, null, valuesIndex);
             if (indexId != -1)
             {
                 ret = true;
             }
-            callback.dataEntryFinished(ITimeEntryDatabaseCallback.OperationType.CREATED, ret, indexId, title);
-
-            ContentValues valuesData = new ContentValues();
-            valuesData.put(TimeEntryData.EntryData.COLUMN_NAME_INDEX_ID, indexId);
-            valuesData.put(TimeEntryData.EntryData.COLUMN_NAME_TIME_ENTRY, startTime);
-            valuesData.put(TimeEntryData.EntryData.COLUMN_NAME_OTHER_ID, 0);
-            valuesData.put(TimeEntryData.EntryData.COLUMN_NAME_GPS_ID, 0);
-            valuesData.put(TimeEntryData.EntryData.COLUMN_NAME_MEMO_ID, 0);
-            valuesData.put(TimeEntryData.EntryData.COLUMN_NAME_ICON_ID, 0);
-            valuesData.put(TimeEntryData.EntryData.COLUMN_NAME_RECORD_TYPE, 0);
-            long dataId = db.insert(TimeEntryData.EntryData.TABLE_NAME, null, valuesData);
-            if (dataId != -1)
+            if (isCallback)
             {
-                ret = true;
+                callback.dataEntryFinished(ITimeEntryDatabaseCallback.OperationType.CREATED, ret, indexId, title);
             }
-            callback.timeEntryFinished(ITimeEntryDatabaseCallback.OperationType.APPENDED, ret, indexId, dataId);
         }
         catch (Exception e)
         {
             e.printStackTrace();
         }
+        appendTimeDataImpl(true, indexId, startTime, DEFAULT_RECORD_TYPE);
+        return (indexId);
     }
 
     @Override
     public void appendTimeData(long indexId, long lapTime)
     {
         Log.v(TAG, "appendTimeData()  " +  lapTime);
+        appendTimeDataImpl(true, indexId, lapTime, DEFAULT_RECORD_TYPE);
+    }
+
+    /**
+     *
+     *
+     */
+    private void appendTimeDataImpl(boolean isCallback, long indexId, long lapTime, long recordType)
+    {
         try
         {
             boolean ret = false;
@@ -205,20 +214,28 @@ class TimeEntryDatabase implements ITimeEntryDatabase
             valuesData.put(TimeEntryData.EntryData.COLUMN_NAME_GPS_ID, 0);
             valuesData.put(TimeEntryData.EntryData.COLUMN_NAME_MEMO_ID, 0);
             valuesData.put(TimeEntryData.EntryData.COLUMN_NAME_ICON_ID, 0);
-            valuesData.put(TimeEntryData.EntryData.COLUMN_NAME_RECORD_TYPE, 0);
+            valuesData.put(TimeEntryData.EntryData.COLUMN_NAME_RECORD_TYPE, recordType);
             long dataId = db.insert(TimeEntryData.EntryData.TABLE_NAME, null, valuesData);
             if (dataId != -1)
             {
                 ret = true;
             }
-            callback.timeEntryFinished(ITimeEntryDatabaseCallback.OperationType.APPENDED, ret, indexId, dataId);
+            if (isCallback)
+            {
+                callback.timeEntryFinished(ITimeEntryDatabaseCallback.OperationType.APPENDED, ret, indexId, dataId);
+            }
         }
         catch (Exception e)
         {
             e.printStackTrace();
         }
+
     }
 
+    /**
+     *
+     *
+     */
     @Override
     public void finishTimeData(long indexId, long startTime, long endTime)
     {
@@ -245,6 +262,37 @@ class TimeEntryDatabase implements ITimeEntryDatabase
         {
             e.printStackTrace();
         }
+    }
+
+    /**
+     *
+     *
+     */
+    @Override
+    public void createTimeEntryModelData(int lap, int hour, int minute, int second, @NonNull String memo)
+    {
+        long totalTime = (hour * (1000 * 60 * 60)) + (minute * (1000 * 60)) + second;
+        long diffTime = totalTime / (long) lap;
+        String title = " " + lap + " LAPs Model";
+        Log.v(TAG, "ENTRY : '" + lap + " " + title + "' mills : " + "(" + diffTime + ") " + memo);
+
+        try
+        {
+            long lapTime = 0;
+            long indexId = createIndexDataImpl(false, title, memo, MODEL_DATA_ICON_ID, lapTime, totalTime);
+            for (int index = 0; index < lap; index++)
+            {
+                lapTime = lapTime + diffTime;
+                appendTimeDataImpl(false, indexId, lapTime, EDITABLE_RECORD_TYPE);
+            }
+            callback.modelDataEntryFinished(ITimeEntryDatabaseCallback.OperationType.FINISHED, true, indexId, title);
+            return;
+       }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        callback.modelDataEntryFinished(ITimeEntryDatabaseCallback.OperationType.FINISHED, false, -1, title);
     }
 
 /*

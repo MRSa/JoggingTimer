@@ -22,4 +22,7 @@ public interface ITimeEntryDatabase
     void createIndexData(String title, String memo, int icon, long startTime);
     void appendTimeData(long indexId, long lapTime);
     void finishTimeData(long indexId, long startTime, long endTime);
+
+    void createTimeEntryModelData(int lap, int hour, int minute, int second, String memo);
+
 }
