@@ -97,6 +97,7 @@ public class RecordDetailAdapter  extends RecyclerView.Adapter<DetailHolder>  im
             holder.setMainText(list.get(position).getTitle());
             holder.setSubText(list.get(position).getDetail());
             holder.setOnClickListener(list.get(position));
+            holder.setOnLongClickListener(list.get(position));
         }
         catch (Exception e)
         {

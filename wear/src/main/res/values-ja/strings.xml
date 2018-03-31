@@ -23,4 +23,5 @@
     <string name="time_picker_minute_separator">:</string>
     <string name="time_picker_second_separator"> </string>
     <string name="information_time_picker">LAPと総時間を入力</string>
+    <string name="information_modify_time">目標ラップタイムを設定</string>
 </resources>

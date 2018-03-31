@@ -51,6 +51,7 @@ public class CreateModelDataDialog
         final NumberPicker hour = alertView.findViewById(R.id.number_picker_hours);
         final NumberPicker minute = alertView.findViewById(R.id.number_picker_minutes);
         final NumberPicker second = alertView.findViewById(R.id.number_picker_seconds);
+
         try
         {
             if (title != null)
@@ -71,12 +72,16 @@ public class CreateModelDataDialog
                 lapStartText.setVisibility(View.GONE);
                 lapEndText.setVisibility(View.GONE);
             }
+
             hour.setMinValue(0);
             hour.setMaxValue(72);
             minute.setMinValue(0);
             minute.setMaxValue(59);
             second.setMinValue(0);
             second.setMaxValue(59);
+            second.setValue((int) (defaultValue / 1000) % 60);
+            minute.setValue((int) ((defaultValue / (1000 * 60)) % 60));
+            hour.setValue((int) ((defaultValue / (1000 * 60 * 60)) % 24));
         }
         catch (Exception e)
         {
@@ -93,8 +98,8 @@ public class CreateModelDataDialog
                         try
                         {
                             Log.v(TAG, "ENTRY [" + lap.getValue() + "] " + hour.getValue() + ":" + minute.getValue() + ":" + second.getValue());
-                            callback.dataCreated(lap.getValue(), hour.getValue(), minute.getValue(), second.getValue());
-                            //callback.dataCreateCancelled();
+                            int lapCount = (lap.getVisibility() == View.GONE) ? -1 : lap.getValue();
+                            callback.dataCreated(lapCount, hour.getValue(), minute.getValue(), second.getValue());
                         }
                         catch (Exception e)
                         {

@@ -26,8 +26,7 @@ class TimeEntryDatabase implements ITimeEntryDatabase
     private static final int REFERENCE_ICON_ID = 2;
     private static final int MODEL_DATA_ICON_ID = 4;
     private static final int DEFAULT_ICON_ID = 0;
-    private static final long DEFAULT_RECORD_TYPE = 0;
-    private static final long EDITABLE_RECORD_TYPE = 1;
+
     private SQLiteDatabase db = null;
     //private SQLiteDatabase writeDb = null;
     //private SQLiteDatabase readDb = null;

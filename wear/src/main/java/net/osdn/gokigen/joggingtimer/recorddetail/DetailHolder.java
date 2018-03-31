@@ -28,6 +28,11 @@ class DetailHolder  extends RecyclerView.ViewHolder
         itemView.setOnClickListener(listener);
     }
 
+    void setOnLongClickListener(View.OnLongClickListener listener)
+    {
+        itemView.setOnLongClickListener(listener);
+    }
+
     void setLapCount(String message)
     {
         lapView.setText(message);

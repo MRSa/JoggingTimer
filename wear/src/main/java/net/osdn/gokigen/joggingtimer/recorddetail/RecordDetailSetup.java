@@ -4,6 +4,7 @@ import android.database.Cursor;
 import android.support.wearable.activity.WearableActivity;
 import android.util.Log;
 
+import net.osdn.gokigen.joggingtimer.R;
 import net.osdn.gokigen.joggingtimer.storage.ITimeEntryDatabase;
 import net.osdn.gokigen.joggingtimer.storage.ITimeEntryDatabaseCallback;
 import net.osdn.gokigen.joggingtimer.storage.TimeEntryDatabaseFactory;
@@ -18,7 +19,7 @@ import static android.provider.BaseColumns._ID;
  *
  *
  */
-public class RecordDetailSetup  implements ITimeEntryDatabaseCallback
+public class RecordDetailSetup  implements ITimeEntryDatabaseCallback, IDetailEditor
 {
     private final String TAG = toString();
     private final WearableActivity activity;
@@ -76,6 +77,7 @@ public class RecordDetailSetup  implements ITimeEntryDatabaseCallback
             callback.databaseSetupFinished(false);
             return;
         }
+        final IDetailEditor editor = this;
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run()
@@ -92,6 +94,7 @@ public class RecordDetailSetup  implements ITimeEntryDatabaseCallback
                     while (cursor.moveToNext())
                     {
                         long dataId = cursor.getLong(cursor.getColumnIndex(_ID));
+                        long indexId = cursor.getLong(cursor.getColumnIndex(TimeEntryData.EntryData.COLUMN_NAME_INDEX_ID));
                         long entryTime = cursor.getLong(cursor.getColumnIndex(TimeEntryData.EntryData.COLUMN_NAME_TIME_ENTRY));
                         int recordType = cursor.getInt(cursor.getColumnIndex(TimeEntryData.EntryData.COLUMN_NAME_RECORD_TYPE));
 
@@ -107,10 +110,7 @@ public class RecordDetailSetup  implements ITimeEntryDatabaseCallback
                             long lapTime = entryTime - previousLapTime;
                             long overallTime = entryTime - startTime;
                             long differenceTime = (lapTime) - (previousLapTime - morePreviousTime);
-                            String lapCount = " " + index;
-                            String lapTimeString = TimeStringConvert.getTimeString(lapTime).toString();
-                            String overallTimeString = TimeStringConvert.getTimeString(overallTime).toString() + " (" + TimeStringConvert.getDiffTimeString(differenceTime).toString() +") ";
-                            operation.addRecord(new DetailRecord(dataId, recordType, lapCount, lapTimeString, overallTimeString));
+                            operation.addRecord(new DetailRecord(indexId, dataId, recordType, index, lapTime, overallTime, differenceTime,  editor));
                             morePreviousTime = previousLapTime;
                             previousLapTime = entryTime;
                         }
@@ -216,6 +216,20 @@ public class RecordDetailSetup  implements ITimeEntryDatabaseCallback
     CreateModelDataDialog.Callback getCreateModelDataCallback()
     {
         return (new CreateModelData(database));
+    }
+
+    @Override
+    public void editDetailData(final long indexId, final long dataId, final int count, final long defaultMillis)
+    {
+        activity.runOnUiThread(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                CreateModelDataDialog dialog2 = new CreateModelDataDialog(activity);
+                dialog2.show(false, activity.getString(R.string.information_modify_time), getCreateModelDataCallback(), defaultMillis);
+            }
+        });
     }
 
     /**

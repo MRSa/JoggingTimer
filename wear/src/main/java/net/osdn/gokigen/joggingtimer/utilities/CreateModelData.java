@@ -27,7 +27,14 @@ public class CreateModelData implements CreateModelDataDialog.Callback
                 {
                     try
                     {
-                        database.createTimeEntryModelData(lap, hour, minute, second, "");
+                        if (lap > 0)
+                        {
+                            database.createTimeEntryModelData(lap, hour, minute, second, "");
+                        }
+                        else
+                        {
+                            Log.v(TAG, "MODIFIED TO : " + hour + ":" + minute + ":" + second);
+                        }
                     }
                     catch (Exception e)
                     {

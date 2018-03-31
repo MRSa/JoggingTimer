@@ -3,6 +3,9 @@ package net.osdn.gokigen.joggingtimer.recorddetail;
 import android.util.Log;
 import android.view.View;
 
+import net.osdn.gokigen.joggingtimer.storage.ITimeEntryDatabase;
+import net.osdn.gokigen.joggingtimer.utilities.TimeStringConvert;
+
 /**
  *
  *
@@ -10,51 +13,61 @@ import android.view.View;
 public class DetailRecord implements View.OnClickListener, View.OnLongClickListener
 {
     private final String TAG = toString();
+    private final long indexId;
     private final long dataId;
     private final int recordType;
-    private String lapCount;
-    private String title;
-    private String detail;
+    private final int lapCount;
+    private final IDetailEditor editorLauncher;
+    private long lapTime;
+    private long overallTime;
+    private long differenceTime;
 
     /**
      *
      */
-    DetailRecord(long dataId, int recordType, String lapCount, String title, String detail)
+    DetailRecord(long indexId, long dataId, int recordType, int lapCount, long lapTime, long overallTime, long differenceTime, IDetailEditor editorLauncher)
     {
+        this.indexId = indexId;
         this.dataId = dataId;
         this.recordType = recordType;
         this.lapCount = lapCount;
-        this.title = title;
-        this.detail = detail;
+        this.lapTime = lapTime;
+        this.overallTime = overallTime;
+        this.differenceTime = differenceTime;
+        this.editorLauncher = editorLauncher;
     }
 
     String getLapCount()
     {
-        return (lapCount);
+        return ("" + lapCount);
     }
 
     String getTitle()
     {
-        return (title);
+        return (TimeStringConvert.getTimeString(lapTime).toString());
     }
 
     String getDetail()
     {
-        return (detail);
+        return (TimeStringConvert.getTimeString(overallTime).toString() + " (" + TimeStringConvert.getDiffTimeString(differenceTime).toString() +") ");
     }
 
     @Override
     public void onClick(View v)
     {
-        Log.v(TAG, "Clicked : [" + dataId + "] (" + lapCount + ") " + title + " " + detail);
-
+        Log.v(TAG, "Clicked : [" + dataId + "] (" + lapCount + ") " + getTitle() + " " + getDetail());
     }
 
     @Override
     public boolean onLongClick(View v)
     {
-        Log.v(TAG, "LONG Clicked : [" + dataId + "] (" + lapCount + ") " + title + " " + detail + " TYPE : " + recordType);
+        Log.v(TAG, "LONG Clicked : [" + dataId + "] (" + lapCount + ") " + getTitle() + " " + getDetail() + " TYPE : " + recordType);
 
+        if (recordType == ITimeEntryDatabase.EDITABLE_RECORD_TYPE)
+        {
+            // Edit Laptime Record...
+            editorLauncher.editDetailData(indexId, dataId, lapCount, lapTime);
+        }
         return (false);
     }
 }
