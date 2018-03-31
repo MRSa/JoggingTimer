@@ -11,7 +11,6 @@ import net.osdn.gokigen.joggingtimer.storage.TimeEntryDatabaseFactory;
 import net.osdn.gokigen.joggingtimer.storage.contract.TimeEntryData;
 import net.osdn.gokigen.joggingtimer.utilities.CreateModelData;
 import net.osdn.gokigen.joggingtimer.utilities.CreateModelDataDialog;
-import net.osdn.gokigen.joggingtimer.utilities.TimeStringConvert;
 
 import static android.provider.BaseColumns._ID;
 
@@ -213,11 +212,14 @@ public class RecordDetailSetup  implements ITimeEntryDatabaseCallback, IDetailEd
     /**
      *
      */
-    CreateModelDataDialog.Callback getCreateModelDataCallback()
+    CreateModelDataDialog.Callback getCreateModelDataCallback(long indexId, long dataId)
     {
-        return (new CreateModelData(database));
+        return (new CreateModelData(database, indexId, dataId));
     }
 
+    /**
+     *    IDetailEditor.editDetailData()
+     */
     @Override
     public void editDetailData(final long indexId, final long dataId, final int count, final long defaultMillis)
     {
@@ -227,7 +229,7 @@ public class RecordDetailSetup  implements ITimeEntryDatabaseCallback, IDetailEd
             public void run()
             {
                 CreateModelDataDialog dialog2 = new CreateModelDataDialog(activity);
-                dialog2.show(false, activity.getString(R.string.information_modify_time), getCreateModelDataCallback(), defaultMillis);
+                dialog2.show(false, activity.getString(R.string.information_modify_time), getCreateModelDataCallback(indexId, dataId), defaultMillis);
             }
         });
     }

@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import net.osdn.gokigen.joggingtimer.R;
+import net.osdn.gokigen.joggingtimer.storage.ITimeEntryDatabase;
 import net.osdn.gokigen.joggingtimer.utilities.CreateModelDataDialog;
 import net.osdn.gokigen.joggingtimer.utilities.DataEditDialog;
 
@@ -248,7 +249,7 @@ public class DetailActivity extends WearableActivity implements RecordDetailSetu
                 break;
             case R.id.menu_create_model:
                 CreateModelDataDialog dialog2 = new CreateModelDataDialog(this);
-                dialog2.show(true, getString(R.string.information_time_picker), setupper.getCreateModelDataCallback(), 0);
+                dialog2.show(true, getString(R.string.information_time_picker), setupper.getCreateModelDataCallback(ITimeEntryDatabase.DONT_USE_ID, ITimeEntryDatabase.DONT_USE_ID), 0);
                 break;
 
             case R.id.menu_set_reference:

@@ -9,7 +9,6 @@ import android.util.Log;
 
 import net.osdn.gokigen.joggingtimer.storage.contract.TimeEntryData;
 import net.osdn.gokigen.joggingtimer.storage.contract.TimeEntryIndex;
-import net.osdn.gokigen.joggingtimer.utilities.TimeStringConvert;
 
 import static android.provider.BaseColumns._ID;
 

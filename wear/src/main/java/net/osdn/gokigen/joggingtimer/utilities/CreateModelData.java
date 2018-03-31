@@ -8,11 +8,14 @@ public class CreateModelData implements CreateModelDataDialog.Callback
 {
     private final String TAG = toString();
     private final ITimeEntryDatabase database;
+    private final long indexId;
+    private final long detailId;
 
-    public CreateModelData(ITimeEntryDatabase database)
+    public CreateModelData(ITimeEntryDatabase database, long indexId, long detailId)
     {
         this.database = database;
-
+        this.indexId = indexId;
+        this.detailId = detailId;
     }
 
     @Override
@@ -33,7 +36,7 @@ public class CreateModelData implements CreateModelDataDialog.Callback
                         }
                         else
                         {
-                            Log.v(TAG, "MODIFIED TO : " + hour + ":" + minute + ":" + second);
+                            Log.v(TAG, "MODIFIED TO : " + hour + ":" + minute + ":" + second + " indexId: " + indexId + "  dataId: " + detailId);
                         }
                     }
                     catch (Exception e)

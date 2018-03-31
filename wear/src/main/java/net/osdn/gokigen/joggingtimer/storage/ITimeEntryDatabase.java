@@ -8,8 +8,9 @@ import android.database.Cursor;
  */
 public interface ITimeEntryDatabase
 {
-    static final long DEFAULT_RECORD_TYPE = 0;
-    static final long EDITABLE_RECORD_TYPE = 1;
+    long DONT_USE_ID = -1;
+    long DEFAULT_RECORD_TYPE = 0;
+    long EDITABLE_RECORD_TYPE = 1;
 
     void prepare();
     void close();

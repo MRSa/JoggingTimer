@@ -12,7 +12,7 @@ public interface ITimeEntryDatabaseCallback
         APPENDED,
         FINISHED,
         //UPDATED,
-    };
+    }
 
     void prepareFinished(boolean isReady);
     void dataEntryFinished(OperationType operationType, boolean result, long id, String title);
