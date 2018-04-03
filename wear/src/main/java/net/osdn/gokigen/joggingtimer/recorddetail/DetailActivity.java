@@ -12,10 +12,11 @@ import android.widget.Toast;
 
 import net.osdn.gokigen.joggingtimer.R;
 import net.osdn.gokigen.joggingtimer.storage.ITimeEntryDatabase;
+import net.osdn.gokigen.joggingtimer.utilities.CreateModelData;
 import net.osdn.gokigen.joggingtimer.utilities.CreateModelDataDialog;
 import net.osdn.gokigen.joggingtimer.utilities.DataEditDialog;
 
-public class DetailActivity extends WearableActivity implements RecordDetailSetup.IDatabaseReadyNotify, MenuItem.OnMenuItemClickListener, DataEditDialog.Callback
+public class DetailActivity extends WearableActivity implements RecordDetailSetup.IDatabaseReadyNotify, MenuItem.OnMenuItemClickListener, DataEditDialog.Callback, CreateModelData.IEditedModelDataCallback
 {
     private final String TAG = toString();
     public static final String INTENT_EXTRA_DATA_ID = "Detail.dataId";
@@ -117,7 +118,7 @@ public class DetailActivity extends WearableActivity implements RecordDetailSetu
             long indexId = getIntent().getLongExtra(INTENT_EXTRA_DATA_ID, -1);
             Log.v(TAG, "onResume() " + indexId);
 
-            setupper = new RecordDetailSetup(this, indexId, this, detailAdapter);
+            setupper = new RecordDetailSetup(this, indexId, this, detailAdapter, this);
             setupper.setup();
         }
         catch (Exception e)
@@ -249,7 +250,7 @@ public class DetailActivity extends WearableActivity implements RecordDetailSetu
                 break;
             case R.id.menu_create_model:
                 CreateModelDataDialog dialog2 = new CreateModelDataDialog(this);
-                dialog2.show(true, getString(R.string.information_time_picker), setupper.getCreateModelDataCallback(ITimeEntryDatabase.DONT_USE_ID, ITimeEntryDatabase.DONT_USE_ID), 0);
+                dialog2.show(true, getString(R.string.information_time_picker), 0, setupper.getCreateModelDataCallback(ITimeEntryDatabase.DONT_USE_ID, ITimeEntryDatabase.DONT_USE_ID), 0);
                 break;
 
             case R.id.menu_set_reference:
@@ -307,5 +308,11 @@ public class DetailActivity extends WearableActivity implements RecordDetailSetu
         {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void editedModelData(long indexId, long detailId, int lapCount, long prevTime, long newTime)
+    {
+        Log.v(TAG, "editedModelData() " + indexId + " " + detailId + " " + lapCount + " (" + prevTime + " -> " + newTime + ")");
     }
 }

@@ -32,7 +32,7 @@ public class CreateModelDataDialog
      *
      * @param callback  結果をコールバック
      */
-    public void show(boolean isLap, String title, final Callback callback, long defaultValue)
+    public void show(final boolean isLap, String title, final int lapCount, final Callback callback, final long defaultValue)
     {
         Log.v(TAG, "show " + "def. : " + defaultValue);
 
@@ -68,6 +68,7 @@ public class CreateModelDataDialog
             }
             else
             {
+                lap.setValue(lapCount);
                 lap.setVisibility(View.GONE);
                 lapStartText.setVisibility(View.GONE);
                 lapEndText.setVisibility(View.GONE);
@@ -98,8 +99,9 @@ public class CreateModelDataDialog
                         try
                         {
                             Log.v(TAG, "ENTRY [" + lap.getValue() + "] " + hour.getValue() + ":" + minute.getValue() + ":" + second.getValue());
-                            int lapCount = (lap.getVisibility() == View.GONE) ? -1 : lap.getValue();
-                            callback.dataCreated(lapCount, hour.getValue(), minute.getValue(), second.getValue());
+                            int lapC = (isLap) ? lap.getValue() : lapCount;
+                            long newMillis = (hour.getValue() * 60 * 60 * 1000) + (minute.getValue() * 60 * 1000) + (second.getValue() * 1000);
+                            callback.dataCreated(isLap, lapC, defaultValue, newMillis);
                         }
                         catch (Exception e)
                         {
@@ -127,7 +129,7 @@ public class CreateModelDataDialog
     // コールバックインタフェース
     public interface Callback
     {
-        void dataCreated(int lap, int hour, int minute, int second); // OKを選択したとき
+        void dataCreated(boolean isLap, int lap, long previousValue, long newValue); // OKを選択したとき
         void dataCreateCancelled();  // キャンセルしたとき
     }
 }

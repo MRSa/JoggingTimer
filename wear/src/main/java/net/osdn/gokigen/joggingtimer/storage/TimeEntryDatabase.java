@@ -267,9 +267,8 @@ class TimeEntryDatabase implements ITimeEntryDatabase
      *
      */
     @Override
-    public void createTimeEntryModelData(int lap, int hour, int minute, int second, @NonNull String memo)
+    public void createTimeEntryModelData(int lap, long totalTime, @NonNull String memo)
     {
-        long totalTime = (hour * (1000 * 60 * 60)) + (minute * (1000 * 60)) + second;
         long diffTime = totalTime / (long) lap;
         String title = " " + lap + " LAPs Model";
         Log.v(TAG, "ENTRY : '" + lap + " " + title + "' mills : " + "(" + diffTime + ") " + memo);

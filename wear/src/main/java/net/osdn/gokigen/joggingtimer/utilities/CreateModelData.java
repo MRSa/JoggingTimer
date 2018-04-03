@@ -8,18 +8,20 @@ public class CreateModelData implements CreateModelDataDialog.Callback
 {
     private final String TAG = toString();
     private final ITimeEntryDatabase database;
+    private final IEditedModelDataCallback editCallback;
     private final long indexId;
     private final long detailId;
 
-    public CreateModelData(ITimeEntryDatabase database, long indexId, long detailId)
+    public CreateModelData(ITimeEntryDatabase database, IEditedModelDataCallback editCallback, long indexId, long detailId)
     {
         this.database = database;
+        this.editCallback = editCallback;
         this.indexId = indexId;
         this.detailId = detailId;
     }
 
     @Override
-    public void dataCreated(final int lap, final int hour, final int minute, final int second)
+    public void dataCreated(final boolean isLap, final int lap, final long prevValue, final long newValue)
     {
         try
         {
@@ -30,13 +32,17 @@ public class CreateModelData implements CreateModelDataDialog.Callback
                 {
                     try
                     {
-                        if (lap > 0)
+                        if (isLap)
                         {
-                            database.createTimeEntryModelData(lap, hour, minute, second, "");
+                            database.createTimeEntryModelData(lap, newValue, "");
                         }
                         else
                         {
-                            Log.v(TAG, "MODIFIED TO : " + hour + ":" + minute + ":" + second + " indexId: " + indexId + "  dataId: " + detailId);
+                            Log.v(TAG, "[" + lap + "] " + "MODIFIED FROM  " + prevValue + " TO " + newValue + " indexId: " + indexId + "  dataId: " + detailId);
+                            if (editCallback != null)
+                            {
+                                editCallback.editedModelData(indexId, detailId, lap, prevValue, newValue);
+                            }
                         }
                     }
                     catch (Exception e)
@@ -58,5 +64,10 @@ public class CreateModelData implements CreateModelDataDialog.Callback
     {
         Log.v(TAG, "dataCreateCancelled()");
 
+    }
+
+    public interface IEditedModelDataCallback
+    {
+        void editedModelData(long indexId, long detailId, int lapCount, long prevValue, long newValue);
     }
 }

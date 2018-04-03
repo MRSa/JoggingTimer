@@ -25,18 +25,20 @@ public class RecordDetailSetup  implements ITimeEntryDatabaseCallback, IDetailEd
     private final long indexId;
     private final IDatabaseReadyNotify callback;
     private final IRecordOperation operation;
+    private final CreateModelData.IEditedModelDataCallback editCallback;
     private ITimeEntryDatabase database = null;
 
     /**
      *
      *
      */
-    RecordDetailSetup(WearableActivity activity, long indexId, IDatabaseReadyNotify callback, IRecordOperation operation)
+    RecordDetailSetup(WearableActivity activity, long indexId, IDatabaseReadyNotify callback, IRecordOperation operation, CreateModelData.IEditedModelDataCallback  editCallback)
     {
         this.activity = activity;
         this.indexId = indexId;
         this.callback = callback;
         this.operation = operation;
+        this.editCallback = editCallback;
     }
 
     /**
@@ -214,7 +216,7 @@ public class RecordDetailSetup  implements ITimeEntryDatabaseCallback, IDetailEd
      */
     CreateModelDataDialog.Callback getCreateModelDataCallback(long indexId, long dataId)
     {
-        return (new CreateModelData(database, indexId, dataId));
+        return (new CreateModelData(database, editCallback, indexId, dataId));
     }
 
     /**
@@ -229,7 +231,7 @@ public class RecordDetailSetup  implements ITimeEntryDatabaseCallback, IDetailEd
             public void run()
             {
                 CreateModelDataDialog dialog2 = new CreateModelDataDialog(activity);
-                dialog2.show(false, activity.getString(R.string.information_modify_time), getCreateModelDataCallback(indexId, dataId), defaultMillis);
+                dialog2.show(false, activity.getString(R.string.information_modify_time), count, getCreateModelDataCallback(indexId, dataId), defaultMillis);
             }
         });
     }
