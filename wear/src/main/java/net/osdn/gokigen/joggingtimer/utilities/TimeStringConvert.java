@@ -29,7 +29,6 @@ public class TimeStringConvert
             return (String.format(Locale.US,"%02d'%02d\"%d", minutes, sec, ms));
         }
         return (String.format(Locale.US,"%d:%02d'%02d\"%d", hours, minutes, sec, ms));
-        //return (DateFormat.format("hh:mm:ss.S", time));
     }
 
     /**
