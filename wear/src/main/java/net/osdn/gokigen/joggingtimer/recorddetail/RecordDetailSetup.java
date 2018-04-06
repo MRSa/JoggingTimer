@@ -1,6 +1,7 @@
 package net.osdn.gokigen.joggingtimer.recorddetail;
 
 import android.database.Cursor;
+import android.support.annotation.NonNull;
 import android.support.wearable.activity.WearableActivity;
 import android.util.Log;
 
@@ -234,6 +235,31 @@ public class RecordDetailSetup  implements ITimeEntryDatabaseCallback, IDetailEd
                 dialog2.show(false, activity.getString(R.string.information_modify_time), count, getCreateModelDataCallback(indexId, dataId), defaultMillis);
             }
         });
+    }
+
+    /**
+     *
+     */
+    public void updateDatabaseRecord(@NonNull RecordDetailAdapter adapter)
+    {
+        try
+        {
+            int count = adapter.getItemCount();
+            if (count > 1)
+            {
+                for (int index = 0; index < count; index++)
+                {
+                    DetailRecord record = adapter.getRecord(index);
+                    long id = record.getDataId();
+                    long time = record.getTotalTime();
+                    database.updateTimeEntryData(id, time);
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
     }
 
     /**

@@ -63,6 +63,20 @@ public class RecordDetailAdapter  extends RecyclerView.Adapter<DetailHolder>  im
         }
     }
 
+    @Override
+    public DetailRecord getRecord(int position)
+    {
+        try
+        {
+            return (list.get(position));
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        return (null);
+    }
+
     /**
      *
      *

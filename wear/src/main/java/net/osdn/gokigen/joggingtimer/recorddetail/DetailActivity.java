@@ -281,6 +281,10 @@ public class DetailActivity extends WearableActivity implements RecordDetailSetu
         return (ret);
     }
 
+
+    /**
+     *
+     */
     @Override
     public void dataEdited(int iconId, String title)
     {
@@ -296,8 +300,10 @@ public class DetailActivity extends WearableActivity implements RecordDetailSetu
         }
     }
 
-    @Override
-    public void cancelled()
+    /**
+     *
+     */
+    private void updateScreen()
     {
         try
         {
@@ -310,9 +316,67 @@ public class DetailActivity extends WearableActivity implements RecordDetailSetu
         }
     }
 
+    /**
+     *
+     */
+    @Override
+    public void cancelled()
+    {
+        updateScreen();
+    }
+
+    /**
+     *
+     */
     @Override
     public void editedModelData(long indexId, long detailId, int lapCount, long prevTime, long newTime)
     {
         Log.v(TAG, "editedModelData() " + indexId + " " + detailId + " " + lapCount + " (" + prevTime + " -> " + newTime + ")");
+        if (detailAdapter == null)
+        {
+            return;
+        }
+
+        long diffTime = newTime - prevTime;
+        int count = detailAdapter.getItemCount();
+        if (count > 1)
+        {
+            long totalTime = 0;
+            long modTime = diffTime * (-1) / (count - 1);
+            for (int index = 1; index <= count; index++)
+            {
+                DetailRecord record = detailAdapter.getRecord(index - 1);
+                if (lapCount == index)
+                {
+                    totalTime = record.addModifiedTime(diffTime, totalTime);
+                }
+                else
+                {
+                    totalTime = record.addModifiedTime(modTime, totalTime);
+                }
+
+                detailAdapter.notifyItemChanged(index - 1);
+            }
+            try
+            {
+                Thread thread = new Thread(new Runnable()
+                {
+                    @Override
+                    public void run()
+                    {
+                        if (setupper != null)
+                        {
+                            setupper.updateDatabaseRecord(detailAdapter);
+                        }
+                    }
+                });
+                thread.start();
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+        }
+        detailAdapter.notifyDataSetChanged();
     }
 }

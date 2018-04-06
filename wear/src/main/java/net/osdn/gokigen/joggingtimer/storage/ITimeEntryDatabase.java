@@ -28,5 +28,5 @@ public interface ITimeEntryDatabase
     void finishTimeData(long indexId, long startTime, long endTime);
 
     void createTimeEntryModelData(int lap, long totalTime, String memo);
-
+    int updateTimeEntryData(long detailId, long totalTime);
 }

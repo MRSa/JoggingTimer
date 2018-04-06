@@ -292,6 +292,28 @@ class TimeEntryDatabase implements ITimeEntryDatabase
         callback.modelDataEntryFinished(ITimeEntryDatabaseCallback.OperationType.FINISHED, false, -1, title);
     }
 
+    /**
+     *
+     *
+     */
+    @Override
+    public int  updateTimeEntryData(long detailId, long totalTime)
+    {
+        int rows = 0;
+        Log.v(TAG, "updateTimeEntryData (" + detailId + ") : " + totalTime);
+        try
+        {
+            ContentValues timeValue = new ContentValues();
+            timeValue.put(TimeEntryData.EntryData.COLUMN_NAME_TIME_ENTRY, totalTime);
+           rows =  db.update(TimeEntryData.EntryData.TABLE_NAME, timeValue, _ID + " = " + detailId, null);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        return (rows);
+     }
+
 /*
     public boolean prepareToRead()
     {
