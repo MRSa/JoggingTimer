@@ -25,9 +25,13 @@ public class LapTimeGraphView extends View
     private boolean isStarted = false;
     private long maxLaptime = 0;
     private long lastSystemLaptime = 0;
-    private long currentLapTime = 0;
+    //private long currentLapTime = 0;
     private int totalLaptimeCount = 0;
+
+    private List<Long> refTimeList = null;
     private List<Long> refLapTimeList = null;
+
+    private List<Long> curTimeList = null;
     private List<Long> curLapTimeList = null;
 
     /**
@@ -224,7 +228,7 @@ public class LapTimeGraphView extends View
         float startX = 0.0f;
         if ((curLapTimeList.size() <= 0)&&(isStarted))
         {
-            currentLapTime = System.currentTimeMillis() - lastSystemLaptime;
+            long currentLapTime = System.currentTimeMillis() - lastSystemLaptime;
             canvas.drawCircle((startX + (boxWidthUnit / 2.0f)), (height - boxHeightUnit * currentLapTime), circleRadius, paint);
             return;
         }
@@ -237,7 +241,7 @@ public class LapTimeGraphView extends View
 
         if (isStarted)
         {
-            currentLapTime = System.currentTimeMillis() - lastSystemLaptime;
+            long currentLapTime = System.currentTimeMillis() - lastSystemLaptime;
             canvas.drawCircle((startX + (boxWidthUnit / 2.0f)), (height - boxHeightUnit * currentLapTime), circleRadius, paint);
         }
     }
@@ -259,20 +263,49 @@ public class LapTimeGraphView extends View
         //canvas.drawRect(rect, paint);
 
         int lapCount = 0;
-        if (curLapTimeList != null)
+        int refCount = 0;
+        long diffTime = 0;
+        try
         {
-            lapCount = curLapTimeList.size();
+            if (curTimeList != null)
+            {
+                lapCount = curTimeList.size();
+            }
+
+            if (refTimeList != null)
+            {
+                refCount = refTimeList.size();
+            }
+
+            if (lapCount > 1)
+            {
+                long totalTime = curTimeList.get(lapCount - 1) - curTimeList.get(0);
+                if ((lapCount <= refCount)&&(refTimeList != null))
+                {
+                    diffTime = totalTime - (refTimeList.get(lapCount - 1) - refTimeList.get(0));
+                }
+            }
         }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
 
         String lap = "";
-        if (currentLapTime == 0)
+        if (diffTime != 0)
         {
-            lap = TimeStringConvert.getDiffTimeString(currentLapTime).toString();
+            lap = TimeStringConvert.getDiffTimeString(diffTime).toString();
         }
-        String message = " [" + lapCount +"/" + totalLaptimeCount + "] " + lap;
+        String message = "T:" + lap;
+        paint.setTextSize(32.0f);
+        paint.setAntiAlias(true);
+        Paint.FontMetrics fm = paint.getFontMetrics();
+        float textHeight = fm.descent - fm.ascent;
         float textWidth = paint.measureText(message);
-
-        canvas.drawText(message, ((width / 2) - (textWidth / 2)) , height / 2, paint);
+        float x = 0.0f;//(width < textWidth) ? 0.0f : (width - textWidth - 8.0f);
+        float y = (height - textHeight - 2) - fm.ascent;
+        canvas.drawText(message, x , y, paint);
     }
 
     /**
@@ -287,7 +320,7 @@ public class LapTimeGraphView extends View
         }
         refLapTimeList = null;
 
-        List<Long> refTimeList = timerCounter.getReferenceLapTimeList();
+        refTimeList = timerCounter.getReferenceLapTimeList();
         totalLaptimeCount = refTimeList.size();
         maxLaptime = 0;
         if (totalLaptimeCount <= 1)
@@ -321,8 +354,8 @@ public class LapTimeGraphView extends View
         {
             return;
         }
-        List<Long> lapTimeList = timerCounter.getLapTimeList();
-        int lapTimeCount = lapTimeList.size();
+        curTimeList = timerCounter.getLapTimeList();
+        int lapTimeCount = curTimeList.size();
         if (lapTimeCount > totalLaptimeCount)
         {
             totalLaptimeCount = lapTimeCount;
@@ -334,13 +367,13 @@ public class LapTimeGraphView extends View
         }
         if (lapTimeCount == 1)
         {
-            lastSystemLaptime = lapTimeList.get(0);
+            lastSystemLaptime = curTimeList.get(0);
             return;
         }
 
         curLapTimeList.clear();
-        long prevTime = lapTimeList.get(0);
-        for (Long time : lapTimeList)
+        long prevTime = curTimeList.get(0);
+        for (Long time : curTimeList)
         {
             long currTime = time - prevTime;
             if (currTime > 0)
