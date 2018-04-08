@@ -33,7 +33,7 @@ public class MainActivity extends WearableActivity implements IClickCallback, My
     private final IWearableActivityControl controller = new WearableActivityController();
     private MyTimerCounter counter = new MyTimerCounter();
     private boolean isCounterLapTime = true;
-    private boolean isLaptimeView = false;
+    private boolean isLaptimeView = true;
     private int currentLapCount = 0;
     private ITimerStopTrigger stopTrigger = null;
 
@@ -90,9 +90,6 @@ public class MainActivity extends WearableActivity implements IClickCallback, My
             // start a timer!
             startTimer();
         }
-
-        // 表示ビューの切り替え
-        changeGraphicView(isLaptimeView);
     }
 
     /**
@@ -669,7 +666,13 @@ public class MainActivity extends WearableActivity implements IClickCallback, My
             @Override
             public void run()
             {
+                // ラップタイム表示状態の更新
                 reloadLapTimeList(forceStartTimer);
+
+                // 表示ビューの切り替え
+                changeGraphicView(isLaptimeView);
+
+                // 表示のボタン状態を変更
                 updateTimerLabel();
             }
         });

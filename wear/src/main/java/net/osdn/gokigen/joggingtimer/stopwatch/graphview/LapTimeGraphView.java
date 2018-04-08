@@ -25,7 +25,6 @@ public class LapTimeGraphView extends View
     private boolean isStarted = false;
     private long maxLaptime = 0;
     private long lastSystemLaptime = 0;
-    //private long currentLapTime = 0;
     private int totalLaptimeCount = 0;
 
     private List<Long> refTimeList = null;
@@ -332,6 +331,10 @@ public class LapTimeGraphView extends View
         refLapTimeList = null;
 
         refTimeList = timerCounter.getReferenceLapTimeList();
+        if (refTimeList == null)
+        {
+            return;
+        }
         totalLaptimeCount = refTimeList.size();
         maxLaptime = 0;
         if (totalLaptimeCount <= 1)
