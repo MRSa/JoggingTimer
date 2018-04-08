@@ -84,6 +84,7 @@ public class MainActivity extends WearableActivity implements IClickCallback, My
                 }
             }
         }
+        isLaptimeView = controller.getDisplayMode();
         controller.setupReferenceData();
 
         if (isStartTimer)
@@ -458,6 +459,7 @@ public class MainActivity extends WearableActivity implements IClickCallback, My
     public boolean pushedArea()
     {
         isLaptimeView = !isLaptimeView;
+        controller.setDisplayMode(isLaptimeView);
         Log.v(TAG, "pushedArea() : " + isLaptimeView);
         changeGraphicView(isLaptimeView);
         updateTimerLabel();

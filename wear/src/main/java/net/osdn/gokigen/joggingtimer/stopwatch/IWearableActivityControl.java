@@ -17,7 +17,9 @@ public interface IWearableActivityControl
 
     IDataEntry getDataEntry();
 
+    boolean getDisplayMode();
     void timerStarted(boolean isStarted);
+    void setDisplayMode(boolean displayLapTime);
     void addTimeStamp(long count, long lapTime, long diffTime);
     void clearTimeStamp();
     int getLapTimeCount();

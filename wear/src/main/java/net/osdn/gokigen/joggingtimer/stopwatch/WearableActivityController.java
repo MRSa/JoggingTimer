@@ -38,6 +38,7 @@ class WearableActivityController implements IWearableActivityControl, ITimeEntry
     private final String TAG = toString();
     private final String PREF_KEY_TIMER_STARTED = "TMR_START";
     private final String PREF_KEY_TIMER_INDEXID = "TMR_INDEX";
+    private final String PREF_KEY_DISPLAY_LAPGRAPHIC = "DISP_LAPGRPH";
 
     private SharedPreferences preferences = null;
     private final ButtonClickListener clickListener = new ButtonClickListener();
@@ -258,6 +259,20 @@ class WearableActivityController implements IWearableActivityControl, ITimeEntry
     }
 
     @Override
+    public boolean getDisplayMode()
+    {
+        try
+        {
+            return (preferences.getBoolean(PREF_KEY_DISPLAY_LAPGRAPHIC, false));
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        return (false);
+    }
+
+    @Override
     public void timerStarted(boolean isStarted)
     {
         try
@@ -271,6 +286,22 @@ class WearableActivityController implements IWearableActivityControl, ITimeEntry
             e.printStackTrace();
         }
     }
+
+    @Override
+    public void setDisplayMode(boolean displayLapTime)
+    {
+        try
+        {
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.putBoolean(PREF_KEY_DISPLAY_LAPGRAPHIC, displayLapTime);
+            editor.apply();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+
 
     @Override
     public void addTimeStamp(long count, long lapTime, long diffTime)
