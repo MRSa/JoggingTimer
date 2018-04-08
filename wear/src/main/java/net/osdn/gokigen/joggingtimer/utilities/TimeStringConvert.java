@@ -41,6 +41,11 @@ public class TimeStringConvert
         int sec = abs((int) (millis / 1000) % 60);
         int minutes = abs((int) ((millis / (1000 * 60))));
         String retString = (millis > 0) ? "+" : "-";
+        if (abs(millis) <= 99)
+        {
+            // 表示限界よりも小さい場合には正負の記号は表示しない
+            retString = "";
+        }
         if (minutes < 1)
         {
             retString = retString + String.format(Locale.US,"%d\"%d", sec, ms);
