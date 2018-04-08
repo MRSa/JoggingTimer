@@ -32,7 +32,7 @@ public class MainActivity extends WearableActivity implements IClickCallback, My
     private final String TAG = toString();
     private final IWearableActivityControl controller = new WearableActivityController();
     private MyTimerCounter counter = new MyTimerCounter();
-    private boolean isCounterLapTime = false;
+    private boolean isCounterLapTime = true;
     private boolean isLaptimeView = false;
     private int currentLapCount = 0;
     private ITimerStopTrigger stopTrigger = null;

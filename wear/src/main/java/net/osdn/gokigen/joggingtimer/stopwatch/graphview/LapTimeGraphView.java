@@ -265,6 +265,7 @@ public class LapTimeGraphView extends View
         int lapCount = 0;
         int refCount = 0;
         long diffTime = 0;
+        long lapTime = 0;
         try
         {
             if (curTimeList != null)
@@ -280,9 +281,13 @@ public class LapTimeGraphView extends View
             if (lapCount > 1)
             {
                 long totalTime = curTimeList.get(lapCount - 1) - curTimeList.get(0);
+                long currTime =  curTimeList.get(lapCount - 1) - curTimeList.get(lapCount - 2);
+                //long currTime =  (lapCount > 2) ? curTimeList.get(lapCount - 1) - curTimeList.get(lapCount - 2) : 0;
                 if ((lapCount <= refCount)&&(refTimeList != null))
                 {
                     diffTime = totalTime - (refTimeList.get(lapCount - 1) - refTimeList.get(0));
+                    lapTime = currTime - (refTimeList.get(lapCount - 1) - refTimeList.get(lapCount - 2));
+                    //lapTime = currTime - ((lapCount > 2) ? refTimeList.get(lapCount - 1) - refTimeList.get(lapCount - 2) : 0);
                 }
             }
         }
@@ -292,20 +297,26 @@ public class LapTimeGraphView extends View
         }
 
 
-        String lap = "";
+        String ovearll = "";
         if (diffTime != 0)
         {
-            lap = TimeStringConvert.getDiffTimeString(diffTime).toString();
+            ovearll = "T:" + TimeStringConvert.getDiffTimeString(diffTime).toString();
         }
-        String message = "T:" + lap;
+        String lap = "";
+        if (lapTime != 0)
+        {
+            lap = TimeStringConvert.getDiffTimeString(lapTime).toString();
+        }
+
         paint.setTextSize(32.0f);
         paint.setAntiAlias(true);
         Paint.FontMetrics fm = paint.getFontMetrics();
         float textHeight = fm.descent - fm.ascent;
-        float textWidth = paint.measureText(message);
-        float x = 0.0f;//(width < textWidth) ? 0.0f : (width - textWidth - 8.0f);
+        float textWidth = paint.measureText(ovearll);
+        float x = (width < textWidth) ? 0.0f : (width - textWidth - 8.0f);
         float y = (height - textHeight - 2) - fm.ascent;
-        canvas.drawText(message, x , y, paint);
+        canvas.drawText(ovearll, x , y, paint);
+        canvas.drawText(lap, 0.0f , y, paint);
     }
 
     /**
