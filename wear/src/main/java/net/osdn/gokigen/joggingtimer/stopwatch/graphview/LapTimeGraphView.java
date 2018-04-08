@@ -21,6 +21,7 @@ import java.util.List;
  */
 public class LapTimeGraphView extends View
 {
+    private Context context = null;
     private ITimerCounter timerCounter = null;
     private boolean isStarted = false;
     private long maxLaptime = 0;
@@ -68,6 +69,7 @@ public class LapTimeGraphView extends View
      */
     private void initComponent(Context context)
     {
+        this.context = context;
         setWillNotDraw(false);
         curLapTimeList = new ArrayList<>();
     }
@@ -307,15 +309,28 @@ public class LapTimeGraphView extends View
             lap = TimeStringConvert.getDiffTimeString(lapTime).toString();
         }
 
-        paint.setTextSize(32.0f);
+        // 表示する文字の大きさの決定
+        try
+        {
+            float density = context.getResources().getDisplayMetrics().density;
+            paint.setTextSize(density * 20.0f + 0.5f);  //
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            paint.setTextSize(32.0f);
+        }
         paint.setAntiAlias(true);
         Paint.FontMetrics fm = paint.getFontMetrics();
         float textHeight = fm.descent - fm.ascent;
         float textWidth = paint.measureText(ovearll);
+
+        // 表示位置の調整...
         float x = (width < textWidth) ? 0.0f : (width - textWidth - 8.0f);
         float y = (height - textHeight - 2) - fm.ascent;
-        canvas.drawText(ovearll, x , y, paint);
-        canvas.drawText(lap, 0.0f , y, paint);
+
+        canvas.drawText(ovearll, x , y, paint);     // 全体時間の遅れ・進み
+        canvas.drawText(lap, 0.0f , y, paint);  // 前回ラップ時間の遅れ・進み
     }
 
     /**
