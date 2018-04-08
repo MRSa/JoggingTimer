@@ -34,6 +34,7 @@ public class MainActivity extends WearableActivity implements IClickCallback, My
     private MyTimerCounter counter = new MyTimerCounter();
     private boolean isCounterLapTime = true;
     private boolean isLaptimeView = true;
+    private boolean pendingStart = false;
     private int currentLapCount = 0;
     private ITimerStopTrigger stopTrigger = null;
 
@@ -88,7 +89,8 @@ public class MainActivity extends WearableActivity implements IClickCallback, My
         if (isStartTimer)
         {
             // start a timer!
-            startTimer();
+            //startTimer();
+            pendingStart = true;
         }
     }
 
@@ -666,6 +668,14 @@ public class MainActivity extends WearableActivity implements IClickCallback, My
             @Override
             public void run()
             {
+
+                // 自動スタート時の処理。。
+                if (pendingStart)
+                {
+                    startTimer();
+                    pendingStart = false;
+                }
+
                 // ラップタイム表示状態の更新
                 reloadLapTimeList(forceStartTimer);
 
@@ -722,7 +732,6 @@ public class MainActivity extends WearableActivity implements IClickCallback, My
             e.printStackTrace();
         }
     }
-
 
     /**
      *
