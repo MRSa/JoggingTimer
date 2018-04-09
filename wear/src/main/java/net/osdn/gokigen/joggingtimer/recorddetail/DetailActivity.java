@@ -5,6 +5,7 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.wear.widget.WearableLinearLayoutManager;
 import android.support.wear.widget.WearableRecyclerView;
 import android.support.wear.widget.drawer.WearableActionDrawerView;
+import android.support.wear.widget.drawer.WearableNavigationDrawerView;
 import android.support.wearable.activity.WearableActivity;
 import android.util.Log;
 import android.view.MenuItem;
@@ -21,7 +22,7 @@ import net.osdn.gokigen.joggingtimer.utilities.DataEditDialog;
  *
  *
  */
-public class DetailActivity extends WearableActivity implements RecordDetailSetup.IDatabaseReadyNotify, MenuItem.OnMenuItemClickListener, DataEditDialog.Callback, CreateModelData.IEditedModelDataCallback
+public class DetailActivity extends WearableActivity implements RecordDetailSetup.IDatabaseReadyNotify, MenuItem.OnMenuItemClickListener, DataEditDialog.Callback, CreateModelData.IEditedModelDataCallback, DetailSelectionMenuAdapter.ISelectedMenu
 {
     private final String TAG = toString();
     public static final String INTENT_EXTRA_DATA_ID = "Detail.dataId";
@@ -47,6 +48,11 @@ public class DetailActivity extends WearableActivity implements RecordDetailSetu
 
         try
         {
+            WearableNavigationDrawerView naviView = findViewById(R.id.top_navigation_drawer);
+            DetailSelectionMenuAdapter menuAdapter = new DetailSelectionMenuAdapter(this, this);
+            naviView.setAdapter(menuAdapter);
+            naviView.addOnItemSelectedListener(menuAdapter);
+
             WearableRecyclerView view = findViewById(R.id.recycler_detail_view);
             detailAdapter = new RecordDetailAdapter();
             WearableLinearLayoutManager layoutManager = new WearableLinearLayoutManager(this);
@@ -242,8 +248,21 @@ public class DetailActivity extends WearableActivity implements RecordDetailSetu
     {
         Log.v(TAG, "onMenuItemClick(): " + item);
 
-        boolean ret = false;
         final int itemId = item.getItemId();
+        try
+        {
+            actionDrawerView.getController().closeDrawer();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        return (itemSelected(itemId));
+    }
+
+    private boolean itemSelected(int itemId)
+    {
+        boolean ret = false;
         String toastMessage = "";
         switch (itemId)
         {
@@ -253,6 +272,7 @@ public class DetailActivity extends WearableActivity implements RecordDetailSetu
                 dialog.show(R.drawable.ic_android_black_24dp, "", this);
                 ret = true;
                 break;
+
             case R.id.menu_create_model:
                 CreateModelDataDialog dialog2 = new CreateModelDataDialog(this);
                 dialog2.show(true, getString(R.string.information_time_picker), 0, setupper.getCreateModelDataCallback(ITimeEntryDatabase.DONT_USE_ID, ITimeEntryDatabase.DONT_USE_ID), 0);
@@ -270,8 +290,6 @@ public class DetailActivity extends WearableActivity implements RecordDetailSetu
         }
         try
         {
-            actionDrawerView.getController().closeDrawer();
-
             if (toastMessage.length() > 0)
             {
                 Toast toast = Toast.makeText(getApplicationContext(), toastMessage, Toast.LENGTH_SHORT);
@@ -383,5 +401,11 @@ public class DetailActivity extends WearableActivity implements RecordDetailSetu
             }
         }
         detailAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void selectedMenu(int itemId)
+    {
+        itemSelected(itemId);
     }
 }

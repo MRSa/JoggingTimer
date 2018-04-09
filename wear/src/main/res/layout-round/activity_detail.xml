@@ -41,15 +41,15 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/grey"
-        android:visibility="gone"
-        app:navigationStyle="multiPage" />
+        android:visibility="visible"
+        app:navigationStyle="singlePage" />
 
     <android.support.wear.widget.drawer.WearableActionDrawerView
         android:id="@+id/bottom_action_drawer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/grey"
-        android:visibility="visible"
+        android:visibility="gone"
         app:actionMenu="@menu/selector_detail" />
 
 </android.support.wear.widget.drawer.WearableDrawerLayout>
