@@ -213,14 +213,6 @@ public class RecordDetailSetup  implements ITimeEntryDatabaseCallback, IDetailEd
     }
 
     /**
-     *
-     */
-    CreateModelDataDialog.Callback getCreateModelDataCallback(long indexId, long dataId)
-    {
-        return (new CreateModelData(database, editCallback, indexId, dataId));
-    }
-
-    /**
      *    IDetailEditor.editDetailData()
      */
     @Override
@@ -232,7 +224,7 @@ public class RecordDetailSetup  implements ITimeEntryDatabaseCallback, IDetailEd
             public void run()
             {
                 CreateModelDataDialog dialog2 = new CreateModelDataDialog(activity);
-                dialog2.show(false, activity.getString(R.string.information_modify_time), count, getCreateModelDataCallback(indexId, dataId), defaultMillis);
+                dialog2.show(false, activity.getString(R.string.information_modify_time), count, new CreateModelData(database, editCallback, null, indexId, dataId), defaultMillis);
             }
         });
     }
@@ -260,6 +252,17 @@ public class RecordDetailSetup  implements ITimeEntryDatabaseCallback, IDetailEd
         {
             e.printStackTrace();
         }
+    }
+
+    /**
+     *   現在のデータを共有する
+     *
+     */
+    public void shareTheData()
+    {
+        Log.v(TAG, "shareTheData()");
+
+
     }
 
     /**

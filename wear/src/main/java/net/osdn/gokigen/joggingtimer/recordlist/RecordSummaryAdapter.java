@@ -17,7 +17,7 @@ import java.util.List;
  */
 public class RecordSummaryAdapter extends RecyclerView.Adapter<RecordHolder> implements IRecordOperation
 {
-    private List<DataRecord> list = null;
+    private List<DataRecord> list;
 
     /**
      *
@@ -113,11 +113,19 @@ public class RecordSummaryAdapter extends RecyclerView.Adapter<RecordHolder> imp
     @Override
     public long removeItem(int position)
     {
-        long indexId = list.get(position).getDataId();
-        list.remove(position);
-        notifyItemRemoved(position);
-        notifyItemRangeChanged(position, list.size());
-        return (indexId);
+        try
+        {
+            long indexId = list.get(position).getDataId();
+            list.remove(position);
+            notifyItemRemoved(position);
+            notifyItemRangeChanged(position, list.size());
+            return (indexId);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        return (-1);
     }
 
     /**

@@ -1,4 +1,4 @@
-package net.osdn.gokigen.joggingtimer.recorddetail;
+package net.osdn.gokigen.joggingtimer.recordlist;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
@@ -9,25 +9,18 @@ import net.osdn.gokigen.joggingtimer.R;
 import java.util.ArrayList;
 import java.util.List;
 
-
-/**
- *
- *
- */
-public class DetailSelectionMenuAdapter extends WearableNavigationDrawerView.WearableNavigationDrawerAdapter implements WearableNavigationDrawerView.OnItemSelectedListener
+public class ListSelectionMenuAdapter  extends WearableNavigationDrawerView.WearableNavigationDrawerAdapter implements WearableNavigationDrawerView.OnItemSelectedListener
 {
     private final Context context;
-    private final ISelectedMenu callback;
-    private List<MenuItem> menuItems = new ArrayList<>();
+    private final ListSelectionMenuAdapter.ISelectedMenu callback;
+    private List<ListSelectionMenuAdapter.MenuItem> menuItems = new ArrayList<>();
 
-    DetailSelectionMenuAdapter(Context context, ISelectedMenu callback)
+    ListSelectionMenuAdapter(Context context, ListSelectionMenuAdapter.ISelectedMenu callback)
     {
         this.context = context;
         this.callback = callback;
 
-        menuItems.add(new MenuItem(R.id.menu_edit_title, R.drawable.ic_edit_black_24dp, context.getString(R.string.action_edit_title)));
-        menuItems.add(new MenuItem(R.id.menu_set_reference, R.drawable.ic_assignment_turned_in_black_24dp, context.getString(R.string.action_set_reference)));
-        //menuItems.add(new MenuItem(R.id.menu_share_data, R.drawable.ic_share_black_24dp, context.getString(R.string.action_share_data)));
+        menuItems.add(new ListSelectionMenuAdapter.MenuItem(R.id.menu_create_model, R.drawable.ic_done_black_24dp, context.getString(R.string.action_create_model)));
     }
 
     @Override

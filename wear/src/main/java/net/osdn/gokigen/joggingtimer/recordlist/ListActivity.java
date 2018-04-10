@@ -5,19 +5,24 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.wear.widget.WearableLinearLayoutManager;
+import android.support.wear.widget.drawer.WearableNavigationDrawerView;
 import android.support.wearable.activity.WearableActivity;
 import android.support.wear.widget.WearableRecyclerView;
 import android.util.Log;
+import android.widget.Toast;
 
 import net.osdn.gokigen.joggingtimer.R;
 import net.osdn.gokigen.joggingtimer.recorddetail.DetailActivity;
+import net.osdn.gokigen.joggingtimer.storage.ITimeEntryDatabase;
 import net.osdn.gokigen.joggingtimer.utilities.ConfirmationDialog;
+import net.osdn.gokigen.joggingtimer.utilities.CreateModelData;
+import net.osdn.gokigen.joggingtimer.utilities.CreateModelDataDialog;
 
 /**
  *
  *
  */
-public class ListActivity extends WearableActivity implements IDetailLauncher, RecordSummarySetup.IDatabaseReadyNotify
+public class ListActivity extends WearableActivity implements IDetailLauncher, RecordSummarySetup.IDatabaseReadyNotify, CreateModelData.ICreatedModelDataCallback, ListSelectionMenuAdapter.ISelectedMenu
 {
     private final String TAG = toString();
     private RecordSummaryAdapter summaryAdapter = null;
@@ -39,6 +44,12 @@ public class ListActivity extends WearableActivity implements IDetailLauncher, R
 
         try
         {
+            WearableNavigationDrawerView naviView = findViewById(R.id.list_top_navigation_drawer);
+            ListSelectionMenuAdapter menuAdapter = new ListSelectionMenuAdapter(this, this);
+            naviView.setAdapter(menuAdapter);
+            naviView.addOnItemSelectedListener(menuAdapter);
+
+
             WearableRecyclerView view = findViewById(R.id.recycler_list_view);
             summaryAdapter = new RecordSummaryAdapter();
             WearableLinearLayoutManager layoutManager = new WearableLinearLayoutManager(this);
@@ -87,7 +98,7 @@ public class ListActivity extends WearableActivity implements IDetailLauncher, R
         Log.v(TAG, "onResume()");
         try
         {
-            setupper = new RecordSummarySetup(this, this, this, summaryAdapter);
+            setupper = new RecordSummarySetup(this, this, this, summaryAdapter, this);
             setupper.setup();
         }
         catch (Exception e)
@@ -199,6 +210,40 @@ public class ListActivity extends WearableActivity implements IDetailLauncher, R
      *
      *
      */
+    private void itemSelected(int itemId)
+    {
+        String toastMessage = "";
+        switch (itemId)
+        {
+            case R.id.menu_create_model:
+                // モデルデータの作成
+                CreateModelDataDialog dialog2 = new CreateModelDataDialog(this);
+                dialog2.show(true, getString(R.string.information_time_picker), 0, setupper.getCreateModelDataCallback(ITimeEntryDatabase.DONT_USE_ID, ITimeEntryDatabase.DONT_USE_ID), 0);
+                break;
+
+
+            default:
+                // 何もしない
+                break;
+        }
+        try
+        {
+            if (toastMessage.length() > 0)
+            {
+                Toast toast = Toast.makeText(getApplicationContext(), toastMessage, Toast.LENGTH_SHORT);
+                toast.show();
+            }
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     *
+     *
+     */
     @Override
     public void deleteRecord(@NonNull DataRecord targetRecord)
     {
@@ -256,5 +301,45 @@ public class ListActivity extends WearableActivity implements IDetailLauncher, R
     public void databaseSetupFinished(boolean result)
     {
         Log.v(TAG, "databaseSetupFinished() : " + result);
+    }
+
+    /**
+     *
+     *
+     */
+    @Override
+    public void selectedMenu(int itemId)
+    {
+        itemSelected(itemId);
+    }
+
+    /**
+     *
+     *
+     */
+    @Override
+    public void createdModelData(long indexId)
+    {
+        // データの登録
+        setupper.setIndexData(indexId);
+
+        // 一覧の更新
+        runOnUiThread(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                if (summaryAdapter != null)
+                {
+                    int count = summaryAdapter.getItemCount();
+                    summaryAdapter.notifyItemChanged(count - 1);
+                    summaryAdapter.notifyDataSetChanged();
+                }
+
+                // Toastで作成を通知する
+                Toast toast = Toast.makeText(getApplicationContext(), getString(R.string.created_model_data), Toast.LENGTH_SHORT);
+                toast.show();
+            }
+        });
     }
 }

@@ -17,6 +17,8 @@
     <string name="action_set_reference">基準値に設定</string>
     <string name="action_edited_data">更新しました</string>
     <string name="action_create_model">モデルデータの作成</string>
+    <string name="action_share_data">データの共有</string>
+    <string name="created_model_data">作成しました。</string>
     <string name="time_picker_lap_start">[</string>
     <string name="time_picker_lap_end">]</string>
     <string name="time_picker_hour_separator">:</string>

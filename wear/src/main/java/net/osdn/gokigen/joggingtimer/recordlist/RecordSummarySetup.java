@@ -7,6 +7,8 @@ import android.util.Log;
 import net.osdn.gokigen.joggingtimer.storage.ITimeEntryDatabase;
 import net.osdn.gokigen.joggingtimer.storage.ITimeEntryDatabaseCallback;
 import net.osdn.gokigen.joggingtimer.storage.TimeEntryDatabaseFactory;
+import net.osdn.gokigen.joggingtimer.utilities.CreateModelData;
+import net.osdn.gokigen.joggingtimer.utilities.CreateModelDataDialog;
 import net.osdn.gokigen.joggingtimer.utilities.IconIdProvider;
 import net.osdn.gokigen.joggingtimer.utilities.TimeStringConvert;
 
@@ -26,14 +28,17 @@ class RecordSummarySetup implements ITimeEntryDatabaseCallback
     private final IDatabaseReadyNotify callback;
     private final IDetailLauncher detailLauncher;
     private final IRecordOperation operation;
+    private final CreateModelData.ICreatedModelDataCallback createCallback;
     private ITimeEntryDatabase database = null;
 
-    RecordSummarySetup(WearableActivity activity, IDatabaseReadyNotify callback, IDetailLauncher detailLauncher, IRecordOperation operation)
+
+    RecordSummarySetup(WearableActivity activity, IDatabaseReadyNotify callback, IDetailLauncher detailLauncher, IRecordOperation operation, CreateModelData.ICreatedModelDataCallback  createCallback)
     {
         this.activity = activity;
         this.callback = callback;
         this.detailLauncher = detailLauncher;
         this.operation = operation;
+        this.createCallback = createCallback;
     }
 
     void setup()
@@ -153,6 +158,42 @@ class RecordSummarySetup implements ITimeEntryDatabaseCallback
             e.printStackTrace();
         }
     }
+
+    /**
+     *
+     */
+    CreateModelDataDialog.Callback getCreateModelDataCallback(long indexId, long dataId)
+    {
+        return (new CreateModelData(database, null, createCallback, indexId, dataId));
+    }
+
+    /**
+     *
+     */
+    void setIndexData(long indexId)
+    {
+        try
+        {
+            Cursor cursor = database.getIndexdata(indexId);
+            while (cursor.moveToNext())
+            {
+                // 1件しかないはず
+                long dataId = cursor.getLong(cursor.getColumnIndex(_ID));
+                String title = cursor.getString(cursor.getColumnIndex(COLUMN_NAME_TITLE));
+                //String memo = cursor.getString(cursor.getColumnIndex(COLUMN_NAME_MEMO));
+                int iconId = IconIdProvider.getIconResourceId(cursor.getInt(cursor.getColumnIndex(COLUMN_NAME_ICON_ID)));
+                //long startTime = cursor.getLong(cursor.getColumnIndex(COLUMN_NAME_START_TIME));
+                long duration = cursor.getLong(cursor.getColumnIndex(COLUMN_NAME_TIME_DURATION));
+                String memo = TimeStringConvert.getTimeString(duration).toString();
+                operation.addRecord(new DataRecord(dataId, iconId, title, memo, detailLauncher));
+            }
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+
 
     /**
      *

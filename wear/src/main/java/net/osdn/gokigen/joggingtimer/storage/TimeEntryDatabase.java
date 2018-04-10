@@ -95,6 +95,12 @@ class TimeEntryDatabase implements ITimeEntryDatabase
     }
 
     @Override
+    public Cursor getIndexdata(long indexId)
+    {
+        return (db.rawQuery("SELECT * FROM " + TimeEntryIndex.EntryIndex.TABLE_NAME + " WHERE " + TimeEntryIndex.EntryIndex._ID + " = " + indexId + " ORDER BY " + TimeEntryIndex.EntryIndex.COLUMN_NAME_START_TIME, null));
+    }
+
+    @Override
     public void deleteTimeEntryData(long indexId)
     {
         int delRecord = db.delete(TimeEntryData.EntryData.TABLE_NAME, TimeEntryData.EntryData.COLUMN_NAME_INDEX_ID + " = " + indexId, null);
@@ -267,7 +273,7 @@ class TimeEntryDatabase implements ITimeEntryDatabase
      *
      */
     @Override
-    public void createTimeEntryModelData(int lap, long totalTime, @NonNull String memo)
+    public long createTimeEntryModelData(int lap, long totalTime, @NonNull String memo)
     {
         long diffTime = totalTime / (long) lap;
         String title = " " + lap + " LAPs Model";
@@ -283,13 +289,14 @@ class TimeEntryDatabase implements ITimeEntryDatabase
                 appendTimeDataImpl(false, indexId, lapTime, EDITABLE_RECORD_TYPE);
             }
             callback.modelDataEntryFinished(ITimeEntryDatabaseCallback.OperationType.FINISHED, true, indexId, title);
-            return;
+            return (indexId);
        }
         catch (Exception e)
         {
             e.printStackTrace();
         }
         callback.modelDataEntryFinished(ITimeEntryDatabaseCallback.OperationType.FINISHED, false, -1, title);
+        return (-1);
     }
 
     /**

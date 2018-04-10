@@ -36,4 +36,12 @@
         </android.support.wear.widget.WearableRecyclerView>
     </LinearLayout>
 
+    <android.support.wear.widget.drawer.WearableNavigationDrawerView
+        android:id="@+id/list_top_navigation_drawer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/grey"
+        android:visibility="visible"
+        app:navigationStyle="singlePage" />
+
 </android.support.wear.widget.drawer.WearableDrawerLayout>

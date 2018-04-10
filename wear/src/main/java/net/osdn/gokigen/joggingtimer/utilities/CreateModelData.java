@@ -9,13 +9,15 @@ public class CreateModelData implements CreateModelDataDialog.Callback
     private final String TAG = toString();
     private final ITimeEntryDatabase database;
     private final IEditedModelDataCallback editCallback;
+    private final ICreatedModelDataCallback createCallback;
     private final long indexId;
     private final long detailId;
 
-    public CreateModelData(ITimeEntryDatabase database, IEditedModelDataCallback editCallback, long indexId, long detailId)
+    public CreateModelData(ITimeEntryDatabase database, IEditedModelDataCallback editCallback, ICreatedModelDataCallback createCallback, long indexId, long detailId)
     {
         this.database = database;
         this.editCallback = editCallback;
+        this.createCallback = createCallback;
         this.indexId = indexId;
         this.detailId = detailId;
     }
@@ -34,7 +36,11 @@ public class CreateModelData implements CreateModelDataDialog.Callback
                     {
                         if (isLap)
                         {
-                            database.createTimeEntryModelData(lap, newValue, "");
+                            long indexId = database.createTimeEntryModelData(lap, newValue, "");
+                            if (createCallback != null)
+                            {
+                                createCallback.createdModelData(indexId);
+                            }
                         }
                         else
                         {
@@ -69,5 +75,10 @@ public class CreateModelData implements CreateModelDataDialog.Callback
     public interface IEditedModelDataCallback
     {
         void editedModelData(long indexId, long detailId, int lapCount, long prevValue, long newValue);
+    }
+
+    public interface ICreatedModelDataCallback
+    {
+        void createdModelData(long indexId);
     }
 }
