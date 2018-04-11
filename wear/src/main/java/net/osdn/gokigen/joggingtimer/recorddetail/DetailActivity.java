@@ -279,7 +279,7 @@ public class DetailActivity extends WearableActivity implements RecordDetailSetu
 
             case R.id.menu_share_data:
                 // 現在のデータを共有する
-                setupper.shareTheData();
+                setupper.shareTheData(detailAdapter);
                 ret = true;
                 break;
 

@@ -62,6 +62,11 @@ public class DetailRecord implements View.OnClickListener, View.OnLongClickListe
         return (overallTime);
     }
 
+    long getLapTime()
+    {
+        return (lapTime);
+    }
+
     long addModifiedTime(long modifiedTime, long overallTime)
     {
         lapTime = lapTime + modifiedTime;

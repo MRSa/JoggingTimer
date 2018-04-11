@@ -1,5 +1,6 @@
 package net.osdn.gokigen.joggingtimer.recorddetail;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.support.annotation.NonNull;
 import android.support.wearable.activity.WearableActivity;
@@ -12,8 +13,13 @@ import net.osdn.gokigen.joggingtimer.storage.TimeEntryDatabaseFactory;
 import net.osdn.gokigen.joggingtimer.storage.contract.TimeEntryData;
 import net.osdn.gokigen.joggingtimer.utilities.CreateModelData;
 import net.osdn.gokigen.joggingtimer.utilities.CreateModelDataDialog;
+import net.osdn.gokigen.joggingtimer.utilities.TimeStringConvert;
 
 import static android.provider.BaseColumns._ID;
+import static net.osdn.gokigen.joggingtimer.storage.contract.TimeEntryIndex.EntryIndex.COLUMN_NAME_MEMO;
+import static net.osdn.gokigen.joggingtimer.storage.contract.TimeEntryIndex.EntryIndex.COLUMN_NAME_START_TIME;
+import static net.osdn.gokigen.joggingtimer.storage.contract.TimeEntryIndex.EntryIndex.COLUMN_NAME_TIME_DURATION;
+import static net.osdn.gokigen.joggingtimer.storage.contract.TimeEntryIndex.EntryIndex.COLUMN_NAME_TITLE;
 
 /**
  *
@@ -258,11 +264,96 @@ public class RecordDetailSetup  implements ITimeEntryDatabaseCallback, IDetailEd
      *   現在のデータを共有する
      *
      */
-    public void shareTheData()
+    public void shareTheData(final RecordDetailAdapter adapter)
     {
         Log.v(TAG, "shareTheData()");
+        if ((adapter == null) || (adapter.getItemCount() <= 0) || (activity == null))
+        {
+            // データがない場合は、何もしない
+            return;
+        }
+        shareDetailIntent(adapter);
+    }
 
 
+    /**
+     *
+     *
+     */
+    private void shareDetailIntent(RecordDetailAdapter adapter)
+    {
+        String title = "";
+        int dataCount = adapter.getItemCount();
+        StringBuilder dataToExport = new StringBuilder("");
+        dataToExport.append("; ");
+        dataToExport.append(activity.getString(R.string.app_name));
+        dataToExport.append("\r\n");
+        try
+        {
+            Cursor cursor = database.getIndexdata(indexId);
+            while (cursor.moveToNext())
+            {
+                dataToExport.append("; ");
+                title = cursor.getString(cursor.getColumnIndex(COLUMN_NAME_TITLE));
+                dataToExport.append(title);
+                dataToExport.append(",");
+                dataToExport.append(TimeStringConvert.getTimeString(cursor.getLong(cursor.getColumnIndex(COLUMN_NAME_TIME_DURATION))));
+                dataToExport.append(",");
+                dataToExport.append(cursor.getLong(cursor.getColumnIndex(COLUMN_NAME_START_TIME)));
+                dataToExport.append(",");
+                dataToExport.append(cursor.getString(cursor.getColumnIndex(COLUMN_NAME_MEMO)));
+                dataToExport.append(",");
+                dataToExport.append("\r\n");
+            }
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            dataToExport.append("\r\n");
+        }
+        dataToExport.append("; \r\n");
+
+        for (int index = 0; index < dataCount; index++)
+        {
+            try
+            {
+                DetailRecord record = adapter.getRecord(index);
+                dataToExport.append(record.getLapCount());
+                dataToExport.append(",");
+                dataToExport.append(record.getTitle());
+                dataToExport.append(",");
+                dataToExport.append(record.getDetail());
+                dataToExport.append(",");
+                dataToExport.append(record.getLapTime());
+                dataToExport.append(",");
+                dataToExport.append(record.getTotalTime());
+                dataToExport.append(",");
+                dataToExport.append(";");
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+                dataToExport.append(";;\r\n");
+                break;
+            }
+            dataToExport.append("\r\n");
+        }
+
+        // Intent発行(ACTION_SEND)
+        try
+        {
+            Intent sendIntent = new Intent(android.content.Intent.ACTION_SEND);
+            sendIntent.putExtra(Intent.EXTRA_SUBJECT, title);
+            sendIntent.setType("text/plain");
+            sendIntent.putExtra(Intent.EXTRA_TEXT, dataToExport.toString());
+            activity.startActivity(sendIntent);
+
+            Log.v(TAG, "<<< SEND INTENT >>> : " + title);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
     }
 
     /**

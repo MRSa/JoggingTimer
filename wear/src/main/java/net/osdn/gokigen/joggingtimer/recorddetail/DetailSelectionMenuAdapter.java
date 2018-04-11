@@ -27,7 +27,7 @@ public class DetailSelectionMenuAdapter extends WearableNavigationDrawerView.Wea
 
         menuItems.add(new MenuItem(R.id.menu_edit_title, R.drawable.ic_edit_black_24dp, context.getString(R.string.action_edit_title)));
         menuItems.add(new MenuItem(R.id.menu_set_reference, R.drawable.ic_assignment_turned_in_black_24dp, context.getString(R.string.action_set_reference)));
-        //menuItems.add(new MenuItem(R.id.menu_share_data, R.drawable.ic_share_black_24dp, context.getString(R.string.action_share_data)));
+        menuItems.add(new MenuItem(R.id.menu_share_data, R.drawable.ic_share_black_24dp, context.getString(R.string.action_share_data)));
     }
 
     @Override
