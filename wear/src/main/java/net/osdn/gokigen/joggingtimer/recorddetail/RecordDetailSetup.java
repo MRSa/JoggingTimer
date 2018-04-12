@@ -312,6 +312,7 @@ public class RecordDetailSetup  implements ITimeEntryDatabaseCallback, IDetailEd
             dataToExport.append("\r\n");
         }
         dataToExport.append("; \r\n");
+        dataToExport.append("; LapCount,LapTime,TotalTime,LapTime(ms),TotalTime(ms),;\r\n");
 
         for (int index = 0; index < dataCount; index++)
         {
@@ -322,7 +323,7 @@ public class RecordDetailSetup  implements ITimeEntryDatabaseCallback, IDetailEd
                 dataToExport.append(",");
                 dataToExport.append(record.getTitle());
                 dataToExport.append(",");
-                dataToExport.append(record.getDetail());
+                dataToExport.append(record.getOverallTime());
                 dataToExport.append(",");
                 dataToExport.append(record.getLapTime());
                 dataToExport.append(",");
