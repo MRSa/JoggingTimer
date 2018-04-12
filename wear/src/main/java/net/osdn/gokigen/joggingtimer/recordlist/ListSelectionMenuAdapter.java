@@ -1,6 +1,7 @@
 package net.osdn.gokigen.joggingtimer.recordlist;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.support.wear.widget.drawer.WearableNavigationDrawerView;
 
@@ -43,7 +44,12 @@ public class ListSelectionMenuAdapter  extends WearableNavigationDrawerView.Wear
         try
         {
             int iconId = menuItems.get(pos).iconResId;
-            return (android.support.v4.content.res.ResourcesCompat.getDrawable(context.getResources(), iconId, null));
+            Drawable icon = android.support.v4.content.res.ResourcesCompat.getDrawable(context.getResources(), iconId, null);
+            if (icon != null)
+            {
+                icon.setTint(Color.WHITE);
+            }
+            return (icon);
         }
         catch (Exception e)
         {
