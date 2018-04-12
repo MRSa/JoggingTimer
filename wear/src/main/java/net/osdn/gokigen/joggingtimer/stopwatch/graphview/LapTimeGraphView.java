@@ -188,7 +188,7 @@ public class LapTimeGraphView extends View
         paint.setStrokeWidth(0.0f);
         paint.setAntiAlias(true);
 
-        float boxWidthUnit = width / totalLaptimeCount;
+        float boxWidthUnit = width / (totalLaptimeCount);
         float boxHeightUnit = height / (maxLaptime * 1.2f);
 
         float startX = 0.0f;
@@ -222,9 +222,10 @@ public class LapTimeGraphView extends View
         paint.setStrokeWidth(0.0f);
         paint.setAntiAlias(true);
 
-        float boxWidthUnit = width / totalLaptimeCount;
+        int minimumLapTime = 15;
+        float boxWidthUnit = width / (totalLaptimeCount);
         float boxHeightUnit = height / (maxLaptime * 1.2f);
-        float circleRadius = boxWidthUnit / 4.0f;
+        float circleRadius = (totalLaptimeCount > minimumLapTime) ? (boxWidthUnit / 4.0f) : (width / minimumLapTime / 4.0f);
 
         float startX = 0.0f;
         if ((curLapTimeList.size() <= 0)&&(isStarted))
