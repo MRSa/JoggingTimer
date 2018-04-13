@@ -319,6 +319,7 @@ public class MainActivity extends WearableActivity implements IClickCallback, My
                 else
                 {
                     Log.v(TAG, "startTimer() START");
+                    controller.clearTimeStamp();
                     timerCounter.start();
                     MyTimerTrigger trigger = new MyTimerTrigger(this, 100, timerCounter);
                     trigger.startTimer();
