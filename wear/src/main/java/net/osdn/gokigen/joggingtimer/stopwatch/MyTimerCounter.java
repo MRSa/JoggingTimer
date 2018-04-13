@@ -18,7 +18,7 @@ public class MyTimerCounter implements ITimerCounter, IDatabaseReloadCallback
     private ICounterStatusNotify callback = null;
     private long startTime = 0;
     private long stopTime = 0;
-    private List<Long> elapsedTime = null;
+    private List<Long> elapsedTime;
     private List<Long> referenceTime = null;
 
     MyTimerCounter()
@@ -116,6 +116,20 @@ public class MyTimerCounter implements ITimerCounter, IDatabaseReloadCallback
             return (getLastElapsedTime());
         }
         return (currentTime - startTime);
+    }
+
+    @Override
+    public long getElapsedTime(int lapCount)
+    {
+        try
+        {
+            return ((lapCount < 0) ? 0 : (elapsedTime.get(lapCount) - startTime));
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        return (getLastElapsedTime());
     }
 
     @Override

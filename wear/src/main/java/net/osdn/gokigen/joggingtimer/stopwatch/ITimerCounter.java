@@ -13,6 +13,7 @@ public interface ITimerCounter
 
     int getElapsedCount();
     long getPastTime();
+    long getElapsedTime(int lapCount);
     long getLastElapsedTime();
     long getCurrentElapsedTime();
 

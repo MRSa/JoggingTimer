@@ -367,6 +367,12 @@ public class MainActivity extends WearableActivity implements IClickCallback, My
                     controller.timerStarted(false);
                     controller.vibrate(120);
                     controller.getDataEntry().finishTimeData(timerCounter.getStartTime(), timerCounter.getStopTime());
+
+                    int lapCount = currentLapCount + 1;
+                    long currentElapsedTime = timerCounter.getLastElapsedTime() - timerCounter.getElapsedTime(currentLapCount);
+                    long refLapTime = timerCounter.getReferenceLapTime(lapCount);
+                    long diffTime = (refLapTime == 0) ? 0 :  (currentElapsedTime - refLapTime);
+                    controller.addTimeStamp(lapCount, currentElapsedTime, diffTime);
                     ret = true;
 
                     LapTimeGraphView graphView = findViewById(R.id.graph_area);
