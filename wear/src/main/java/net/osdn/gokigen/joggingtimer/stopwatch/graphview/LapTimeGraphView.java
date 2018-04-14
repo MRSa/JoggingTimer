@@ -137,17 +137,24 @@ public class LapTimeGraphView extends View
     {
         super.onDraw(canvas);
 
-        // 背景の表示
-        drawBackground(canvas);
+        try
+        {
+            // 背景の表示
+            drawBackground(canvas);
 
-        // 基準の値表示
-        drawReferenceLap(canvas);
+            // 基準の値表示
+            drawReferenceLap(canvas);
 
-        // 現在の値表示
-        drawCurrentLap(canvas);
+            // 現在の値表示
+            drawCurrentLap(canvas);
 
-        // メッセージの表示
-        drawMessage(canvas);
+            // メッセージの表示
+            drawMessage(canvas);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
 
     }
 
@@ -165,6 +172,8 @@ public class LapTimeGraphView extends View
         paint.setColor(Color.BLACK);
         paint.setStyle(Paint.Style.FILL);
         canvas.drawRect(rect, paint);
+
+        // Log.v("Canvas", "("+ width + "," + height + ")");
     }
 
     /**
@@ -254,6 +263,7 @@ public class LapTimeGraphView extends View
      */
     private void drawMessage(Canvas canvas)
     {
+        boolean drawTextLeft = false;
         int width = canvas.getWidth();
         int height = canvas.getHeight();
         Paint paint = new Paint();
@@ -268,6 +278,7 @@ public class LapTimeGraphView extends View
         int refCount = 0;
         long diffTime = 0;
         long lapTime = 0;
+        long currTime = 0;
         try
         {
             if (curTimeList != null)
@@ -283,7 +294,7 @@ public class LapTimeGraphView extends View
             if (lapCount > 1)
             {
                 long totalTime = curTimeList.get(lapCount - 1) - curTimeList.get(0);
-                long currTime =  curTimeList.get(lapCount - 1) - curTimeList.get(lapCount - 2);
+                currTime =  curTimeList.get(lapCount - 1) - curTimeList.get(lapCount - 2);
                 //long currTime =  (lapCount > 2) ? curTimeList.get(lapCount - 1) - curTimeList.get(lapCount - 2) : 0;
                 if ((lapCount <= refCount)&&(refTimeList != null))
                 {
@@ -298,23 +309,30 @@ public class LapTimeGraphView extends View
             e.printStackTrace();
         }
 
-
-        String ovearll = "";
-        if (diffTime != 0)
+        String textToDraw = "";
+        if ((lapTime == 0)&&(diffTime == 0)&&(lapCount > 1))
         {
-            ovearll = "T:" + TimeStringConvert.getDiffTimeString(diffTime).toString();
+            textToDraw = "[" + (lapCount - 1) + "] " + TimeStringConvert.getTimeString(currTime).toString();
+            drawTextLeft = true;
         }
-        String lap = "";
-        if (lapTime != 0)
+        else
         {
-            lap = TimeStringConvert.getDiffTimeString(lapTime).toString();
+            if (lapTime != 0)
+            {
+                textToDraw = TimeStringConvert.getDiffTimeString(lapTime).toString();
+            }
+            if (diffTime != 0)
+            {
+                //  「前回ラップ時間の遅れ・進み / 全体時間の遅れ・進み」
+                textToDraw = textToDraw + " / " + TimeStringConvert.getDiffTimeString(diffTime).toString();
+            }
         }
 
         // 表示する文字の大きさの決定
         try
         {
             float density = context.getResources().getDisplayMetrics().density;
-            paint.setTextSize(density * 20.0f + 0.5f);  //
+            paint.setTextSize(density * 20.0f + 0.5f);
         }
         catch (Exception e)
         {
@@ -324,14 +342,16 @@ public class LapTimeGraphView extends View
         paint.setAntiAlias(true);
         Paint.FontMetrics fm = paint.getFontMetrics();
         float textHeight = fm.descent - fm.ascent;
-        float textWidth = paint.measureText(ovearll);
+        float textWidth = paint.measureText(textToDraw);
 
         // 表示位置の調整...
         float x = (width < textWidth) ? 0.0f : (width - textWidth - 8.0f);
         float y = (height - textHeight - 2) - fm.ascent;
-
-        canvas.drawText(ovearll, x , y, paint);     // 全体時間の遅れ・進み
-        canvas.drawText(lap, 0.0f , y, paint);  // 前回ラップ時間の遅れ・進み
+        if (drawTextLeft)
+        {
+            x = 0.0f;
+        }
+        canvas.drawText(textToDraw, x , y, paint);
     }
 
     /**

@@ -85,6 +85,8 @@ public class MainActivity extends WearableActivity implements IClickCallback, My
             }
         }
         isLaptimeView = controller.getDisplayMode();
+        //Log.v(TAG, "isLaptimeView " + isLaptimeView);
+
         controller.setupReferenceData();
 
         if (isStartTimer)
@@ -558,7 +560,7 @@ public class MainActivity extends WearableActivity implements IClickCallback, My
      */
     private void updateElapsedTimesGraph()
     {
-        //Log.v(TAG, "updateElapsedTimesGraph()");
+        Log.v(TAG, "updateElapsedTimesGraph()");
         LapTimeGraphView view = findViewById(R.id.graph_area);
         view.invalidate();
     }

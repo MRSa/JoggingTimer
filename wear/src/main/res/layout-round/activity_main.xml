@@ -101,6 +101,8 @@
             android:clickable="true"
             android:focusable="true"
             android:visibility="gone"
+            android:layout_below="@id/sub_counter1"
+            android:layout_above="@id/btn1"
             />
 
         <ListView

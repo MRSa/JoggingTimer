@@ -86,6 +86,10 @@ class TimeEntryDatabase implements ITimeEntryDatabase
     @Override
     public Cursor getAllReferenceDetailData()
     {
+        if (db == null)
+        {
+            return (null);
+        }
         String queryString = "SELECT * FROM " + TimeEntryIndex.EntryIndex.TABLE_NAME + " INNER JOIN " + TimeEntryData.EntryData.TABLE_NAME +
                 " ON " + TimeEntryIndex.EntryIndex.TABLE_NAME + "." + TimeEntryIndex.EntryIndex._ID + " = " + TimeEntryData.EntryData.TABLE_NAME+ "." + TimeEntryData.EntryData.COLUMN_NAME_INDEX_ID +
                 " WHERE " + TimeEntryIndex.EntryIndex.TABLE_NAME+ "." + TimeEntryIndex.EntryIndex.COLUMN_NAME_ICON_ID + " = " + REFERENCE_ICON_ID +
