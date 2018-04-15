@@ -1,6 +1,7 @@
 package net.osdn.gokigen.joggingtimer.stopwatch.listview;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,7 +14,7 @@ import android.widget.TextView;
  */
 public class LapTimeArrayAdapter  extends ArrayAdapter<LapTimeItems> implements ILapTimeHolder
 {
-    private LayoutInflater inflater = null;
+    private LayoutInflater inflater;
     private final int resourceId;
 
     /**
@@ -47,13 +48,17 @@ public class LapTimeArrayAdapter  extends ArrayAdapter<LapTimeItems> implements 
             if (item != null)
             {
                 TextView lap1View = view.findViewWithTag("lap1");
+                lap1View.setTextColor(Color.WHITE);
                 lap1View.setText(item.getLapCount());
 
                 TextView lap2View = view.findViewWithTag("lap2");
+                lap2View.setTextColor(Color.WHITE);
                 lap2View.setText(item.getMainText());
 
                 TextView lap3View = view.findViewWithTag("lap3");
+                lap3View.setTextColor(Color.WHITE);
                 lap3View.setText(item.getSubText());
+                //Log.v("LAP TIME", "" + item.getLapCount() + " " + item.getMainText());
             }
         }
         catch (Exception e)

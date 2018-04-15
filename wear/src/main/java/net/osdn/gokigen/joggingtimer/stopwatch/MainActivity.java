@@ -8,7 +8,9 @@ import android.support.wearable.activity.WearableActivity;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -16,6 +18,7 @@ import android.widget.TextView;
 import net.osdn.gokigen.joggingtimer.R;
 import net.osdn.gokigen.joggingtimer.recordlist.ListActivity;
 import net.osdn.gokigen.joggingtimer.stopwatch.graphview.LapTimeGraphView;
+import net.osdn.gokigen.joggingtimer.stopwatch.listview.LapTimeItems;
 import net.osdn.gokigen.joggingtimer.utilities.TimeStringConvert;
 
 import java.text.SimpleDateFormat;
