@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Path;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.util.AttributeSet;
@@ -226,8 +227,8 @@ public class LapTimeGraphView extends View
 
         Paint paint = new Paint();
         paint.setColor(Color.WHITE);
-        paint.setStyle(Paint.Style.STROKE);
-        paint.setStyle(Paint.Style.FILL);
+        paint.setColor(Color.GRAY);
+        paint.setStyle(Paint.Style.FILL_AND_STROKE);
         paint.setStrokeWidth(0.0f);
         paint.setAntiAlias(true);
 
@@ -244,17 +245,27 @@ public class LapTimeGraphView extends View
             return;
         }
 
+        Path linePath = new Path();
+        linePath.moveTo(0.0f, height);  // ０原点から線を引く
         for (Long time : curLapTimeList)
         {
-            canvas.drawCircle((startX + (boxWidthUnit / 2.0f)), (height - boxHeightUnit * time), circleRadius, paint);
+            float cX = (startX + (boxWidthUnit / 2.0f));
+            float cY = (height - boxHeightUnit * time);
+            linePath.lineTo(cX, cY);
+            canvas.drawCircle(cX, cY, circleRadius, paint);
             startX = startX + boxWidthUnit;
         }
-
         if (isStarted)
         {
             long currentLapTime = System.currentTimeMillis() - lastSystemLaptime;
-            canvas.drawCircle((startX + (boxWidthUnit / 2.0f)), (height - boxHeightUnit * currentLapTime), circleRadius, paint);
+            float cX = (startX + (boxWidthUnit / 2.0f));
+            float cY = (height - boxHeightUnit * currentLapTime);
+            linePath.lineTo(cX, cY);
+            canvas.drawCircle(cX, cY, circleRadius, paint);
         }
+        paint.setStyle(Paint.Style.STROKE);
+        paint.setColor(Color.GRAY);
+        canvas.drawPath(linePath, paint);
     }
 
     /**
