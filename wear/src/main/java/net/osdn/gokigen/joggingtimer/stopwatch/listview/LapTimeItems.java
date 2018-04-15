@@ -10,19 +10,16 @@ import java.util.Locale;
  */
 public class LapTimeItems
 {
-    private String lapCount = "";
-    private String mainText = "";
-    private String subText = "";
+    private String lapCount;
+    private String mainText;
+    private String subText;
 
     public LapTimeItems(long lapCount, long mainText, long subText)
     {
         this.lapCount = String.format(Locale.US,"%02d", lapCount);
         this.mainText = TimeStringConvert.getTimeString(mainText).toString();
 
-        if (subText != 0)
-        {
-            this.subText = TimeStringConvert.getDiffTimeString(subText).toString();
-        }
+        this.subText = (subText != 0) ? this.subText = TimeStringConvert.getDiffTimeString(subText).toString() : "";
     }
 
     String getLapCount()

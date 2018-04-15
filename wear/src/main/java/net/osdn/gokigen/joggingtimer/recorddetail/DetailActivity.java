@@ -267,7 +267,15 @@ public class DetailActivity extends WearableActivity implements RecordDetailSetu
             case R.id.menu_edit_title:
                 // タイトルの編集
                 DataEditDialog dialog = new DataEditDialog(this);
-                dialog.show(R.drawable.ic_android_black_24dp, "", this);
+                String title = "";
+                int iconId = R.drawable.ic_android_black_24dp;
+                RecordDetailSetup.EditIndexData data = setupper.getEditIndexData();
+                if (data != null)
+                {
+                    iconId = data.getIcon();
+                    title = data.getTitle();
+                }
+                dialog.show(iconId, title, this);
                 ret = true;
                 break;
 
@@ -312,7 +320,7 @@ public class DetailActivity extends WearableActivity implements RecordDetailSetu
     {
         Log.v(TAG, "iconId : " + iconId + " title : '"+ title +"'");
         try {
-            setupper.setIndexData(title, iconId);
+            setupper.setEditIndexData(title, iconId);
             WearableRecyclerView view = findViewById(R.id.recycler_detail_view);
             view.postInvalidate();
         }

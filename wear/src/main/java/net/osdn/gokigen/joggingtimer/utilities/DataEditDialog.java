@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.TypedArray;
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.wearable.activity.WearableActivity;
 import android.util.Log;

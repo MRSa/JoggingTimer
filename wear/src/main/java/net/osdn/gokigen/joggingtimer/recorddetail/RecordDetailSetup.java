@@ -11,6 +11,7 @@ import net.osdn.gokigen.joggingtimer.storage.ITimeEntryDatabase;
 import net.osdn.gokigen.joggingtimer.storage.ITimeEntryDatabaseCallback;
 import net.osdn.gokigen.joggingtimer.storage.TimeEntryDatabaseFactory;
 import net.osdn.gokigen.joggingtimer.storage.contract.TimeEntryData;
+import net.osdn.gokigen.joggingtimer.storage.contract.TimeEntryIndex;
 import net.osdn.gokigen.joggingtimer.utilities.CreateModelData;
 import net.osdn.gokigen.joggingtimer.utilities.CreateModelDataDialog;
 import net.osdn.gokigen.joggingtimer.utilities.TimeStringConvert;
@@ -148,16 +149,42 @@ public class RecordDetailSetup  implements ITimeEntryDatabaseCallback, IDetailEd
      *
      *
      */
-    void setIndexData(final String title, final int icon)
+    void setEditIndexData(@NonNull final String title, final int icon)
     {
+        final EditIndexData data = new EditIndexData(title, icon);
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
-                database.updateIndexData(indexId, title, icon);
+                database.updateIndexData(indexId, data.getTitle(), data.getIcon());
                 callback.updatedIndexData(false);
             }
         });
         thread.start();
+    }
+
+    /**
+     *
+     *
+     */
+    EditIndexData getEditIndexData()
+    {
+        String title = "";
+        int iconId = R.drawable.ic_android_black_24dp;
+        try
+        {
+            Cursor cursor = database.getIndexdata(indexId);
+            while (cursor.moveToNext())
+            {
+                title = cursor.getString(cursor.getColumnIndex(TimeEntryIndex.EntryIndex.COLUMN_NAME_TITLE));
+                iconId = cursor.getInt(cursor.getColumnIndex(TimeEntryIndex.EntryIndex.COLUMN_NAME_ICON_ID));
+            }
+            return (new EditIndexData(title, iconId));
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        return (null);
     }
 
     /**
@@ -356,6 +383,29 @@ public class RecordDetailSetup  implements ITimeEntryDatabaseCallback, IDetailEd
             e.printStackTrace();
         }
     }
+
+    class EditIndexData
+    {
+        final String title;
+        final int icon;
+
+        EditIndexData(String title, int icon)
+        {
+            this.title = title;
+            this.icon = icon;
+        }
+
+        String getTitle()
+        {
+            return (title);
+        }
+
+        int getIcon()
+        {
+            return (icon);
+        }
+    }
+
 
     /**
      *

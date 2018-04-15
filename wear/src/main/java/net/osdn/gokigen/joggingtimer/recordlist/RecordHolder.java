@@ -10,9 +10,9 @@ import net.osdn.gokigen.joggingtimer.R;
 class RecordHolder extends RecyclerView.ViewHolder
 {
     private final View itemView;
-    private ImageView iconView = null;
-    private TextView mainText = null;
-    private TextView subText = null;
+    private ImageView iconView;
+    private TextView mainText;
+    private TextView subText;
 
     RecordHolder(View itemView)
     {
