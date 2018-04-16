@@ -1,5 +1,6 @@
 package net.osdn.gokigen.joggingtimer.recordlist;
 
+import android.app.FragmentManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -255,8 +256,7 @@ public class ListActivity extends WearableActivity implements IDetailLauncher, R
             Log.v(TAG, "deleteRecord() : " + title);
 
             String message = getString(R.string.dialog_message_delete) + " (" + title + ")";
-            ConfirmationDialog dialog = new ConfirmationDialog(this);
-            dialog.show(R.string.dialog_title_delete, message, new ConfirmationDialog.Callback() {
+            ConfirmationDialog dialog = ConfirmationDialog.newInstance(getString(R.string.dialog_title_delete), message,  new ConfirmationDialog.Callback() {
                 @Override
                 public void confirm()
                 {
@@ -286,6 +286,12 @@ public class ListActivity extends WearableActivity implements IDetailLauncher, R
                     }
                 }
             });
+            FragmentManager manager = getFragmentManager();
+            String tag = "dialog";
+            if (manager != null)
+            {
+                dialog.show(manager, tag);
+            }
         }
         catch (Exception e)
         {

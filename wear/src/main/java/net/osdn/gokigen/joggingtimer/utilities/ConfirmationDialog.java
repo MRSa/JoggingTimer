@@ -1,8 +1,13 @@
 package net.osdn.gokigen.joggingtimer.utilities;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.DialogFragment;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.util.Log;
 
 import net.osdn.gokigen.joggingtimer.R;
 
@@ -11,80 +16,83 @@ import net.osdn.gokigen.joggingtimer.R;
  *
  *
  */
-public class ConfirmationDialog
+public class ConfirmationDialog extends DialogFragment
 {
-    private final Context context;
+    private final String TAG = toString();
+    String title = "";
+    String message = "";
+    Callback callback = null;
+    Dialog myDialog = null;
 
-    public ConfirmationDialog(Context context)
+    public static ConfirmationDialog newInstance(String title, String message, @NonNull Callback callback)
     {
-        this.context = context;
+        ConfirmationDialog instance = new ConfirmationDialog();
+        instance.prepare(callback, title, message);
+
+        // パラメータはBundleにまとめておく
+        Bundle arguments = new Bundle();
+        arguments.putString("title", title);
+        arguments.putString("message", message);
+        instance.setArguments(arguments);
+
+        return (instance);
     }
 
     /**
      *
-     * @param titleResId    ダイアログタイトル
-     * @param messageResId  ダイアログメッセージ
-     * @param callback       結果をコールバック
+     *
      */
-    public void show(int titleResId, int messageResId, final Callback callback)
+    private void prepare(Callback callback, String title, String message)
     {
-        String title = "";
-        String message = "";
+        this.callback = callback;
+        this.title = title;
+        this.message = message;
+    }
 
-        // タイトルとメッセージをのダイアログを表示する
-        if (context != null)
+    /**
+     *
+     *
+     */
+    @Override
+    public @NonNull Dialog onCreateDialog(Bundle savedInstanceState)
+    {
+        String title = this.title;
+        String message = this.message;
+        if (savedInstanceState != null)
         {
-            title = context.getString(titleResId);
-            message = context.getString(messageResId);
+            title = savedInstanceState.getString("title");
+            message = savedInstanceState.getString("message");
         }
-        show(title, message, callback);
-    }
-
-    /**
-     *
-     * @param titleResId   ダイアログタイトル
-     * @param message      ダイアログメッセージ
-     * @param callback     結果をコールバック
-     */
-    public void show(int titleResId, String message, final Callback callback)
-    {
-        String title = "";
-
-        // タイトルとメッセージをのダイアログを表示する
-        if (context != null)
-        {
-            title = context.getString(titleResId);
-        }
-        show(title, message, callback);
-    }
-
-    /**
-     *
-     * @param title     ダイアログタイトル
-     * @param message   ダイアログメッセージ
-     * @param callback  結果をコールバック
-     */
-    public void show(String title, String message, final Callback callback)
-    {
-        // 確認ダイアログの生成
-        final AlertDialog.Builder alertDialog = new AlertDialog.Builder(context);
+        Context context = getContext();
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(context);
         alertDialog.setTitle(title);
         alertDialog.setIcon(android.R.drawable.ic_dialog_alert);
         alertDialog.setMessage(message);
         alertDialog.setCancelable(true);
+        String positiveLabel = "OK";
+        String negativeLabel = "Cancel";
+        if (context != null)
+        {
+            positiveLabel = context.getString(R.string.dialog_positive_execute);
+            negativeLabel = context.getString(R.string.dialog_negative_cancel);
+        }
 
         // ボタンを設定する（実行ボタン）
-        alertDialog.setPositiveButton(context.getString(R.string.dialog_positive_execute),
+        alertDialog.setPositiveButton(positiveLabel,
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which)
                     {
-                        callback.confirm();
+                        Log.v(TAG, "ConfirmationDialog::OK");
+                        if (callback != null)
+                        {
+                            callback.confirm();
+                        }
                         dialog.dismiss();
                     }
                 });
 
         // ボタンを設定する (キャンセルボタン）
-        alertDialog.setNegativeButton(context.getString(R.string.dialog_negative_cancel),
+        alertDialog.setNegativeButton(negativeLabel,
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which)
                     {
@@ -92,9 +100,21 @@ public class ConfirmationDialog
                     }
                 });
 
-        // 確認ダイアログを表示する
-        alertDialog.show();
+        myDialog = alertDialog.create();
+        return (myDialog);
     }
+
+    @Override
+    public void onPause()
+    {
+        super.onPause();
+        Log.v(TAG, "AlertDialog::onPause()");
+        if (myDialog != null)
+        {
+            myDialog.cancel();
+        }
+    }
+
 
     // コールバックインタフェース
     public interface Callback
