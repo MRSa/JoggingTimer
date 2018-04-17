@@ -256,8 +256,8 @@ public class RecordDetailSetup  implements ITimeEntryDatabaseCallback, IDetailEd
             @Override
             public void run()
             {
-                CreateModelDataDialog dialog2 = new CreateModelDataDialog(activity);
-                dialog2.show(false, activity.getString(R.string.information_modify_time), count, new CreateModelData(database, editCallback, null, indexId, dataId), defaultMillis);
+                CreateModelDataDialog dialog2 = CreateModelDataDialog.newInstance(false, activity.getString(R.string.information_modify_time), count, new CreateModelData(database, editCallback, null, indexId, dataId), defaultMillis);
+                dialog2.show(activity.getFragmentManager(), "dialog2");
             }
         });
     }

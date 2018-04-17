@@ -1,8 +1,12 @@
 package net.osdn.gokigen.joggingtimer.utilities;
 
+import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.DialogFragment;
 import android.content.DialogInterface;
-import android.support.wearable.activity.WearableActivity;
+import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
@@ -18,24 +22,58 @@ import net.osdn.gokigen.joggingtimer.R;
  *
  *
  */
-public class CreateModelDataDialog
+public class CreateModelDataDialog  extends DialogFragment
 {
     private final String TAG = toString();
-    private final WearableActivity activity;
 
-    public CreateModelDataDialog(WearableActivity activity)
+    private boolean isLap = true;
+    private String title = "";
+    private int lapCount = 0;
+    private Callback callback = null;
+    private long defaultValue = 0;
+    Dialog myDialog = null;
+
+    /**
+     *
+     *
+     */
+    public static CreateModelDataDialog newInstance(boolean isLap, String title, int lapCount, Callback callback, long defaultValue)
     {
-        this.activity = activity;
+        CreateModelDataDialog instance = new CreateModelDataDialog();
+        instance.prepare(isLap, title, lapCount, callback, defaultValue);
+
+        // パラメータはBundleにまとめておく
+        Bundle arguments = new Bundle();
+        arguments.putString("title", title);
+        //arguments.putString("message", message);
+        instance.setArguments(arguments);
+
+        return (instance);
     }
 
     /**
      *
-     * @param callback  結果をコールバック
+     *
      */
-    public void show(final boolean isLap, String title, final int lapCount, final Callback callback, final long defaultValue)
+    private void prepare(boolean isLap, String title, int lapCount, Callback callback, long defaultValue)
+    {
+        this.isLap = isLap;
+        this.title = title;
+        this.lapCount = lapCount;
+        this.callback = callback;
+        this.defaultValue = defaultValue;
+    }
+
+    /**
+     *
+     *
+     */
+    @Override
+    public @NonNull Dialog onCreateDialog(Bundle savedInstanceState)
     {
         Log.v(TAG, "show " + "def. : " + defaultValue);
 
+        Activity activity = getActivity();
         // 確認ダイアログの生成
         final AlertDialog.Builder alertDialog = new AlertDialog.Builder(new ContextThemeWrapper(activity, R.style.wear2_dialog_theme));
 
@@ -117,16 +155,39 @@ public class CreateModelDataDialog
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which)
                     {
-                        callback.dataCreateCancelled();
+                        try
+                        {
+                            callback.dataCreateCancelled();
+                        }
+                        catch (Exception e)
+                        {
+                            e.printStackTrace();
+                        }
                         dialog.cancel();
                     }
                 });
 
-        // 確認ダイアログを表示する
-        alertDialog.show();
+        myDialog = alertDialog.create();
+        return (myDialog);
     }
 
-    // コールバックインタフェース
+
+    @Override
+    public void onPause()
+    {
+        super.onPause();
+        Log.v(TAG, "AlertDialog::onPause()");
+        if (myDialog != null)
+        {
+            myDialog.cancel();
+        }
+    }
+
+
+    /**
+     *  コールバックインタフェース
+     *
+     */
     public interface Callback
     {
         void dataCreated(boolean isLap, int lap, long previousValue, long newValue); // OKを選択したとき

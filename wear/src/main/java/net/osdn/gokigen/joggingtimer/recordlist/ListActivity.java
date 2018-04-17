@@ -218,8 +218,8 @@ public class ListActivity extends WearableActivity implements IDetailLauncher, R
         {
             case R.id.menu_create_model:
                 // モデルデータの作成
-                CreateModelDataDialog dialog2 = new CreateModelDataDialog(this);
-                dialog2.show(true, getString(R.string.information_time_picker), 0, setupper.getCreateModelDataCallback(ITimeEntryDatabase.DONT_USE_ID, ITimeEntryDatabase.DONT_USE_ID), 0);
+                CreateModelDataDialog dialog2 = CreateModelDataDialog.newInstance(true, getString(R.string.information_time_picker), 0, setupper.getCreateModelDataCallback(ITimeEntryDatabase.DONT_USE_ID, ITimeEntryDatabase.DONT_USE_ID), 0);
+                dialog2.show(getFragmentManager(), "dialog2");
                 break;
 
 
