@@ -1,5 +1,6 @@
 package net.osdn.gokigen.joggingtimer.recorddetail;
 
+import android.app.FragmentManager;
 import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.wear.widget.WearableLinearLayoutManager;
@@ -266,7 +267,6 @@ public class DetailActivity extends WearableActivity implements RecordDetailSetu
         {
             case R.id.menu_edit_title:
                 // タイトルの編集
-                DataEditDialog dialog = new DataEditDialog(this);
                 String title = "";
                 int iconId = R.drawable.ic_android_black_24dp;
                 RecordDetailSetup.EditIndexData data = setupper.getEditIndexData();
@@ -275,7 +275,13 @@ public class DetailActivity extends WearableActivity implements RecordDetailSetu
                     iconId = data.getIcon();
                     title = data.getTitle();
                 }
-                dialog.show(iconId, title, this);
+                DataEditDialog dialog = DataEditDialog.newInstance(iconId, title, this);
+                FragmentManager manager = getFragmentManager();
+                String tag = "dialog";
+                if (manager != null)
+                {
+                    dialog.show(manager, tag);
+                }
                 ret = true;
                 break;
 

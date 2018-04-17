@@ -1,12 +1,14 @@
 package net.osdn.gokigen.joggingtimer.utilities;
 
+import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.DialogFragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.TypedArray;
-import android.graphics.Color;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.wearable.activity.WearableActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,24 +25,53 @@ import net.osdn.gokigen.joggingtimer.R;
  *
  *
  */
-public class DataEditDialog
+public class DataEditDialog  extends DialogFragment
 {
     private final String TAG = toString();
-    private final WearableActivity activity;
+    private int iconResId = 0;
+    private String title = "";
     private int selectedPosition = 0;
+    private DataEditDialog.Callback callback = null;
+    Dialog myDialog = null;
 
-    public DataEditDialog(WearableActivity activity)
+    /**
+     *
+     *
+     */
+    public static DataEditDialog newInstance(int iconResId, String title,  @NonNull DataEditDialog.Callback callback)
     {
-        this.activity = activity;
+        DataEditDialog instance = new DataEditDialog();
+        instance.prepare(iconResId, title, callback);
+
+        // パラメータはBundleにまとめておく
+        Bundle arguments = new Bundle();
+        arguments.putString("title", title);
+        //arguments.putString("message", message);
+        instance.setArguments(arguments);
+
+        return (instance);
     }
 
     /**
      *
-     * @param iconResId  アイコンリソース
-     * @param callback  結果をコールバック
+     *
      */
-    public void show(int iconResId, String title, final DataEditDialog.Callback callback)
+    private void prepare(int iconResId, String title,  @NonNull DataEditDialog.Callback callback)
     {
+        this.iconResId = iconResId;
+        this.title = title;
+        this.callback = callback;
+    }
+
+    /**
+     *
+     *
+     */
+    @Override
+    public @NonNull Dialog onCreateDialog(Bundle savedInstanceState)
+    {
+        Activity activity = getActivity();
+
         // 確認ダイアログの生成
         final AlertDialog.Builder alertDialog = new AlertDialog.Builder(activity);
 
@@ -74,7 +105,6 @@ public class DataEditDialog
         {
             e.printStackTrace();
         }
-
         alertDialog.setIcon(iconResId);
         alertDialog.setMessage(activity.getString(R.string.dialog_message_data_edit));
         alertDialog.setCancelable(true);
@@ -86,13 +116,23 @@ public class DataEditDialog
                     {
                         try
                         {
-                            String array[] = activity.getResources().getStringArray(R.array.icon_selection_id);
-                            callback.dataEdited(Integer.parseInt(array[selectedPosition]),  titleText.getText().toString());
+                            Activity activity = getActivity();
+                            if (activity != null)
+                            {
+                                String array[] = activity.getResources().getStringArray(R.array.icon_selection_id);
+                                if (callback != null)
+                                {
+                                    callback.dataEdited(Integer.parseInt(array[selectedPosition]), titleText.getText().toString());
+                                }
+                            }
                         }
                         catch (Exception e)
                         {
                             e.printStackTrace();
-                            callback.cancelled();
+                            if (callback != null)
+                            {
+                                callback.cancelled();
+                            }
                         }
                         dialog.dismiss();
                     }
@@ -101,18 +141,36 @@ public class DataEditDialog
         // ボタンを設定する (キャンセルボタン）
         alertDialog.setNegativeButton(activity.getString(R.string.dialog_negative_cancel),
                 new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which)
-                    {
-                        callback.cancelled();
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (callback != null)
+                        {
+                            callback.cancelled();
+                        }
                         dialog.cancel();
                     }
                 });
 
-        // 確認ダイアログを表示する
-        alertDialog.show();
+        // 確認ダイアログを応答する
+        myDialog = alertDialog.create();
+        return (myDialog);
     }
 
-    // コールバックインタフェース
+
+    @Override
+    public void onPause()
+    {
+        super.onPause();
+        Log.v(TAG, "AlertDialog::onPause()");
+        if (myDialog != null)
+        {
+            myDialog.cancel();
+        }
+    }
+
+    /**
+     * コールバックインタフェース
+     *
+     */
     public interface Callback
     {
         void dataEdited(int iconId, String title); // OKを選択したとき
@@ -125,7 +183,7 @@ public class DataEditDialog
         private final int layoutResourceId;
         private final String[]  stringList;
 
-        private IconListAdapter(WearableActivity activity, int layoutResourceId, String[] strings)
+        private IconListAdapter(Activity activity, int layoutResourceId, String[] strings)
         {
             super(activity, layoutResourceId, strings);
             inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -155,11 +213,18 @@ public class DataEditDialog
         public @NonNull View getView(int position, View convertView, @NonNull ViewGroup parent)
         {
             View row = inflater.inflate(layoutResourceId, parent, false);
-            TextView target = row.findViewById(R.id.selection_icon);
-            TypedArray imgs = activity.getResources().obtainTypedArray(R.array.icon_selection);
-            int rscId = imgs.getResourceId(position, R.drawable.ic_label_outline_black_24dp);
-            target.setCompoundDrawablesWithIntrinsicBounds(rscId, 0, 0, 0);
-            imgs.recycle();
+            try
+            {
+                TextView target = row.findViewById(R.id.selection_icon);
+                TypedArray imgs = getActivity().getResources().obtainTypedArray(R.array.icon_selection);
+                int rscId = imgs.getResourceId(position, R.drawable.ic_label_outline_black_24dp);
+                target.setCompoundDrawablesWithIntrinsicBounds(rscId, 0, 0, 0);
+                imgs.recycle();
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+            }
             return (row);
         }
 
