@@ -204,7 +204,10 @@ public class MainActivity extends WearableActivity implements IClickCallback, My
 
             btn1.setImageResource(R.drawable.ic_flag_black_24dp);
             btn1.setBackgroundColor(bgColor);
-            btn1.setVisibility(View.VISIBLE);
+
+            // チャタリング防止（ラップタイムとして、３秒以内は記録しないようボタンを消しておく）
+            long currentElapsedTime = timerCounter.getCurrentElapsedTime();
+            btn1.setVisibility((currentElapsedTime > 3000) ? View.VISIBLE : View.INVISIBLE);
             btn1.invalidate();
 
             btn2.setImageResource(R.drawable.ic_stop_black_24dp);
@@ -299,9 +302,8 @@ public class MainActivity extends WearableActivity implements IClickCallback, My
                 if (timerCounter.isStarted())
                 {
                     Log.v(TAG, "startTimer() LAP TIME");
-                    // チャタリング防止（ラップタイムとして、３秒以内は記録しないようにする）
                     long currentElapsedTime = timerCounter.getCurrentElapsedTime();
-                    if (currentElapsedTime > 3000)
+                    // if (currentElapsedTime > 3000)  // チャタリング防止（ラップタイムとして、３秒以内は記録しないようにする）
                     {
                         currentLapCount++;
                         long lapTime = timerCounter.timeStamp();
