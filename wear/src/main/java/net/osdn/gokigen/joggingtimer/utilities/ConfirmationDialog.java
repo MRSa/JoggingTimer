@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.util.Log;
+import android.view.ContextThemeWrapper;
 
 import net.osdn.gokigen.joggingtimer.R;
 
@@ -64,7 +65,9 @@ public class ConfirmationDialog extends DialogFragment
             message = savedInstanceState.getString("message");
         }
         Context context = getContext();
+        //AlertDialog.Builder alertDialog = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.wear2_dialog_theme));
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(context);
+
         alertDialog.setTitle(title);
         alertDialog.setIcon(android.R.drawable.ic_dialog_alert);
         alertDialog.setMessage(message);

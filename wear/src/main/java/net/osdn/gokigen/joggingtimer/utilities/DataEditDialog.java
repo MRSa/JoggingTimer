@@ -7,15 +7,20 @@ import android.app.DialogFragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.TypedArray;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.util.Log;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -73,7 +78,9 @@ public class DataEditDialog  extends DialogFragment
         Activity activity = getActivity();
 
         // 確認ダイアログの生成
+        //final AlertDialog.Builder alertDialog = new AlertDialog.Builder(new ContextThemeWrapper(activity, R.style.wear2_dialog_theme));
         final AlertDialog.Builder alertDialog = new AlertDialog.Builder(activity);
+
 
         // Get the layout inflater
         LayoutInflater inflater = activity.getLayoutInflater();
@@ -83,6 +90,13 @@ public class DataEditDialog  extends DialogFragment
         final String[] objects = activity.getResources().getStringArray(R.array.icon_selection_id);
         final Spinner spinner = alertView.findViewById(R.id.spinner_selection);
         final EditText titleText = alertView.findViewById(R.id.edit_title);
+
+        // もー苦肉の策だ。。。
+        if (Build.VERSION.SDK_INT <= android.os.Build.VERSION_CODES.M)
+        {
+            titleText.setTextColor(Color.BLACK);
+        }
+
         try
         {
             titleText.setText(title);

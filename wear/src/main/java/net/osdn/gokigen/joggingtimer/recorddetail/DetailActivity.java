@@ -56,7 +56,8 @@ public class DetailActivity extends WearableActivity implements RecordDetailSetu
             detailAdapter = new RecordDetailAdapter();
             WearableLinearLayoutManager layoutManager = new WearableLinearLayoutManager(this);
 
-            view.setCircularScrollingGestureEnabled(getResources().getConfiguration().isScreenRound());
+            //view.setCircularScrollingGestureEnabled(getResources().getConfiguration().isScreenRound());
+            view.setCircularScrollingGestureEnabled(false);
 
             DividerItemDecoration dividerDecoration = new DividerItemDecoration(view.getContext(), layoutManager.getOrientation());
 

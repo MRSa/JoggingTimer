@@ -1,23 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.wear.widget.drawer.WearableDrawerLayout
+
+<android.support.wear.widget.BoxInsetLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/list_drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:nestedScrollingEnabled="true"
-    android:background="@color/white">
+    android:paddingStart="@dimen/list_start_padding"
+    android:paddingEnd="@dimen/list_end_padding"
+    android:background="@color/white"
+>
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        >
 
         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/info_edit_data"
             android:orientation="vertical"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:padding="6dp"
+            android:padding="2dp"
             >
-
             <Spinner
                 android:id="@+id/spinner_selection"
                 android:layout_width="fill_parent"
@@ -38,4 +42,4 @@
                 />
         </LinearLayout>
     </ScrollView>
-</android.support.wear.widget.drawer.WearableDrawerLayout>
+</android.support.wear.widget.BoxInsetLayout>

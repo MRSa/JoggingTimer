@@ -32,6 +32,12 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scrollbars="vertical"
+            android:clipChildren="true"
+            android:clipToPadding="true"
+            android:paddingTop="@dimen/list_top_padding"
+            android:paddingBottom="@dimen/list_bottom_padding"
+            android:paddingStart="@dimen/list_start_padding"
+            android:paddingEnd="@dimen/list_end_padding"
             >
         </android.support.wear.widget.WearableRecyclerView>
     </LinearLayout>

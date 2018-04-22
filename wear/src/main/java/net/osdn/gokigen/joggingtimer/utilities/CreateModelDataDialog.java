@@ -75,7 +75,8 @@ public class CreateModelDataDialog  extends DialogFragment
 
         Activity activity = getActivity();
         // 確認ダイアログの生成
-        final AlertDialog.Builder alertDialog = new AlertDialog.Builder(new ContextThemeWrapper(activity, R.style.wear2_dialog_theme));
+        //final AlertDialog.Builder alertDialog = new AlertDialog.Builder(new ContextThemeWrapper(activity, R.style.wear2_dialog_theme));
+        final AlertDialog.Builder alertDialog = new AlertDialog.Builder(activity);
 
         // Get the layout inflater
         LayoutInflater inflater = activity.getLayoutInflater();
