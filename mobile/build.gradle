@@ -7,8 +7,8 @@ android {
         applicationId "net.osdn.gokigen.joggingtimer"
         minSdkVersion 14  // 14
         targetSdkVersion 27
-        versionCode 100012
-        versionName "1.0.1"
+        versionCode 100022
+        versionName "1.0.2"
     }
     buildTypes {
         release {
