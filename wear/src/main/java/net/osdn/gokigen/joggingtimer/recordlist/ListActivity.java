@@ -55,8 +55,8 @@ public class ListActivity extends WearableActivity implements IDetailLauncher, R
             summaryAdapter = new RecordSummaryAdapter();
             WearableLinearLayoutManager layoutManager = new WearableLinearLayoutManager(this);
 
-            //view.setCircularScrollingGestureEnabled(getResources().getConfiguration().isScreenRound());
-            view.setCircularScrollingGestureEnabled(false);
+            view.setCircularScrollingGestureEnabled(getResources().getConfiguration().isScreenRound());
+            //view.setCircularScrollingGestureEnabled(false);
 
             DividerItemDecoration dividerDecoration = new DividerItemDecoration(view.getContext(), layoutManager.getOrientation());
 

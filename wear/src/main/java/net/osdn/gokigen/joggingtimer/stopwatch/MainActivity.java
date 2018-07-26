@@ -303,7 +303,7 @@ public class MainActivity extends WearableActivity implements IClickCallback, My
                 {
                     Log.v(TAG, "startTimer() LAP TIME");
                     long currentElapsedTime = timerCounter.getCurrentElapsedTime();
-                    // if (currentElapsedTime > 3000)  // チャタリング防止（ラップタイムとして、３秒以内は記録しないようにする）
+                    if (currentElapsedTime > 3000)  // チャタリング防止（ラップタイムとして、３秒以内は記録しないようにする）
                     {
                         currentLapCount++;
                         long lapTime = timerCounter.timeStamp();
