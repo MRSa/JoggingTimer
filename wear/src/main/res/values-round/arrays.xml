@@ -42,6 +42,13 @@
         <item>@drawable/ic_beach_access_black_24dp</item>
         <item>@drawable/ic_fitness_center_black_24dp</item>
         <item>@drawable/ic_golf_course_black_24dp</item>
+        <item>@drawable/ic_baseline_elderly_24</item>
+        <item>@drawable/ic_baseline_emoji_people_24</item>
+        <item>@drawable/ic_baseline_follow_the_signs_24</item>
+        <item>@drawable/ic_baseline_hail_24</item>
+        <item>@drawable/ic_baseline_hiking_24</item>
+        <item>@drawable/ic_baseline_self_improvement_24</item>
+        <item>@drawable/ic_baseline_pedal_bike_24</item>
     </array>
     <string-array name="icon_selection_id">
         <item>0</item>
@@ -85,5 +92,12 @@
         <item>42</item>
         <item>43</item>
         <item>44</item>
+        <item>45</item>
+        <item>46</item>
+        <item>47</item>
+        <item>48</item>
+        <item>49</item>
+        <item>50</item>
+        <item>51</item>
     </string-array>
 </resources>
