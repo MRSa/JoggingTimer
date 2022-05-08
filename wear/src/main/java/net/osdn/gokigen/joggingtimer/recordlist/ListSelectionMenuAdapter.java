@@ -3,7 +3,9 @@ package net.osdn.gokigen.joggingtimer.recordlist;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
-import android.support.wear.widget.drawer.WearableNavigationDrawerView;
+
+import androidx.core.content.res.ResourcesCompat;
+import androidx.wear.widget.drawer.WearableNavigationDrawerView;
 
 import net.osdn.gokigen.joggingtimer.R;
 
@@ -14,7 +16,7 @@ public class ListSelectionMenuAdapter  extends WearableNavigationDrawerView.Wear
 {
     private final Context context;
     private final ListSelectionMenuAdapter.ISelectedMenu callback;
-    private List<ListSelectionMenuAdapter.MenuItem> menuItems = new ArrayList<>();
+    private final List<ListSelectionMenuAdapter.MenuItem> menuItems = new ArrayList<>();
 
     ListSelectionMenuAdapter(Context context, ListSelectionMenuAdapter.ISelectedMenu callback)
     {
@@ -44,7 +46,7 @@ public class ListSelectionMenuAdapter  extends WearableNavigationDrawerView.Wear
         try
         {
             int iconId = menuItems.get(pos).iconResId;
-            Drawable icon = android.support.v4.content.res.ResourcesCompat.getDrawable(context.getResources(), iconId, null);
+            Drawable icon = ResourcesCompat.getDrawable(context.getResources(), iconId, null);
             if (icon != null)
             {
                 icon.setTint(Color.WHITE);
@@ -64,7 +66,7 @@ public class ListSelectionMenuAdapter  extends WearableNavigationDrawerView.Wear
         return (menuItems.size());
     }
 
-    private class MenuItem
+    private static class MenuItem
     {
         private final int menuId;
         private final int iconResId;

@@ -3,14 +3,15 @@ package net.osdn.gokigen.joggingtimer.recordlist;
 import android.app.FragmentManager;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.DividerItemDecoration;
-import android.support.wear.widget.WearableLinearLayoutManager;
-import android.support.wear.widget.drawer.WearableNavigationDrawerView;
 import android.support.wearable.activity.WearableActivity;
-import android.support.wear.widget.WearableRecyclerView;
 import android.util.Log;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.wear.widget.WearableLinearLayoutManager;
+import androidx.wear.widget.WearableRecyclerView;
+import androidx.wear.widget.drawer.WearableNavigationDrawerView;
 
 import net.osdn.gokigen.joggingtimer.R;
 import net.osdn.gokigen.joggingtimer.recorddetail.DetailActivity;

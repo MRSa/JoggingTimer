@@ -1,5 +1,6 @@
 package net.osdn.gokigen.joggingtimer.recordlist;
 
+import android.annotation.SuppressLint;
 import android.database.Cursor;
 import android.support.wearable.activity.WearableActivity;
 import android.util.Log;
@@ -81,12 +82,12 @@ class RecordSummarySetup implements ITimeEntryDatabaseCallback
                     Cursor cursor = database.getAllIndexData();
                     while (cursor.moveToNext())
                     {
-                        long dataId = cursor.getLong(cursor.getColumnIndex(_ID));
-                        String title = cursor.getString(cursor.getColumnIndex(COLUMN_NAME_TITLE));
+                        @SuppressLint("Range") long dataId = cursor.getLong(cursor.getColumnIndex(_ID));
+                        @SuppressLint("Range") String title = cursor.getString(cursor.getColumnIndex(COLUMN_NAME_TITLE));
                         //String memo = cursor.getString(cursor.getColumnIndex(COLUMN_NAME_MEMO));
-                        int iconId = IconIdProvider.getIconResourceId(cursor.getInt(cursor.getColumnIndex(COLUMN_NAME_ICON_ID)));
+                        @SuppressLint("Range") int iconId = IconIdProvider.getIconResourceId(cursor.getInt(cursor.getColumnIndex(COLUMN_NAME_ICON_ID)));
                         //long startTime = cursor.getLong(cursor.getColumnIndex(COLUMN_NAME_START_TIME));
-                        long duration = cursor.getLong(cursor.getColumnIndex(COLUMN_NAME_TIME_DURATION));
+                        @SuppressLint("Range") long duration = cursor.getLong(cursor.getColumnIndex(COLUMN_NAME_TIME_DURATION));
                         String memo = TimeStringConvert.getTimeString(duration).toString();
                         operation.addRecord(new DataRecord(dataId, iconId, title, memo, detailLauncher));
                     }
@@ -178,12 +179,12 @@ class RecordSummarySetup implements ITimeEntryDatabaseCallback
             while (cursor.moveToNext())
             {
                 // 1件しかないはず
-                long dataId = cursor.getLong(cursor.getColumnIndex(_ID));
-                String title = cursor.getString(cursor.getColumnIndex(COLUMN_NAME_TITLE));
+                @SuppressLint("Range") long dataId = cursor.getLong(cursor.getColumnIndex(_ID));
+                @SuppressLint("Range") String title = cursor.getString(cursor.getColumnIndex(COLUMN_NAME_TITLE));
                 //String memo = cursor.getString(cursor.getColumnIndex(COLUMN_NAME_MEMO));
-                int iconId = IconIdProvider.getIconResourceId(cursor.getInt(cursor.getColumnIndex(COLUMN_NAME_ICON_ID)));
+                @SuppressLint("Range") int iconId = IconIdProvider.getIconResourceId(cursor.getInt(cursor.getColumnIndex(COLUMN_NAME_ICON_ID)));
                 //long startTime = cursor.getLong(cursor.getColumnIndex(COLUMN_NAME_START_TIME));
-                long duration = cursor.getLong(cursor.getColumnIndex(COLUMN_NAME_TIME_DURATION));
+                @SuppressLint("Range") long duration = cursor.getLong(cursor.getColumnIndex(COLUMN_NAME_TIME_DURATION));
                 String memo = TimeStringConvert.getTimeString(duration).toString();
                 operation.addRecord(new DataRecord(dataId, iconId, title, memo, detailLauncher));
             }

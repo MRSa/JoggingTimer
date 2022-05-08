@@ -4,13 +4,14 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.support.annotation.NonNull;
 import android.util.Log;
 
 import net.osdn.gokigen.joggingtimer.storage.contract.TimeEntryData;
 import net.osdn.gokigen.joggingtimer.storage.contract.TimeEntryIndex;
 
 import static android.provider.BaseColumns._ID;
+
+import androidx.annotation.NonNull;
 
 /**
  *

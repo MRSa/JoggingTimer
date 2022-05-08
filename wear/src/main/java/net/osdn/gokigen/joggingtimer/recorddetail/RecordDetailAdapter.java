@@ -1,10 +1,12 @@
 package net.osdn.gokigen.joggingtimer.recorddetail;
 
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
+import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 import net.osdn.gokigen.joggingtimer.R;
 
@@ -17,7 +19,7 @@ import java.util.List;
  */
 public class RecordDetailAdapter  extends RecyclerView.Adapter<DetailHolder>  implements IRecordOperation
 {
-    private List<DetailRecord> list;
+    private final List<DetailRecord> list;
 
     /**
      *
@@ -26,7 +28,6 @@ public class RecordDetailAdapter  extends RecyclerView.Adapter<DetailHolder>  im
     RecordDetailAdapter()
     {
         list = new ArrayList<>();
-        list.clear();
     }
 
     /**
@@ -81,6 +82,7 @@ public class RecordDetailAdapter  extends RecyclerView.Adapter<DetailHolder>  im
      *
      *
      */
+    @SuppressLint("NotifyDataSetChanged")
     @Override
     public void dataSetChangeFinished()
     {
@@ -103,7 +105,7 @@ public class RecordDetailAdapter  extends RecyclerView.Adapter<DetailHolder>  im
      *
      */
     @Override
-    public void onBindViewHolder(@NonNull  DetailHolder holder, int position)
+    public void onBindViewHolder(@NonNull DetailHolder holder, int position)
     {
         try
         {

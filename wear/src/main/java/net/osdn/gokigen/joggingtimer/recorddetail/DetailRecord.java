@@ -20,7 +20,7 @@ public class DetailRecord implements View.OnClickListener, View.OnLongClickListe
     private final IDetailEditor editorLauncher;
     private long lapTime;
     private long overallTime;
-    private long differenceTime;
+    private final long differenceTime;
 
     /**
      *

@@ -6,8 +6,6 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.os.Vibrator;
 import android.preference.PreferenceManager;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.wearable.activity.WearableActivity;
 import android.util.Log;
 import android.widget.ImageButton;
@@ -27,6 +25,9 @@ import net.osdn.gokigen.joggingtimer.storage.contract.TimeEntryData;
 import java.util.ArrayList;
 
 import static android.content.Context.VIBRATOR_SERVICE;
+
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 /**
  *

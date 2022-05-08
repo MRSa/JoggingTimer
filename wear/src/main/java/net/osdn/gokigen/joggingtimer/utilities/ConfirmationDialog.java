@@ -6,9 +6,9 @@ import android.app.DialogFragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.util.Log;
-import android.view.ContextThemeWrapper;
+
+import androidx.annotation.NonNull;
 
 import net.osdn.gokigen.joggingtimer.R;
 

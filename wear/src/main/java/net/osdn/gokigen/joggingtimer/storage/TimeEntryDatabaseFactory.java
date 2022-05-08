@@ -1,8 +1,9 @@
 package net.osdn.gokigen.joggingtimer.storage;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
 import android.util.Log;
+
+import androidx.annotation.NonNull;
 
 public class TimeEntryDatabaseFactory
 {

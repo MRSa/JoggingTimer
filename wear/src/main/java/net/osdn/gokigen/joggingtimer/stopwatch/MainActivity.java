@@ -3,7 +3,6 @@ package net.osdn.gokigen.joggingtimer.stopwatch;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.wear.widget.BoxInsetLayout;
 import android.support.wearable.activity.WearableActivity;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -12,6 +11,8 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import androidx.wear.widget.BoxInsetLayout;
 
 import net.osdn.gokigen.joggingtimer.R;
 import net.osdn.gokigen.joggingtimer.recordlist.ListActivity;

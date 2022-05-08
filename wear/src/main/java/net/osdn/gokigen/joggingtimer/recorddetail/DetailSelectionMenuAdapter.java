@@ -3,7 +3,9 @@ package net.osdn.gokigen.joggingtimer.recorddetail;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
-import android.support.wear.widget.drawer.WearableNavigationDrawerView;
+
+import androidx.core.content.res.ResourcesCompat;
+import androidx.wear.widget.drawer.WearableNavigationDrawerView;
 
 import net.osdn.gokigen.joggingtimer.R;
 
@@ -51,7 +53,7 @@ public class DetailSelectionMenuAdapter extends WearableNavigationDrawerView.Wea
         try
         {
             int iconId = menuItems.get(pos).iconResId;
-            Drawable icon = android.support.v4.content.res.ResourcesCompat.getDrawable(context.getResources(), iconId, null);
+            Drawable icon = ResourcesCompat.getDrawable(context.getResources(), iconId, null);
             if (icon != null)
             {
                 icon.setTint(Color.WHITE);

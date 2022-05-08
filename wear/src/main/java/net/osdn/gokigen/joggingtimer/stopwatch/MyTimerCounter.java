@@ -3,8 +3,9 @@ package net.osdn.gokigen.joggingtimer.stopwatch;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.support.annotation.NonNull;
 import android.util.Log;
+
+import androidx.annotation.NonNull;
 
 /**
  *    My Timer counter

@@ -2,7 +2,6 @@ package net.osdn.gokigen.joggingtimer.recorddetail;
 
 import android.content.Intent;
 import android.database.Cursor;
-import android.support.annotation.NonNull;
 import android.support.wearable.activity.WearableActivity;
 import android.util.Log;
 
@@ -21,6 +20,8 @@ import static net.osdn.gokigen.joggingtimer.storage.contract.TimeEntryIndex.Entr
 import static net.osdn.gokigen.joggingtimer.storage.contract.TimeEntryIndex.EntryIndex.COLUMN_NAME_START_TIME;
 import static net.osdn.gokigen.joggingtimer.storage.contract.TimeEntryIndex.EntryIndex.COLUMN_NAME_TIME_DURATION;
 import static net.osdn.gokigen.joggingtimer.storage.contract.TimeEntryIndex.EntryIndex.COLUMN_NAME_TITLE;
+
+import androidx.annotation.NonNull;
 
 /**
  *
