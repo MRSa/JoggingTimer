@@ -1,5 +1,6 @@
 package net.osdn.gokigen.joggingtimer.recorddetail;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.database.Cursor;
 import android.support.wearable.activity.WearableActivity;
@@ -58,18 +59,14 @@ public class RecordDetailSetup  implements ITimeEntryDatabaseCallback, IDetailEd
     {
         Log.v(TAG, "setup()");
         database = new TimeEntryDatabaseFactory(activity, this).getEntryDatabase();
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run()
+        Thread thread = new Thread(() -> {
+            try
             {
-                try
-                {
-                    database.prepare();
-                }
-                catch (Exception e)
-                {
-                    e.printStackTrace();
-                }
+                database.prepare();
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
             }
         });
         thread.start();
@@ -88,60 +85,49 @@ public class RecordDetailSetup  implements ITimeEntryDatabaseCallback, IDetailEd
             return;
         }
         final IDetailEditor editor = this;
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run()
+        Thread thread = new Thread(() -> {
+            boolean ret = false;
+            try
             {
-                boolean ret = false;
-                try
+                operation.clearRecord();
+                Cursor cursor = database.getAllDetailData(indexId);
+                int index = 0;
+                long startTime = 0;
+                long previousLapTime = 0;
+                long morePreviousTime = 0;
+                while (cursor.moveToNext())
                 {
-                    operation.clearRecord();
-                    Cursor cursor = database.getAllDetailData(indexId);
-                    int index = 0;
-                    long startTime = 0;
-                    long previousLapTime = 0;
-                    long morePreviousTime = 0;
-                    while (cursor.moveToNext())
-                    {
-                        long dataId = cursor.getLong(cursor.getColumnIndex(_ID));
-                        long indexId = cursor.getLong(cursor.getColumnIndex(TimeEntryData.EntryData.COLUMN_NAME_INDEX_ID));
-                        long entryTime = cursor.getLong(cursor.getColumnIndex(TimeEntryData.EntryData.COLUMN_NAME_TIME_ENTRY));
-                        int recordType = cursor.getInt(cursor.getColumnIndex(TimeEntryData.EntryData.COLUMN_NAME_RECORD_TYPE));
+                    @SuppressLint("Range") long dataId = cursor.getLong(cursor.getColumnIndex(_ID));
+                    @SuppressLint("Range") long indexId = cursor.getLong(cursor.getColumnIndex(TimeEntryData.EntryData.COLUMN_NAME_INDEX_ID));
+                    @SuppressLint("Range") long entryTime = cursor.getLong(cursor.getColumnIndex(TimeEntryData.EntryData.COLUMN_NAME_TIME_ENTRY));
+                    @SuppressLint("Range") int recordType = cursor.getInt(cursor.getColumnIndex(TimeEntryData.EntryData.COLUMN_NAME_RECORD_TYPE));
 
-                        if (index == 0)
-                        {
-                            // first record
-                            startTime = entryTime;
-                            previousLapTime = entryTime;
-                            morePreviousTime = entryTime;
-                        }
-                        else
-                        {
-                            long lapTime = entryTime - previousLapTime;
-                            long overallTime = entryTime - startTime;
-                            long differenceTime = (lapTime) - (previousLapTime - morePreviousTime);
-                            operation.addRecord(new DetailRecord(indexId, dataId, recordType, index, lapTime, overallTime, differenceTime,  editor));
-                            morePreviousTime = previousLapTime;
-                            previousLapTime = entryTime;
-                        }
-                        index++;
-                    }
-                    activity.runOnUiThread(new Runnable()
+                    if (index == 0)
                     {
-                        @Override
-                        public void run()
-                        {
-                            operation.dataSetChangeFinished();
-                        }
-                    });
-                    ret = true;
+                        // first record
+                        startTime = entryTime;
+                        previousLapTime = entryTime;
+                        morePreviousTime = entryTime;
+                    }
+                    else
+                    {
+                        long lapTime = entryTime - previousLapTime;
+                        long overallTime = entryTime - startTime;
+                        long differenceTime = (lapTime) - (previousLapTime - morePreviousTime);
+                        operation.addRecord(new DetailRecord(indexId, dataId, recordType, index, lapTime, overallTime, differenceTime,  editor));
+                        morePreviousTime = previousLapTime;
+                        previousLapTime = entryTime;
+                    }
+                    index++;
                 }
-                catch (Exception e)
-                {
-                    e.printStackTrace();
-                }
-                callback.databaseSetupFinished(ret);
+                activity.runOnUiThread(operation::dataSetChangeFinished);
+                ret = true;
             }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+            callback.databaseSetupFinished(ret);
         });
         thread.start();
     }
@@ -153,12 +139,9 @@ public class RecordDetailSetup  implements ITimeEntryDatabaseCallback, IDetailEd
     void setEditIndexData(@NonNull final String title, final int icon)
     {
         final EditIndexData data = new EditIndexData(title, icon);
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                database.updateIndexData(indexId, data.getTitle(), data.getIcon());
-                callback.updatedIndexData(false);
-            }
+        Thread thread = new Thread(() -> {
+            database.updateIndexData(indexId, data.getTitle(), data.getIcon());
+            callback.updatedIndexData(false);
         });
         thread.start();
     }
@@ -167,6 +150,7 @@ public class RecordDetailSetup  implements ITimeEntryDatabaseCallback, IDetailEd
      *
      *
      */
+    @SuppressLint("Range")
     EditIndexData getEditIndexData()
     {
         String title = "";
@@ -194,12 +178,9 @@ public class RecordDetailSetup  implements ITimeEntryDatabaseCallback, IDetailEd
      */
     void setReferenceData()
     {
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                database.setReferenceIndexData(indexId);
-                callback.updatedIndexData(true);
-            }
+        Thread thread = new Thread(() -> {
+            database.setReferenceIndexData(indexId);
+            callback.updatedIndexData(true);
         });
         thread.start();
     }
@@ -252,14 +233,9 @@ public class RecordDetailSetup  implements ITimeEntryDatabaseCallback, IDetailEd
     @Override
     public void editDetailData(final long indexId, final long dataId, final int count, final long defaultMillis)
     {
-        activity.runOnUiThread(new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                CreateModelDataDialog dialog2 = CreateModelDataDialog.newInstance(false, activity.getString(R.string.information_modify_time), count, new CreateModelData(database, editCallback, null, indexId, dataId), defaultMillis);
-                dialog2.show(activity.getFragmentManager(), "dialog2");
-            }
+        activity.runOnUiThread(() -> {
+            CreateModelDataDialog dialog2 = CreateModelDataDialog.newInstance(false, activity.getString(R.string.information_modify_time), count, new CreateModelData(database, editCallback, null, indexId, dataId), defaultMillis);
+            dialog2.show(activity.getFragmentManager(), "dialog2");
         });
     }
 
@@ -308,11 +284,12 @@ public class RecordDetailSetup  implements ITimeEntryDatabaseCallback, IDetailEd
      *
      *
      */
+    @SuppressLint("Range")
     private void shareDetailIntent(RecordDetailAdapter adapter)
     {
         String title = "";
         int dataCount = adapter.getItemCount();
-        StringBuilder dataToExport = new StringBuilder("");
+        StringBuilder dataToExport = new StringBuilder();
         dataToExport.append("; ");
         dataToExport.append(activity.getString(R.string.app_name));
         dataToExport.append("\r\n");
@@ -385,7 +362,7 @@ public class RecordDetailSetup  implements ITimeEntryDatabaseCallback, IDetailEd
         }
     }
 
-    class EditIndexData
+    static class EditIndexData
     {
         final String title;
         final int icon;

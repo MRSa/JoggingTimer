@@ -14,8 +14,8 @@ public class DataRecord implements View.OnClickListener, View.OnLongClickListene
     private final IDetailLauncher launcher;
     private int positionId = -1;
     private int iconId;
-    private String title;
-    private String detail;
+    private final String title;
+    private final String detail;
 
     /**
      *

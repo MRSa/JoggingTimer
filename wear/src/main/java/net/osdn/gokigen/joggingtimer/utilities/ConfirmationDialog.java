@@ -2,9 +2,8 @@ package net.osdn.gokigen.joggingtimer.utilities;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.DialogFragment;
+import androidx.fragment.app.DialogFragment;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -82,26 +81,18 @@ public class ConfirmationDialog extends DialogFragment
 
         // ボタンを設定する（実行ボタン）
         alertDialog.setPositiveButton(positiveLabel,
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which)
+                (dialog, which) -> {
+                    Log.v(TAG, "ConfirmationDialog::OK");
+                    if (callback != null)
                     {
-                        Log.v(TAG, "ConfirmationDialog::OK");
-                        if (callback != null)
-                        {
-                            callback.confirm();
-                        }
-                        dialog.dismiss();
+                        callback.confirm();
                     }
+                    dialog.dismiss();
                 });
 
         // ボタンを設定する (キャンセルボタン）
         alertDialog.setNegativeButton(negativeLabel,
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which)
-                    {
-                        dialog.cancel();
-                    }
-                });
+                (dialog, which) -> dialog.cancel());
 
         myDialog = alertDialog.create();
         return (myDialog);

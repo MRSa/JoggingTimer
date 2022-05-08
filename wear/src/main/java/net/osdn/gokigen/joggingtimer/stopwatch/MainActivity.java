@@ -32,7 +32,7 @@ public class MainActivity extends WearableActivity implements IClickCallback, My
 {
     private final String TAG = toString();
     private final IWearableActivityControl controller = new WearableActivityController();
-    private MyTimerCounter counter = new MyTimerCounter();
+    private final MyTimerCounter counter = new MyTimerCounter();
     private boolean isCounterLapTime = true;
     private boolean isLaptimeView = true;
     private boolean pendingStart = false;
@@ -179,11 +179,6 @@ public class MainActivity extends WearableActivity implements IClickCallback, My
     private void updateTimerLabel()
     {
         ITimerCounter timerCounter = counter;
-        if (timerCounter == null)
-        {
-            return;
-        }
-
         int bgColor;
         BoxInsetLayout insetLayout = findViewById(R.id.box_inset_layout);
         RelativeLayout layout = findViewById(R.id.relative_main_layout);
@@ -297,56 +292,52 @@ public class MainActivity extends WearableActivity implements IClickCallback, My
         try
         {
             ITimerCounter timerCounter = counter;
-            if (timerCounter != null)
+            LapTimeGraphView graphView = findViewById(R.id.graph_area);
+            if (timerCounter.isStarted())
             {
-                LapTimeGraphView graphView = findViewById(R.id.graph_area);
-                if (timerCounter.isStarted())
+                Log.v(TAG, "startTimer() LAP TIME");
+                long currentElapsedTime = timerCounter.getCurrentElapsedTime();
+                if (currentElapsedTime > 3000)  // チャタリング防止（ラップタイムとして、３秒以内は記録しないようにする）
                 {
-                    Log.v(TAG, "startTimer() LAP TIME");
-                    long currentElapsedTime = timerCounter.getCurrentElapsedTime();
-                    if (currentElapsedTime > 3000)  // チャタリング防止（ラップタイムとして、３秒以内は記録しないようにする）
-                    {
-                        currentLapCount++;
-                        long lapTime = timerCounter.timeStamp();
-                        long refLapTime = timerCounter.getReferenceLapTime(currentLapCount);
-                        long diffTime = (refLapTime == 0) ? 0 :  (currentElapsedTime - refLapTime);
-                        controller.vibrate(50);
-                        controller.getDataEntry().appendTimeData(lapTime);
-                        controller.addTimeStamp(currentLapCount, currentElapsedTime, diffTime);
-                        //Log.v(TAG, " [[[ " + currentLapCount + " lap: " + currentElapsedTime + " diff:" + diffTime + " (" + refLapTime + ") ]]]");
-
-                        if (graphView != null)
-                        {
-                            graphView.notifyLapTime();
-                        }
-                    }
-                }
-                else
-                {
-                    Log.v(TAG, "startTimer() START");
-                    controller.clearTimeStamp();
-                    timerCounter.start();
-                    MyTimerTrigger trigger = new MyTimerTrigger(this, 100, timerCounter);
-                    trigger.startTimer();
-                    currentLapCount = 0;
-                    stopTrigger = trigger;
-                    controller.timerStarted(true);
-                    controller.vibrate(120);
-
-                    Date date = new Date();
-                    SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
-                    String title = sdf1.format(date);
-                    long startTime = timerCounter.getStartTime();
-                    controller.getDataEntry().createIndex(title, startTime);
+                    currentLapCount++;
+                    long lapTime = timerCounter.timeStamp();
+                    long refLapTime = timerCounter.getReferenceLapTime(currentLapCount);
+                    long diffTime = (refLapTime == 0) ? 0 :  (currentElapsedTime - refLapTime);
+                    controller.vibrate(50);
+                    controller.getDataEntry().appendTimeData(lapTime);
+                    controller.addTimeStamp(currentLapCount, currentElapsedTime, diffTime);
+                    //Log.v(TAG, " [[[ " + currentLapCount + " lap: " + currentElapsedTime + " diff:" + diffTime + " (" + refLapTime + ") ]]]");
 
                     if (graphView != null)
                     {
-                        graphView.notifyStarted(startTime);
+                        graphView.notifyLapTime();
                     }
-
                 }
-                updateTimerLabel();
             }
+            else
+            {
+                Log.v(TAG, "startTimer() START");
+                controller.clearTimeStamp();
+                timerCounter.start();
+                MyTimerTrigger trigger = new MyTimerTrigger(this, 100, timerCounter);
+                trigger.startTimer();
+                currentLapCount = 0;
+                stopTrigger = trigger;
+                controller.timerStarted(true);
+                controller.vibrate(120);
+
+                Date date = new Date();
+                SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
+                String title = sdf1.format(date);
+                long startTime = timerCounter.getStartTime();
+                controller.getDataEntry().createIndex(title, startTime);
+
+                if (graphView != null)
+                {
+                    graphView.notifyStarted(startTime);
+                }
+            }
+            updateTimerLabel();
         }
         catch (Exception e)
         {
@@ -364,30 +355,27 @@ public class MainActivity extends WearableActivity implements IClickCallback, My
         try
         {
             ITimerCounter timerCounter = counter;
-            if (timerCounter != null)
+            if (timerCounter.isStarted())
             {
-                if (timerCounter.isStarted())
+                timerCounter.stop();
+                controller.timerStarted(false);
+                controller.vibrate(120);
+                controller.getDataEntry().finishTimeData(timerCounter.getStartTime(), timerCounter.getStopTime());
+
+                int lapCount = currentLapCount + 1;
+                long currentElapsedTime = timerCounter.getLastElapsedTime() - timerCounter.getElapsedTime(currentLapCount);
+                long refLapTime = timerCounter.getReferenceLapTime(lapCount);
+                long diffTime = (refLapTime == 0) ? 0 :  (currentElapsedTime - refLapTime);
+                controller.addTimeStamp(lapCount, currentElapsedTime, diffTime);
+                ret = true;
+
+                LapTimeGraphView graphView = findViewById(R.id.graph_area);
+                if (graphView != null)
                 {
-                    timerCounter.stop();
-                    controller.timerStarted(false);
-                    controller.vibrate(120);
-                    controller.getDataEntry().finishTimeData(timerCounter.getStartTime(), timerCounter.getStopTime());
-
-                    int lapCount = currentLapCount + 1;
-                    long currentElapsedTime = timerCounter.getLastElapsedTime() - timerCounter.getElapsedTime(currentLapCount);
-                    long refLapTime = timerCounter.getReferenceLapTime(lapCount);
-                    long diffTime = (refLapTime == 0) ? 0 :  (currentElapsedTime - refLapTime);
-                    controller.addTimeStamp(lapCount, currentElapsedTime, diffTime);
-                    ret = true;
-
-                    LapTimeGraphView graphView = findViewById(R.id.graph_area);
-                    if (graphView != null)
-                    {
-                        graphView.notifyStopped();
-                    }
+                    graphView.notifyStopped();
                 }
-                updateTimerLabel();
             }
+            updateTimerLabel();
         }
         catch (Exception e)
         {
@@ -402,17 +390,13 @@ public class MainActivity extends WearableActivity implements IClickCallback, My
     @Override
     public void clickedBtn2()
     {
-        ITimerCounter timerCounter = counter;
-        if (timerCounter != null)
+        if (!((ITimerCounter) counter).isStarted())
         {
-            if (!timerCounter.isStarted())
-            {
-                // 停止中は、記録一覧を呼び出す
-                launchListActivity();
+            // 停止中は、記録一覧を呼び出す
+            launchListActivity();
 
-                // ぶるぶる
-                controller.vibrate(35);
-            }
+            // ぶるぶる
+            controller.vibrate(35);
         }
         updateTimerLabel();
     }
@@ -424,22 +408,19 @@ public class MainActivity extends WearableActivity implements IClickCallback, My
     public void clickedBtn3()
     {
         ITimerCounter timerCounter = counter;
-        if (timerCounter != null)
+        if (!timerCounter.isStarted())
         {
-            if (!timerCounter.isStarted())
+            timerCounter.reset();
+            controller.vibrate(50);
+            controller.clearTimeStamp();
+            currentLapCount = 0;
+            LapTimeGraphView graphView = findViewById(R.id.graph_area);
+            if (graphView != null)
             {
-                timerCounter.reset();
-                controller.vibrate(50);
-                controller.clearTimeStamp();
-                currentLapCount = 0;
-                LapTimeGraphView graphView = findViewById(R.id.graph_area);
-                if (graphView != null)
-                {
-                    graphView.notifyReset();
-                }
+                graphView.notifyReset();
             }
-            updateTimerLabel();
         }
+        updateTimerLabel();
     }
 
     @Override
@@ -487,12 +468,7 @@ public class MainActivity extends WearableActivity implements IClickCallback, My
     {
         try
         {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    updateTimerLabel();
-                }
-            });
+            runOnUiThread(this::updateTimerLabel);
         }
         catch (Exception e)
         {
@@ -510,35 +486,32 @@ public class MainActivity extends WearableActivity implements IClickCallback, My
         TextView sub = findViewById(R.id.sub_counter1);
 
         ITimerCounter timerCounter = counter;
-        if (timerCounter != null)
+        long time1 = timerCounter.getPastTime();
+        CharSequence str1 = TimeStringConvert.getTimeString(time1);
+        CharSequence str2 = "";
+        if (timerCounter.isStarted())
         {
-            long time1 = timerCounter.getPastTime();
-            CharSequence str1 = TimeStringConvert.getTimeString(time1);
-            CharSequence str2 = "";
-            if (timerCounter.isStarted())
+            long time2 = timerCounter.getCurrentElapsedTime();
+            int lapCount = timerCounter.getElapsedCount();
+            if ((time2 >= 100) && (lapCount > 1))
             {
-                long time2 = timerCounter.getCurrentElapsedTime();
-                int lapCount = timerCounter.getElapsedCount();
-                if ((time2 >= 100) && (lapCount > 1))
-                {
-                    str2 =  "[" + lapCount + "] " + TimeStringConvert.getTimeString(time2);
-                }
+                str2 =  "[" + lapCount + "] " + TimeStringConvert.getTimeString(time2);
             }
-
-            if ((str2.length() > 0)&&(isCounterLapTime))
-            {
-                // ラップタイムの方を大きく表示する
-                main.setText(str2);
-                sub.setText(str1);
-            }
-            else
-            {
-                main.setText(str1);
-                sub.setText(str2);
-            }
-            main.invalidate();
-            sub.invalidate();
         }
+
+        if ((str2.length() > 0)&&(isCounterLapTime))
+        {
+            // ラップタイムの方を大きく表示する
+            main.setText(str2);
+            sub.setText(str1);
+        }
+        else
+        {
+            main.setText(str1);
+            sub.setText(str2);
+        }
+        main.invalidate();
+        sub.invalidate();
     }
 
     /**
@@ -654,18 +627,14 @@ public class MainActivity extends WearableActivity implements IClickCallback, My
     @Override
     public void counterStatusChanged(final boolean forceStartTimer)
     {
-        ITimerCounter timerCounter = counter;
         if (forceStartTimer)
         {
             try
             {
                 LapTimeGraphView graphView = findViewById(R.id.graph_area);
-                if (timerCounter != null)
-                {
-                    MyTimerTrigger trigger = new MyTimerTrigger(this, 100, timerCounter);
-                    trigger.startTimer();
-                    stopTrigger = trigger;
-                }
+                MyTimerTrigger trigger = new MyTimerTrigger(this, 100, counter);
+                trigger.startTimer();
+                stopTrigger = trigger;
                 if (graphView != null)
                 {
                     graphView.notifyLapTime();
@@ -677,28 +646,22 @@ public class MainActivity extends WearableActivity implements IClickCallback, My
             }
         }
 
-        runOnUiThread(new Runnable()
-        {
-            @Override
-            public void run()
+        runOnUiThread(() -> {
+            // 自動スタート時の処理。。
+            if (pendingStart)
             {
-
-                // 自動スタート時の処理。。
-                if (pendingStart)
-                {
-                    startTimer();
-                    pendingStart = false;
-                }
-
-                // ラップタイム表示状態の更新
-                reloadLapTimeList(forceStartTimer);
-
-                // 表示ビューの切り替え
-                changeGraphicView(isLaptimeView);
-
-                // 表示のボタン状態を変更
-                updateTimerLabel();
+                startTimer();
+                pendingStart = false;
             }
+
+            // ラップタイム表示状態の更新
+            reloadLapTimeList(forceStartTimer);
+
+            // 表示ビューの切り替え
+            changeGraphicView(isLaptimeView);
+
+            // 表示のボタン状態を変更
+            updateTimerLabel();
         });
     }
 
@@ -708,8 +671,7 @@ public class MainActivity extends WearableActivity implements IClickCallback, My
      */
     private void reloadLapTimeList(final boolean forceStartTimer)
     {
-        ITimerCounter timerCounter = counter;
-        if ((!forceStartTimer)||(timerCounter == null))
+        if (!forceStartTimer)
         {
             return;
         }
@@ -717,7 +679,8 @@ public class MainActivity extends WearableActivity implements IClickCallback, My
         // Adapter と TimerCounterの整合性を確認
         try
         {
-            List<Long> lapTimeList = timerCounter.getLapTimeList();
+            List<Long> lapTimeList;
+            lapTimeList = ((ITimerCounter) counter).getLapTimeList();
             int lapCount = lapTimeList.size();
             int listCount = controller.getLapTimeCount();
             if (lapCount != listCount)

@@ -8,7 +8,7 @@ import net.osdn.gokigen.joggingtimer.R;
  */
 public class IconIdProvider
 {
-    private static int iconIds[] = {
+    private static final int[] iconIds = {
             R.drawable.ic_label_outline_black_24dp	,
             R.drawable.ic_bookmark_border_black_24dp,
             R.drawable.ic_content_paste_black_24dp,
@@ -54,6 +54,13 @@ public class IconIdProvider
             R.drawable.ic_beach_access_black_24dp,
             R.drawable.ic_fitness_center_black_24dp,
             R.drawable.ic_golf_course_black_24dp,
+            R.drawable.ic_baseline_elderly_24,
+            R.drawable.ic_baseline_emoji_people_24,
+            R.drawable.ic_baseline_follow_the_signs_24,
+            R.drawable.ic_baseline_hail_24,
+            R.drawable.ic_baseline_hiking_24,
+            R.drawable.ic_baseline_self_improvement_24,
+            R.drawable.ic_baseline_pedal_bike_24,
     };
 
     public static int getIconResourceId(int id)

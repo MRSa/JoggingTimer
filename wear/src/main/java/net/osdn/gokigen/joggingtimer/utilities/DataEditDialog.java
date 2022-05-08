@@ -3,9 +3,9 @@ package net.osdn.gokigen.joggingtimer.utilities;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+//import androidx.fragment.app.DialogFragment;
 import android.app.DialogFragment;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.os.Build;
@@ -123,43 +123,38 @@ public class DataEditDialog  extends DialogFragment
 
         // ボタンを設定する（実行ボタン）
         alertDialog.setPositiveButton(activity.getString(R.string.dialog_positive_execute),
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which)
+                (dialog, which) -> {
+                    try
                     {
-                        try
+                        Activity activity1 = getActivity();
+                        if (activity1 != null)
                         {
-                            Activity activity = getActivity();
-                            if (activity != null)
-                            {
-                                String array[] = activity.getResources().getStringArray(R.array.icon_selection_id);
-                                if (callback != null)
-                                {
-                                    callback.dataEdited(Integer.parseInt(array[selectedPosition]), titleText.getText().toString());
-                                }
-                            }
-                        }
-                        catch (Exception e)
-                        {
-                            e.printStackTrace();
+                            String[] array = activity1.getResources().getStringArray(R.array.icon_selection_id);
                             if (callback != null)
                             {
-                                callback.cancelled();
+                                callback.dataEdited(Integer.parseInt(array[selectedPosition]), titleText.getText().toString());
                             }
                         }
-                        dialog.dismiss();
                     }
-                });
-
-        // ボタンを設定する (キャンセルボタン）
-        alertDialog.setNegativeButton(activity.getString(R.string.dialog_negative_cancel),
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
+                    catch (Exception e)
+                    {
+                        e.printStackTrace();
                         if (callback != null)
                         {
                             callback.cancelled();
                         }
-                        dialog.cancel();
                     }
+                    dialog.dismiss();
+                });
+
+        // ボタンを設定する (キャンセルボタン）
+        alertDialog.setNegativeButton(activity.getString(R.string.dialog_negative_cancel),
+                (dialog, which) -> {
+                    if (callback != null)
+                    {
+                        callback.cancelled();
+                    }
+                    dialog.cancel();
                 });
 
         // 確認ダイアログを応答する

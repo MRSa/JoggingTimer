@@ -34,7 +34,7 @@ public class TimeEntryDatabaseFactory
     public static void deleteDatabase(@NonNull Context context)
     {
         Log.v("DatabaseFactory", "deleteDatabase()");
-        String dbList[] = context.databaseList();
+        String[] dbList = context.databaseList();
         for (String databaseName : dbList)
         {
             Log.v("DB Name(before):", databaseName);
@@ -42,7 +42,7 @@ public class TimeEntryDatabaseFactory
 
         TimeEntryDataOpenHelper.deleteDatabase(context);
 
-        String dbListAfter[] = context.databaseList();
+        String[] dbListAfter = context.databaseList();
         for (String databaseName : dbListAfter)
         {
             Log.v("DB Name(after):", databaseName);

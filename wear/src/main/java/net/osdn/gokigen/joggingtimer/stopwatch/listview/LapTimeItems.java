@@ -10,8 +10,8 @@ import java.util.Locale;
  */
 public class LapTimeItems
 {
-    private String lapCount;
-    private String mainText;
+    private final String lapCount;
+    private final String mainText;
     private String subText;
 
     public LapTimeItems(long lapCount, long mainText, long subText)

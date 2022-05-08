@@ -11,9 +11,9 @@ import net.osdn.gokigen.joggingtimer.R;
 class DetailHolder  extends RecyclerView.ViewHolder
 {
     private final View itemView;
-    private TextView lapView;
-    private TextView mainText;
-    private TextView subText;
+    private final TextView lapView;
+    private final TextView mainText;
+    private final TextView subText;
 
     DetailHolder(@NonNull View itemView)
     {

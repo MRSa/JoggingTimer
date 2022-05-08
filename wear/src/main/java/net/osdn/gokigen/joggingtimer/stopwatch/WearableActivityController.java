@@ -1,6 +1,7 @@
 package net.osdn.gokigen.joggingtimer.stopwatch;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -126,22 +127,19 @@ class WearableActivityController implements IWearableActivityControl, ITimeEntry
     public void setupDatabase(final WearableActivity activity, final boolean isInitialize)
     {
         database = new TimeEntryDatabaseFactory(activity, this).getEntryDatabase();
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try
+        Thread thread = new Thread(() -> {
+            try
+            {
+                if (isInitialize)
                 {
-                    if (isInitialize)
-                    {
-                        // 既存のデータベースを消去する場合、、、
-                        TimeEntryDatabaseFactory.deleteDatabase(activity);
-                    }
-                    database.prepare();
+                    // 既存のデータベースを消去する場合、、、
+                    TimeEntryDatabaseFactory.deleteDatabase(activity);
                 }
-                catch (Exception e)
-                {
-                    e.printStackTrace();
-                }
+                database.prepare();
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
             }
         });
         thread.start();
@@ -197,22 +195,19 @@ class WearableActivityController implements IWearableActivityControl, ITimeEntry
     private void closeDatabase()
     {
         Log.v(TAG, "closeDatabase()");
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                // DBのクローズ実行
-                if (isReadyDatabase)
+        Thread thread = new Thread(() -> {
+            // DBのクローズ実行
+            if (isReadyDatabase)
+            {
+                isReadyDatabase = false;
+                try
                 {
-                    isReadyDatabase = false;
-                    try
-                    {
-                        Log.v(TAG, "closeDatabase() EXECUTE...");
-                        database.close();
-                    }
-                    catch (Exception e)
-                    {
-                        e.printStackTrace();
-                    }
+                    Log.v(TAG, "closeDatabase() EXECUTE...");
+                    database.close();
+                }
+                catch (Exception e)
+                {
+                    e.printStackTrace();
                 }
             }
         });
@@ -240,12 +235,7 @@ class WearableActivityController implements IWearableActivityControl, ITimeEntry
                 return;
             }
 
-            Thread thread = new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    vibrator.vibrate(duration);
-                }
-            });
+            Thread thread = new Thread(() -> vibrator.vibrate(duration));
             thread.start();
         }
         catch (Exception e)
@@ -354,6 +344,7 @@ class WearableActivityController implements IWearableActivityControl, ITimeEntry
         }
     }
 
+    @SuppressLint("Range")
     @Override
     public void prepareFinished(boolean isReady)
     {
@@ -392,6 +383,7 @@ class WearableActivityController implements IWearableActivityControl, ITimeEntry
         }
     }
 
+    @SuppressLint("Range")
     private void loadReferenceData()
     {
         // load reference data
@@ -459,20 +451,16 @@ class WearableActivityController implements IWearableActivityControl, ITimeEntry
         final String memo = "";
         final int icon = 0;
         Log.v(TAG, "createIndex() " + title + " " + startTime);
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run()
+        Thread thread = new Thread(() -> {
+            if (isReadyDatabase)
             {
-                if (isReadyDatabase)
+                try
                 {
-                    try
-                    {
-                        database.createIndexData(title, memo, icon, startTime);
-                    }
-                    catch (Exception e)
-                    {
-                        e.printStackTrace();
-                    }
+                    database.createIndexData(title, memo, icon, startTime);
+                }
+                catch (Exception e)
+                {
+                    e.printStackTrace();
                 }
             }
         });
@@ -483,20 +471,16 @@ class WearableActivityController implements IWearableActivityControl, ITimeEntry
     public void appendTimeData(final long elapsedTime)
     {
         Log.v(TAG, "appendTimeData() " + " " + elapsedTime);
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run()
+        Thread thread = new Thread(() -> {
+            if (isReadyDatabase)
             {
-                if (isReadyDatabase)
+                try
                 {
-                    try
-                    {
-                        database.appendTimeData(recordingIndexId, elapsedTime);
-                    }
-                    catch (Exception e)
-                    {
-                        e.printStackTrace();
-                    }
+                    database.appendTimeData(recordingIndexId, elapsedTime);
+                }
+                catch (Exception e)
+                {
+                    e.printStackTrace();
                 }
             }
         });
@@ -507,20 +491,16 @@ class WearableActivityController implements IWearableActivityControl, ITimeEntry
     public void finishTimeData(final long startTime, final long endTime)
     {
         Log.v(TAG, "finishTimeData() " + startTime + " " + endTime);
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run()
+        Thread thread = new Thread(() -> {
+            if (isReadyDatabase)
             {
-                if (isReadyDatabase)
+                try
                 {
-                    try
-                    {
-                        database.finishTimeData(recordingIndexId, startTime, endTime);
-                    }
-                    catch (Exception e)
-                    {
-                        e.printStackTrace();
-                    }
+                    database.finishTimeData(recordingIndexId, startTime, endTime);
+                }
+                catch (Exception e)
+                {
+                    e.printStackTrace();
                 }
             }
         });

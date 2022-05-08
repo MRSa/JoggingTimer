@@ -77,7 +77,7 @@ public class ListActivity extends WearableActivity implements IDetailLauncher, R
      *
      */
     @Override
-    protected void onSaveInstanceState(Bundle outState)
+    protected void onSaveInstanceState(@NonNull Bundle outState)
     {
         super.onSaveInstanceState(outState);
     }
@@ -86,7 +86,7 @@ public class ListActivity extends WearableActivity implements IDetailLauncher, R
      *
      */
     @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState)
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState)
     {
         super.onRestoreInstanceState(savedInstanceState);
     }
@@ -215,20 +215,14 @@ public class ListActivity extends WearableActivity implements IDetailLauncher, R
      */
     private void itemSelected(int itemId)
     {
-        String toastMessage = "";
-        switch (itemId)
+        //String toastMessage = "";
+        if (itemId == R.id.menu_create_model)
         {
-            case R.id.menu_create_model:
                 // モデルデータの作成
                 CreateModelDataDialog dialog2 = CreateModelDataDialog.newInstance(true, getString(R.string.information_time_picker), 0, setupper.getCreateModelDataCallback(ITimeEntryDatabase.DONT_USE_ID, ITimeEntryDatabase.DONT_USE_ID), 0);
                 dialog2.show(getFragmentManager(), "dialog2");
-                break;
-
-
-            default:
-                // 何もしない
-                break;
         }
+/*
         try
         {
             if (toastMessage.length() > 0)
@@ -241,6 +235,7 @@ public class ListActivity extends WearableActivity implements IDetailLauncher, R
         {
             e.printStackTrace();
         }
+ */
     }
 
     /**
@@ -258,33 +253,24 @@ public class ListActivity extends WearableActivity implements IDetailLauncher, R
             Log.v(TAG, "deleteRecord() : " + title);
 
             String message = getString(R.string.dialog_message_delete) + " (" + title + ")";
-            ConfirmationDialog dialog = ConfirmationDialog.newInstance(getString(R.string.dialog_title_delete), message,  new ConfirmationDialog.Callback() {
-                @Override
-                public void confirm()
+            ConfirmationDialog dialog = ConfirmationDialog.newInstance(getString(R.string.dialog_title_delete), message, () -> {
+                Log.v(TAG, "Delete Record Execute [" + title + "]" + " pos:" + positionId);
+                if (summaryAdapter != null)
                 {
-                    Log.v(TAG, "Delete Record Execute [" + title + "]" + " pos:" + positionId);
-                    if (summaryAdapter != null)
+                    final long indexId = summaryAdapter.removeItem(positionId);
+                    try
                     {
-                        final long indexId = summaryAdapter.removeItem(positionId);
-                        try
-                        {
-                            Thread thread = new Thread(new Runnable()
+                        Thread thread = new Thread(() -> {
+                            if (indexId >= 0)
                             {
-                                @Override
-                                public void run()
-                                {
-                                    if (indexId >= 0)
-                                    {
-                                        setupper.deleteTimeEntryData(indexId);
-                                    }
-                                }
-                            });
-                            thread.start();
-                        }
-                        catch (Exception e)
-                        {
-                            e.printStackTrace();
-                        }
+                                setupper.deleteTimeEntryData(indexId);
+                            }
+                        });
+                        thread.start();
+                    }
+                    catch (Exception e)
+                    {
+                        e.printStackTrace();
                     }
                 }
             });
@@ -332,22 +318,17 @@ public class ListActivity extends WearableActivity implements IDetailLauncher, R
         setupper.setIndexData(indexId);
 
         // 一覧の更新
-        runOnUiThread(new Runnable()
-        {
-            @Override
-            public void run()
+        runOnUiThread(() -> {
+            if (summaryAdapter != null)
             {
-                if (summaryAdapter != null)
-                {
-                    int count = summaryAdapter.getItemCount();
-                    summaryAdapter.notifyItemChanged(count - 1);
-                    summaryAdapter.notifyDataSetChanged();
-                }
-
-                // Toastで作成を通知する
-                Toast toast = Toast.makeText(getApplicationContext(), getString(R.string.created_model_data), Toast.LENGTH_SHORT);
-                toast.show();
+                int count = summaryAdapter.getItemCount();
+                summaryAdapter.notifyItemChanged(count - 1);
+                summaryAdapter.notifyDataSetChanged();
             }
+
+            // Toastで作成を通知する
+            Toast toast = Toast.makeText(getApplicationContext(), getString(R.string.created_model_data), Toast.LENGTH_SHORT);
+            toast.show();
         });
     }
 }

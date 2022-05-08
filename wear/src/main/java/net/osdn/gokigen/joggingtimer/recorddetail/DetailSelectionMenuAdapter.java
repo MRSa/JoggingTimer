@@ -21,7 +21,7 @@ public class DetailSelectionMenuAdapter extends WearableNavigationDrawerView.Wea
 {
     private final Context context;
     private final ISelectedMenu callback;
-    private List<MenuItem> menuItems = new ArrayList<>();
+    private final List<MenuItem> menuItems = new ArrayList<>();
 
     DetailSelectionMenuAdapter(Context context, ISelectedMenu callback)
     {
@@ -73,7 +73,7 @@ public class DetailSelectionMenuAdapter extends WearableNavigationDrawerView.Wea
         return (menuItems.size());
     }
 
-    private class MenuItem
+    private static class MenuItem
     {
         private final int menuId;
         private final int iconResId;

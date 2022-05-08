@@ -15,7 +15,7 @@ import androidx.annotation.NonNull;
  */
 public class LapTimeArrayAdapter  extends ArrayAdapter<LapTimeItems> implements ILapTimeHolder
 {
-    private LayoutInflater inflater;
+    private final LayoutInflater inflater;
     private final int resourceId;
 
     /**

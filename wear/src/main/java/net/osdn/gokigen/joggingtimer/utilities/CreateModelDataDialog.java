@@ -3,8 +3,7 @@ package net.osdn.gokigen.joggingtimer.utilities;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.DialogFragment;
-import android.content.DialogInterface;
+import androidx.fragment.app.DialogFragment;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -132,40 +131,34 @@ public class CreateModelDataDialog  extends DialogFragment
 
         // ボタンを設定する（実行ボタン）
         alertDialog.setPositiveButton(activity.getString(R.string.dialog_positive_execute),
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which)
+                (dialog, which) -> {
+                    try
                     {
-                        try
-                        {
-                            Log.v(TAG, "ENTRY [" + lap.getValue() + "] " + hour.getValue() + ":" + minute.getValue() + ":" + second.getValue());
-                            int lapC = (isLap) ? lap.getValue() : lapCount;
-                            long newMillis = (hour.getValue() * 60 * 60 * 1000) + (minute.getValue() * 60 * 1000) + (second.getValue() * 1000);
-                            callback.dataCreated(isLap, lapC, defaultValue, newMillis);
-                        }
-                        catch (Exception e)
-                        {
-                            e.printStackTrace();
-                            callback.dataCreateCancelled();
-                        }
-                        dialog.dismiss();
+                        Log.v(TAG, "ENTRY [" + lap.getValue() + "] " + hour.getValue() + ":" + minute.getValue() + ":" + second.getValue());
+                        int lapC = (isLap) ? lap.getValue() : lapCount;
+                        long newMillis = ((long) hour.getValue() * 60 * 60 * 1000) + ((long) minute.getValue() * 60 * 1000) + (second.getValue() * 1000L);
+                        callback.dataCreated(isLap, lapC, defaultValue, newMillis);
                     }
+                    catch (Exception e)
+                    {
+                        e.printStackTrace();
+                        callback.dataCreateCancelled();
+                    }
+                    dialog.dismiss();
                 });
 
         // ボタンを設定する (キャンセルボタン）
         alertDialog.setNegativeButton(activity.getString(R.string.dialog_negative_cancel),
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which)
+                (dialog, which) -> {
+                    try
                     {
-                        try
-                        {
-                            callback.dataCreateCancelled();
-                        }
-                        catch (Exception e)
-                        {
-                            e.printStackTrace();
-                        }
-                        dialog.cancel();
+                        callback.dataCreateCancelled();
                     }
+                    catch (Exception e)
+                    {
+                        e.printStackTrace();
+                    }
+                    dialog.cancel();
                 });
 
         myDialog = alertDialog.create();

@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.wear.widget.WearableLinearLayoutManager;
 import androidx.wear.widget.WearableRecyclerView;
@@ -83,7 +84,7 @@ public class DetailActivity extends WearableActivity implements RecordDetailSetu
      *
      */
     @Override
-    protected void onSaveInstanceState(Bundle outState)
+    protected void onSaveInstanceState(@NonNull Bundle outState)
     {
         super.onSaveInstanceState(outState);
     }
@@ -92,7 +93,7 @@ public class DetailActivity extends WearableActivity implements RecordDetailSetu
      *
      */
     @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState)
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState)
     {
         super.onRestoreInstanceState(savedInstanceState);
     }
@@ -215,27 +216,24 @@ public class DetailActivity extends WearableActivity implements RecordDetailSetu
     public void updatedIndexData(final boolean isIconOnly)
     {
         Log.v(TAG, "selectedReferenceData() : " + isIconOnly);
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                try
+        runOnUiThread(() -> {
+            try
+            {
+                String title;
+                if (isIconOnly)
                 {
-                    String title;
-                    if (isIconOnly)
-                    {
-                        title = getString(R.string.action_set_reference);
-                    }
-                    else
-                    {
-                        title = getString(R.string.action_edited_data);
-                    }
-                    Toast toast = Toast.makeText(getApplicationContext(), title, Toast.LENGTH_SHORT);
-                    toast.show();
+                    title = getString(R.string.action_set_reference);
                 }
-                catch (Exception e)
+                else
                 {
-                    e.printStackTrace();
+                    title = getString(R.string.action_edited_data);
                 }
+                Toast toast = Toast.makeText(getApplicationContext(), title, Toast.LENGTH_SHORT);
+                toast.show();
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
             }
         });
     }
@@ -264,45 +262,38 @@ public class DetailActivity extends WearableActivity implements RecordDetailSetu
     private boolean itemSelected(int itemId)
     {
         boolean ret = false;
-        String toastMessage = "";
-        switch (itemId)
+        //String toastMessage = "";
+        if (itemId == R.id.menu_edit_title)
         {
-            case R.id.menu_edit_title:
-                // タイトルの編集
-                String title = "";
-                int iconId = R.drawable.ic_android_black_24dp;
-                RecordDetailSetup.EditIndexData data = setupper.getEditIndexData();
-                if (data != null)
-                {
-                    iconId = data.getIcon();
-                    title = data.getTitle();
-                }
-                DataEditDialog dialog = DataEditDialog.newInstance(iconId, title, this);
-                FragmentManager manager = getFragmentManager();
-                String tag = "dialog";
-                if (manager != null)
-                {
-                    dialog.show(manager, tag);
-                }
-                ret = true;
-                break;
-
-            case R.id.menu_set_reference:
-                // 現在のデータを基準値として設定する
-                setupper.setReferenceData();
-                ret = true;
-                break;
-
-            case R.id.menu_share_data:
-                // 現在のデータを共有する
-                setupper.shareTheData(detailAdapter);
-                ret = true;
-                break;
-
-            default:
-                // 何もしない
-                break;
+            // タイトルの編集
+            String title = "";
+            int iconId = R.drawable.ic_android_black_24dp;
+            RecordDetailSetup.EditIndexData data = setupper.getEditIndexData();
+            if (data != null) {
+                iconId = data.getIcon();
+                title = data.getTitle();
+            }
+            DataEditDialog dialog = DataEditDialog.newInstance(iconId, title, this);
+            FragmentManager manager = getFragmentManager();
+            String tag = "dialog";
+            if (manager != null) {
+                dialog.show(manager, tag);
+            }
+            ret = true;
         }
+        else if (itemId == R.id.menu_set_reference)
+        {
+            // 現在のデータを基準値として設定する
+            setupper.setReferenceData();
+            ret = true;
+        }
+        else if (itemId == R.id.menu_share_data)
+        {
+            // 現在のデータを共有する
+            setupper.shareTheData(detailAdapter);
+            ret = true;
+        }
+/*
         try
         {
             if (toastMessage.length() > 0)
@@ -315,7 +306,7 @@ public class DetailActivity extends WearableActivity implements RecordDetailSetu
         {
             e.printStackTrace();
         }
-
+*/
         return (ret);
     }
 
@@ -396,15 +387,10 @@ public class DetailActivity extends WearableActivity implements RecordDetailSetu
             }
             try
             {
-                Thread thread = new Thread(new Runnable()
-                {
-                    @Override
-                    public void run()
+                Thread thread = new Thread(() -> {
+                    if (setupper != null)
                     {
-                        if (setupper != null)
-                        {
-                            setupper.updateDatabaseRecord(detailAdapter);
-                        }
+                        setupper.updateDatabaseRecord(detailAdapter);
                     }
                 });
                 thread.start();
@@ -414,7 +400,14 @@ public class DetailActivity extends WearableActivity implements RecordDetailSetu
                 e.printStackTrace();
             }
         }
-        detailAdapter.notifyDataSetChanged();
+        try
+        {
+            detailAdapter.notifyDataSetChanged();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
     }
 
     @Override

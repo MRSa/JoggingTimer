@@ -27,34 +27,29 @@ public class CreateModelData implements CreateModelDataDialog.Callback
     {
         try
         {
-            Thread thread = new Thread(new Runnable()
-            {
-                @Override
-                public void run()
+            Thread thread = new Thread(() -> {
+                try
                 {
-                    try
+                    if (isLap)
                     {
-                        if (isLap)
+                        long indexId = database.createTimeEntryModelData(lap, newValue, "");
+                        if (createCallback != null)
                         {
-                            long indexId = database.createTimeEntryModelData(lap, newValue, "");
-                            if (createCallback != null)
-                            {
-                                createCallback.createdModelData(indexId);
-                            }
-                        }
-                        else
-                        {
-                            Log.v(TAG, "[" + lap + "] " + "MODIFIED FROM  " + prevValue + " TO " + newValue + " indexId: " + indexId + "  dataId: " + detailId);
-                            if (editCallback != null)
-                            {
-                                editCallback.editedModelData(indexId, detailId, lap, prevValue, newValue);
-                            }
+                            createCallback.createdModelData(indexId);
                         }
                     }
-                    catch (Exception e)
+                    else
                     {
-                        e.printStackTrace();
+                        Log.v(TAG, "[" + lap + "] " + "MODIFIED FROM  " + prevValue + " TO " + newValue + " indexId: " + indexId + "  dataId: " + detailId);
+                        if (editCallback != null)
+                        {
+                            editCallback.editedModelData(indexId, detailId, lap, prevValue, newValue);
+                        }
                     }
+                }
+                catch (Exception e)
+                {
+                    e.printStackTrace();
                 }
             });
             thread.start();

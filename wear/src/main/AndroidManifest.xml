@@ -62,7 +62,7 @@
             android:label="@string/result_detail">
         </activity>
         <activity
-            android:name="android.support.wearable.activity.ConfirmationActivity">
+            android:name="androidx.wear.activity.ConfirmationActivity">
         </activity>
     </application>
 </manifest>

@@ -19,7 +19,7 @@ import java.util.List;
  */
 public class RecordSummaryAdapter extends RecyclerView.Adapter<RecordHolder> implements IRecordOperation
 {
-    private List<DataRecord> list;
+    private final List<DataRecord> list;
 
     /**
      *
@@ -28,7 +28,7 @@ public class RecordSummaryAdapter extends RecyclerView.Adapter<RecordHolder> imp
     RecordSummaryAdapter()
     {
         list = new ArrayList<>();
-        list.clear();
+        //list.clear();
     }
 
     /**

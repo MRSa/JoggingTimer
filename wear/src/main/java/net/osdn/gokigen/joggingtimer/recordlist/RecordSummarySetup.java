@@ -46,18 +46,14 @@ class RecordSummarySetup implements ITimeEntryDatabaseCallback
     {
         Log.v(TAG, "setup()");
         database = new TimeEntryDatabaseFactory(activity, this).getEntryDatabase();
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run()
+        Thread thread = new Thread(() -> {
+            try
             {
-                try
-                {
-                    database.prepare();
-                }
-                catch (Exception e)
-                {
-                    e.printStackTrace();
-                }
+                database.prepare();
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
             }
         });
         thread.start();
@@ -71,42 +67,31 @@ class RecordSummarySetup implements ITimeEntryDatabaseCallback
             callback.databaseSetupFinished(false);
             return;
         }
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run()
+        Thread thread = new Thread(() -> {
+            boolean ret = false;
+            try
             {
-                boolean ret = false;
-                try
+                operation.clearRecord();
+                Cursor cursor = database.getAllIndexData();
+                while (cursor.moveToNext())
                 {
-                    operation.clearRecord();
-                    Cursor cursor = database.getAllIndexData();
-                    while (cursor.moveToNext())
-                    {
-                        @SuppressLint("Range") long dataId = cursor.getLong(cursor.getColumnIndex(_ID));
-                        @SuppressLint("Range") String title = cursor.getString(cursor.getColumnIndex(COLUMN_NAME_TITLE));
-                        //String memo = cursor.getString(cursor.getColumnIndex(COLUMN_NAME_MEMO));
-                        @SuppressLint("Range") int iconId = IconIdProvider.getIconResourceId(cursor.getInt(cursor.getColumnIndex(COLUMN_NAME_ICON_ID)));
-                        //long startTime = cursor.getLong(cursor.getColumnIndex(COLUMN_NAME_START_TIME));
-                        @SuppressLint("Range") long duration = cursor.getLong(cursor.getColumnIndex(COLUMN_NAME_TIME_DURATION));
-                        String memo = TimeStringConvert.getTimeString(duration).toString();
-                        operation.addRecord(new DataRecord(dataId, iconId, title, memo, detailLauncher));
-                    }
-                    activity.runOnUiThread(new Runnable()
-                    {
-                        @Override
-                        public void run()
-                        {
-                            operation.dataSetChangeFinished();
-                        }
-                    });
-                    ret = true;
+                    @SuppressLint("Range") long dataId = cursor.getLong(cursor.getColumnIndex(_ID));
+                    @SuppressLint("Range") String title = cursor.getString(cursor.getColumnIndex(COLUMN_NAME_TITLE));
+                    //String memo = cursor.getString(cursor.getColumnIndex(COLUMN_NAME_MEMO));
+                    @SuppressLint("Range") int iconId = IconIdProvider.getIconResourceId(cursor.getInt(cursor.getColumnIndex(COLUMN_NAME_ICON_ID)));
+                    //long startTime = cursor.getLong(cursor.getColumnIndex(COLUMN_NAME_START_TIME));
+                    @SuppressLint("Range") long duration = cursor.getLong(cursor.getColumnIndex(COLUMN_NAME_TIME_DURATION));
+                    String memo = TimeStringConvert.getTimeString(duration).toString();
+                    operation.addRecord(new DataRecord(dataId, iconId, title, memo, detailLauncher));
                 }
-                catch (Exception e)
-                {
-                    e.printStackTrace();
-                }
-                callback.databaseSetupFinished(ret);
+                activity.runOnUiThread(operation::dataSetChangeFinished);
+                ret = true;
             }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+            callback.databaseSetupFinished(ret);
         });
         thread.start();
     }
