@@ -1,6 +1,6 @@
 package net.osdn.gokigen.joggingtimer.stopwatch;
 
-import android.support.wearable.activity.WearableActivity;
+import androidx.appcompat.app.AppCompatActivity;
 
 /**
  *
@@ -9,9 +9,9 @@ import android.support.wearable.activity.WearableActivity;
  */
 public interface IWearableActivityControl
 {
-    void setup(WearableActivity activity, IClickCallback callback, IDatabaseReloadCallback dbCallback);
-    void setupDatabase(WearableActivity activity, boolean isReset);
-    void exitApplication(WearableActivity activity);
+    void setup(AppCompatActivity activity, IClickCallback callback, IDatabaseReloadCallback dbCallback);
+    void setupDatabase(AppCompatActivity activity, boolean isReset);
+    void exitApplication(AppCompatActivity activity);
 
     void vibrate(int duration);
 

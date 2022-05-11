@@ -12,14 +12,13 @@ public class LapTimeItems
 {
     private final String lapCount;
     private final String mainText;
-    private String subText;
+    private final String subText;
 
     public LapTimeItems(long lapCount, long mainText, long subText)
     {
         this.lapCount = String.format(Locale.US,"%02d", lapCount);
         this.mainText = TimeStringConvert.getTimeString(mainText).toString();
-
-        this.subText = (subText != 0) ? this.subText = TimeStringConvert.getDiffTimeString(subText).toString() : "";
+        this.subText = (subText != 0) ? TimeStringConvert.getDiffTimeString(subText).toString() : "";
     }
 
     String getLapCount()

@@ -20,26 +20,22 @@ class MyTimerTrigger implements ITimerStopTrigger
 
     void startTimer()
     {
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run()
+        Thread thread = new Thread(() -> {
+            if (timerCounter != null)
             {
-                if (timerCounter != null)
-                {
-                    do {
-                        try {
-                            Thread.sleep(duration);
-                        } catch (Exception e) {
-                            // timeout! (But, do nothing!)
-                        }
-                        if (triggerReceiver != null)
-                        {
-                            triggerReceiver.timeout();
-                        }
-                    } while ((timerCounter.isStarted())&&(!forceStop));
-                }
-                forceStop = false;
+                do {
+                    try {
+                        Thread.sleep(duration);
+                    } catch (Exception e) {
+                        // timeout! (But, do nothing!)
+                    }
+                    if (triggerReceiver != null)
+                    {
+                        triggerReceiver.timeout();
+                    }
+                } while ((timerCounter.isStarted())&&(!forceStop));
             }
+            forceStop = false;
         });
         try
         {

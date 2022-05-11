@@ -3,7 +3,6 @@ package net.osdn.gokigen.joggingtimer.recorddetail;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.database.Cursor;
-import android.support.wearable.activity.WearableActivity;
 import android.util.Log;
 
 import net.osdn.gokigen.joggingtimer.R;
@@ -23,6 +22,7 @@ import static net.osdn.gokigen.joggingtimer.storage.contract.TimeEntryIndex.Entr
 import static net.osdn.gokigen.joggingtimer.storage.contract.TimeEntryIndex.EntryIndex.COLUMN_NAME_TITLE;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 /**
  *
@@ -31,7 +31,7 @@ import androidx.annotation.NonNull;
 public class RecordDetailSetup  implements ITimeEntryDatabaseCallback, IDetailEditor
 {
     private final String TAG = toString();
-    private final WearableActivity activity;
+    private final AppCompatActivity activity;
     private final long indexId;
     private final IDatabaseReadyNotify callback;
     private final IRecordOperation operation;
@@ -42,7 +42,7 @@ public class RecordDetailSetup  implements ITimeEntryDatabaseCallback, IDetailEd
      *
      *
      */
-    RecordDetailSetup(WearableActivity activity, long indexId, IDatabaseReadyNotify callback, IRecordOperation operation, CreateModelData.IEditedModelDataCallback  editCallback)
+    RecordDetailSetup(AppCompatActivity activity, long indexId, IDatabaseReadyNotify callback, IRecordOperation operation, CreateModelData.IEditedModelDataCallback  editCallback)
     {
         this.activity = activity;
         this.indexId = indexId;
@@ -235,7 +235,7 @@ public class RecordDetailSetup  implements ITimeEntryDatabaseCallback, IDetailEd
     {
         activity.runOnUiThread(() -> {
             CreateModelDataDialog dialog2 = CreateModelDataDialog.newInstance(false, activity.getString(R.string.information_modify_time), count, new CreateModelData(database, editCallback, null, indexId, dataId), defaultMillis);
-            dialog2.show(activity.getFragmentManager(), "dialog2");
+            dialog2.showNow(activity.getSupportFragmentManager(), "dialog2");
         });
     }
 

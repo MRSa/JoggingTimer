@@ -307,7 +307,7 @@ public class LapTimeGraphView extends View
                 long totalTime = curTimeList.get(lapCount - 1) - curTimeList.get(0);
                 currTime =  curTimeList.get(lapCount - 1) - curTimeList.get(lapCount - 2);
                 //long currTime =  (lapCount > 2) ? curTimeList.get(lapCount - 1) - curTimeList.get(lapCount - 2) : 0;
-                if ((lapCount <= refCount)&&(refTimeList != null))
+                if (lapCount <= refCount)
                 {
                     diffTime = totalTime - (refTimeList.get(lapCount - 1) - refTimeList.get(0));
                     lapTime = currTime - (refTimeList.get(lapCount - 1) - refTimeList.get(lapCount - 2));
@@ -323,7 +323,7 @@ public class LapTimeGraphView extends View
         String textToDraw = "";
         if ((lapTime == 0)&&(diffTime == 0)&&(lapCount > 1))
         {
-            textToDraw = "[" + (lapCount - 1) + "] " + TimeStringConvert.getTimeString(currTime).toString();
+            textToDraw = "[" + (lapCount - 1) + "] " + TimeStringConvert.getTimeString(currTime);
             drawTextLeft = true;
         }
         else
@@ -335,7 +335,7 @@ public class LapTimeGraphView extends View
             if (diffTime != 0)
             {
                 //  「前回ラップ時間の遅れ・進み / 全体時間の遅れ・進み」
-                textToDraw = textToDraw + " / " + TimeStringConvert.getDiffTimeString(diffTime).toString();
+                textToDraw = textToDraw + " / " + TimeStringConvert.getDiffTimeString(diffTime);
             }
         }
 

@@ -1,14 +1,14 @@
 package net.osdn.gokigen.joggingtimer.recordlist;
 
-import android.app.FragmentManager;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.wearable.activity.WearableActivity;
 import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.wear.ambient.AmbientModeSupport;
 import androidx.wear.widget.WearableLinearLayoutManager;
 import androidx.wear.widget.WearableRecyclerView;
 import androidx.wear.widget.drawer.WearableNavigationDrawerView;
@@ -24,7 +24,7 @@ import net.osdn.gokigen.joggingtimer.utilities.CreateModelDataDialog;
  *
  *
  */
-public class ListActivity extends WearableActivity implements IDetailLauncher, RecordSummarySetup.IDatabaseReadyNotify, CreateModelData.ICreatedModelDataCallback, ListSelectionMenuAdapter.ISelectedMenu
+public class ListActivity extends AppCompatActivity implements IDetailLauncher, RecordSummarySetup.IDatabaseReadyNotify, CreateModelData.ICreatedModelDataCallback, ListSelectionMenuAdapter.ISelectedMenu, AmbientModeSupport.AmbientCallbackProvider
 {
     private final String TAG = toString();
     private RecordSummaryAdapter summaryAdapter = null;
@@ -42,7 +42,17 @@ public class ListActivity extends WearableActivity implements IDetailLauncher, R
         setContentView(R.layout.activity_list);
 
         // Enables Always-on
-        setAmbientEnabled();
+        //setAmbientEnabled();
+        try
+        {
+            AmbientModeSupport.AmbientController ambientController = AmbientModeSupport.attach(this);
+            ambientController.setAutoResumeEnabled(true);
+            //boolean isAmbient = ambientController.isAmbient();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
 
         try
         {
@@ -156,10 +166,7 @@ public class ListActivity extends WearableActivity implements IDetailLauncher, R
         Log.v(TAG, "onStop()");
     }
 
-    /**
-     *
-     *
-     */
+/*
     @Override
     public void onEnterAmbient(Bundle ambientDetails)
     {
@@ -167,10 +174,6 @@ public class ListActivity extends WearableActivity implements IDetailLauncher, R
         Log.v(TAG, "onEnterAmbient()");
     }
 
-    /**
-     *
-     *
-     */
     @Override
     public void onExitAmbient()
     {
@@ -178,16 +181,13 @@ public class ListActivity extends WearableActivity implements IDetailLauncher, R
         Log.v(TAG, "onExitAmbient()");
     }
 
-    /**
-     *
-     *
-     */
     @Override
     public void onUpdateAmbient()
     {
         super.onUpdateAmbient();
         Log.v(TAG, "onUpdateAmbient()");
     }
+*/
 
     /**
      *
@@ -220,7 +220,7 @@ public class ListActivity extends WearableActivity implements IDetailLauncher, R
         {
                 // モデルデータの作成
                 CreateModelDataDialog dialog2 = CreateModelDataDialog.newInstance(true, getString(R.string.information_time_picker), 0, setupper.getCreateModelDataCallback(ITimeEntryDatabase.DONT_USE_ID, ITimeEntryDatabase.DONT_USE_ID), 0);
-                dialog2.show(getFragmentManager(), "dialog2");
+                dialog2.show(getSupportFragmentManager(), "dialog2");
         }
 /*
         try
@@ -274,12 +274,7 @@ public class ListActivity extends WearableActivity implements IDetailLauncher, R
                     }
                 }
             });
-            FragmentManager manager = getFragmentManager();
-            String tag = "dialog";
-            if (manager != null)
-            {
-                dialog.show(manager, tag);
-            }
+            dialog.show(getSupportFragmentManager(), "dialog");
         }
         catch (Exception e)
         {
@@ -330,5 +325,26 @@ public class ListActivity extends WearableActivity implements IDetailLauncher, R
             Toast toast = Toast.makeText(getApplicationContext(), getString(R.string.created_model_data), Toast.LENGTH_SHORT);
             toast.show();
         });
+    }
+
+    @Override
+    public AmbientModeSupport.AmbientCallback getAmbientCallback()
+    {
+        return (new AmbientModeSupport.AmbientCallback() {
+            public void onEnterAmbient(Bundle ambientDetails)
+            {
+                Log.v(TAG, "onEnterAmbient()");
+            }
+            public void onExitAmbient(Bundle ambientDetails)
+            {
+                Log.v(TAG, "onExitAmbient()");
+                //updateTimerLabel();
+            }
+        });
+    }
+
+    @Override
+    public void onPointerCaptureChanged(boolean hasCapture) {
+        super.onPointerCaptureChanged(hasCapture);
     }
 }

@@ -2,13 +2,14 @@ package net.osdn.gokigen.joggingtimer.recorddetail;
 
 import android.app.FragmentManager;
 import android.os.Bundle;
-import android.support.wearable.activity.WearableActivity;
 import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.wear.ambient.AmbientModeSupport;
 import androidx.wear.widget.WearableLinearLayoutManager;
 import androidx.wear.widget.WearableRecyclerView;
 import androidx.wear.widget.drawer.WearableActionDrawerView;
@@ -23,7 +24,7 @@ import net.osdn.gokigen.joggingtimer.utilities.DataEditDialog;
  *
  *
  */
-public class DetailActivity extends WearableActivity implements RecordDetailSetup.IDatabaseReadyNotify, MenuItem.OnMenuItemClickListener, DataEditDialog.Callback, CreateModelData.IEditedModelDataCallback, DetailSelectionMenuAdapter.ISelectedMenu
+public class DetailActivity extends AppCompatActivity implements RecordDetailSetup.IDatabaseReadyNotify, MenuItem.OnMenuItemClickListener, DataEditDialog.Callback, CreateModelData.IEditedModelDataCallback, DetailSelectionMenuAdapter.ISelectedMenu, AmbientModeSupport.AmbientCallbackProvider
 {
     private final String TAG = toString();
     public static final String INTENT_EXTRA_DATA_ID = "Detail.dataId";
@@ -45,7 +46,17 @@ public class DetailActivity extends WearableActivity implements RecordDetailSetu
         setContentView(R.layout.activity_detail);
 
         // Enables Always-on
-        setAmbientEnabled();
+        //setAmbientEnabled();
+        try
+        {
+            AmbientModeSupport.AmbientController ambientController = AmbientModeSupport.attach(this);
+            ambientController.setAutoResumeEnabled(true);
+            //boolean isAmbient = ambientController.isAmbient();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
 
         try
         {
@@ -165,10 +176,7 @@ public class DetailActivity extends WearableActivity implements RecordDetailSetu
         System.gc();
     }
 
-    /**
-     *
-     *
-     */
+/*
     @Override
     public void onEnterAmbient(Bundle ambientDetails)
     {
@@ -176,10 +184,6 @@ public class DetailActivity extends WearableActivity implements RecordDetailSetu
         Log.v(TAG, "onEnterAmbient()");
     }
 
-    /**
-     *
-     *
-     */
     @Override
     public void onExitAmbient()
     {
@@ -187,16 +191,13 @@ public class DetailActivity extends WearableActivity implements RecordDetailSetu
         Log.v(TAG, "onExitAmbient()");
     }
 
-    /**
-     *
-     *
-     */
     @Override
     public void onUpdateAmbient()
     {
         super.onUpdateAmbient();
         Log.v(TAG, "onUpdateAmbient()");
     }
+*/
 
     /**
      *
@@ -414,5 +415,25 @@ public class DetailActivity extends WearableActivity implements RecordDetailSetu
     public void selectedMenu(int itemId)
     {
         itemSelected(itemId);
+    }
+
+    @Override
+    public AmbientModeSupport.AmbientCallback getAmbientCallback()
+    {
+        return (new AmbientModeSupport.AmbientCallback() {
+            public void onEnterAmbient(Bundle ambientDetails)
+            {
+                Log.v(TAG, "onEnterAmbient()");
+            }
+            public void onExitAmbient(Bundle ambientDetails)
+            {
+                Log.v(TAG, "onExitAmbient()");
+            }
+        });
+    }
+
+    @Override
+    public void onPointerCaptureChanged(boolean hasCapture) {
+        super.onPointerCaptureChanged(hasCapture);
     }
 }

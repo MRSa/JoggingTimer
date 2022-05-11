@@ -49,7 +49,7 @@ public class DetailRecord implements View.OnClickListener, View.OnLongClickListe
 
     String getDetail()
     {
-        return (TimeStringConvert.getTimeString(overallTime).toString() + " (" + TimeStringConvert.getDiffTimeString(differenceTime).toString() +") ");
+        return (TimeStringConvert.getTimeString(overallTime) + " (" + TimeStringConvert.getDiffTimeString(differenceTime) +") ");
     }
 
     String getOverallTime()

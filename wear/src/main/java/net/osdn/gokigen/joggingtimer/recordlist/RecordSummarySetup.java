@@ -2,7 +2,6 @@ package net.osdn.gokigen.joggingtimer.recordlist;
 
 import android.annotation.SuppressLint;
 import android.database.Cursor;
-import android.support.wearable.activity.WearableActivity;
 import android.util.Log;
 
 import net.osdn.gokigen.joggingtimer.storage.ITimeEntryDatabase;
@@ -18,6 +17,8 @@ import static net.osdn.gokigen.joggingtimer.storage.contract.TimeEntryIndex.Entr
 import static net.osdn.gokigen.joggingtimer.storage.contract.TimeEntryIndex.EntryIndex.COLUMN_NAME_TIME_DURATION;
 import static net.osdn.gokigen.joggingtimer.storage.contract.TimeEntryIndex.EntryIndex.COLUMN_NAME_TITLE;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 /**
  *
  *
@@ -25,7 +26,7 @@ import static net.osdn.gokigen.joggingtimer.storage.contract.TimeEntryIndex.Entr
 class RecordSummarySetup implements ITimeEntryDatabaseCallback
 {
     private final String TAG = toString();
-    private final WearableActivity activity;
+    private final AppCompatActivity activity;
     private final IDatabaseReadyNotify callback;
     private final IDetailLauncher detailLauncher;
     private final IRecordOperation operation;
@@ -33,7 +34,7 @@ class RecordSummarySetup implements ITimeEntryDatabaseCallback
     private ITimeEntryDatabase database = null;
 
 
-    RecordSummarySetup(WearableActivity activity, IDatabaseReadyNotify callback, IDetailLauncher detailLauncher, IRecordOperation operation, CreateModelData.ICreatedModelDataCallback  createCallback)
+    RecordSummarySetup(AppCompatActivity activity, IDatabaseReadyNotify callback, IDetailLauncher detailLauncher, IRecordOperation operation, CreateModelData.ICreatedModelDataCallback  createCallback)
     {
         this.activity = activity;
         this.callback = callback;

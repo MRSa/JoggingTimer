@@ -7,7 +7,6 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.os.Vibrator;
 import android.preference.PreferenceManager;
-import android.support.wearable.activity.WearableActivity;
 import android.util.Log;
 import android.widget.ImageButton;
 import android.widget.ListView;
@@ -27,6 +26,7 @@ import java.util.ArrayList;
 
 import static android.content.Context.VIBRATOR_SERVICE;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
@@ -60,7 +60,7 @@ class WearableActivityController implements IWearableActivityControl, ITimeEntry
     }
 
     @Override
-    public void setup(WearableActivity activity, IClickCallback callback, IDatabaseReloadCallback dbCallback)
+    public void setup(AppCompatActivity activity, IClickCallback callback, IDatabaseReloadCallback dbCallback)
     {
         this.preferences = PreferenceManager.getDefaultSharedPreferences(activity);
         this.dbCallback = dbCallback;
@@ -75,7 +75,7 @@ class WearableActivityController implements IWearableActivityControl, ITimeEntry
      *
      *
      */
-    private void setupPermissions(WearableActivity activity)
+    private void setupPermissions(AppCompatActivity activity)
     {
         if ((ContextCompat.checkSelfPermission(activity, Manifest.permission.VIBRATE) != PackageManager.PERMISSION_GRANTED) ||
                 (ContextCompat.checkSelfPermission(activity, Manifest.permission.WAKE_LOCK) != PackageManager.PERMISSION_GRANTED)) {
@@ -92,7 +92,7 @@ class WearableActivityController implements IWearableActivityControl, ITimeEntry
      *
      *
      */
-    private void setupHardwares(WearableActivity activity)
+    private void setupHardwares(AppCompatActivity activity)
     {
         // バイブレータをつかまえる
         vibrator = (Vibrator) activity.getSystemService(VIBRATOR_SERVICE);
@@ -105,7 +105,7 @@ class WearableActivityController implements IWearableActivityControl, ITimeEntry
      *
      *
      */
-    private void setupScreen(WearableActivity activity)
+    private void setupScreen(AppCompatActivity activity)
     {
         TextView mTextView = activity.findViewById(R.id.text);
         if (mTextView != null)
@@ -124,7 +124,7 @@ class WearableActivityController implements IWearableActivityControl, ITimeEntry
      * データベースのセットアップ
      */
     @Override
-    public void setupDatabase(final WearableActivity activity, final boolean isInitialize)
+    public void setupDatabase(final AppCompatActivity activity, final boolean isInitialize)
     {
         database = new TimeEntryDatabaseFactory(activity, this).getEntryDatabase();
         Thread thread = new Thread(() -> {
@@ -148,7 +148,7 @@ class WearableActivityController implements IWearableActivityControl, ITimeEntry
     /**
      * リスナのセットアップ
      */
-    private void setupListeners(WearableActivity activity, IClickCallback callback)
+    private void setupListeners(AppCompatActivity activity, IClickCallback callback)
     {
         try
         {
@@ -219,7 +219,7 @@ class WearableActivityController implements IWearableActivityControl, ITimeEntry
      *
      */
     @Override
-    public void exitApplication(WearableActivity activity)
+    public void exitApplication(AppCompatActivity activity)
     {
         Log.v(TAG, "exitApplication()");
         closeDatabase();

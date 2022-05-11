@@ -3,7 +3,6 @@ package net.osdn.gokigen.joggingtimer.stopwatch;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.wearable.activity.WearableActivity;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -12,6 +11,8 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.wear.ambient.AmbientModeSupport;
 import androidx.wear.widget.BoxInsetLayout;
 
 import net.osdn.gokigen.joggingtimer.R;
@@ -28,7 +29,7 @@ import java.util.Locale;
  *
  *
  */
-public class MainActivity extends WearableActivity implements IClickCallback, MyTimerTrigger.ITimeoutReceiver, MyTimerCounter.ICounterStatusNotify
+public class MainActivity extends AppCompatActivity implements IClickCallback, MyTimerTrigger.ITimeoutReceiver, MyTimerCounter.ICounterStatusNotify, AmbientModeSupport.AmbientCallbackProvider
 {
     private final String TAG = toString();
     private final IWearableActivityControl controller = new WearableActivityController();
@@ -53,7 +54,18 @@ public class MainActivity extends WearableActivity implements IClickCallback, My
         controller.setup(this, this, counter);
 
         // Enables Always-on
-        setAmbientEnabled();
+        //getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        //setAmbientEnabled();
+        try
+        {
+            AmbientModeSupport.AmbientController ambientController = AmbientModeSupport.attach(this);
+            ambientController.setAutoResumeEnabled(true);
+            //boolean isAmbient = ambientController.isAmbient();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -139,10 +151,7 @@ public class MainActivity extends WearableActivity implements IClickCallback, My
         controller.exitApplication(this);
     }
 
-    /**
-     *
-     *
-     */
+/*
     @Override
     public void onEnterAmbient(Bundle ambientDetails)
     {
@@ -150,10 +159,6 @@ public class MainActivity extends WearableActivity implements IClickCallback, My
         Log.v(TAG, "onEnterAmbient()");
     }
 
-    /**
-     *
-     *
-     */
     @Override
     public void onExitAmbient()
     {
@@ -162,16 +167,13 @@ public class MainActivity extends WearableActivity implements IClickCallback, My
         //updateTimerLabel();
     }
 
-    /**
-     *
-     *
-     */
     @Override
     public void onUpdateAmbient()
     {
         super.onUpdateAmbient();
         Log.v(TAG, "onUpdateAmbient()");
     }
+*/
 
     /**
      *
@@ -591,6 +593,11 @@ public class MainActivity extends WearableActivity implements IClickCallback, My
         return (super.dispatchKeyEvent(event));
     }
 
+    @Override
+    public void onPointerCaptureChanged(boolean hasCapture) {
+        super.onPointerCaptureChanged(hasCapture);
+    }
+
     /**
      *
      *
@@ -737,5 +744,21 @@ public class MainActivity extends WearableActivity implements IClickCallback, My
         {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public AmbientModeSupport.AmbientCallback getAmbientCallback()
+    {
+        return (new AmbientModeSupport.AmbientCallback() {
+            public void onEnterAmbient(Bundle ambientDetails)
+            {
+                Log.v(TAG, "onEnterAmbient()");
+            }
+            public void onExitAmbient(Bundle ambientDetails)
+            {
+                Log.v(TAG, "onExitAmbient()");
+                //updateTimerLabel();
+            }
+        });
     }
 }
