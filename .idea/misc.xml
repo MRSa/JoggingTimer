@@ -4,6 +4,7 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Users/MRSa/AndroidStudioProjects/JoggingTimer/wear/src/main/res/drawable/ic_assignment_turned_in_black_24dp.xml" value="0.1" />
+        <entry key="..\:/Users/MRSa/AndroidStudioProjects/JoggingTimer/wear/src/main/res/drawable/ic_baseline_cruelty_free_24.xml" value="0.309" />
         <entry key="..\:/Users/MRSa/AndroidStudioProjects/JoggingTimer/wear/src/main/res/drawable/ic_baseline_elderly_24.xml" value="0.1055" />
         <entry key="..\:/Users/MRSa/AndroidStudioProjects/JoggingTimer/wear/src/main/res/drawable/ic_baseline_emoji_people_24.xml" value="0.1055" />
         <entry key="..\:/Users/MRSa/AndroidStudioProjects/JoggingTimer/wear/src/main/res/drawable/ic_baseline_follow_the_signs_24.xml" value="0.1055" />
@@ -12,20 +13,27 @@
         <entry key="..\:/Users/MRSa/AndroidStudioProjects/JoggingTimer/wear/src/main/res/drawable/ic_baseline_pedal_bike_24.xml" value="0.1055" />
         <entry key="..\:/Users/MRSa/AndroidStudioProjects/JoggingTimer/wear/src/main/res/drawable/ic_baseline_self_improvement_24.xml" value="0.1055" />
         <entry key="..\:/Users/MRSa/AndroidStudioProjects/JoggingTimer/wear/src/main/res/drawable/ic_battery_alert_black_24dp.xml" value="0.1055" />
+        <entry key="..\:/Users/MRSa/AndroidStudioProjects/JoggingTimer/wear/src/main/res/drawable/ic_board_1_black_24dp.xml" value="0.434" />
+        <entry key="..\:/Users/MRSa/AndroidStudioProjects/JoggingTimer/wear/src/main/res/drawable/ic_board_2_black_24dp.xml" value="0.434" />
+        <entry key="..\:/Users/MRSa/AndroidStudioProjects/JoggingTimer/wear/src/main/res/drawable/ic_board_3_black_24dp.xml" value="0.434" />
         <entry key="..\:/Users/MRSa/AndroidStudioProjects/JoggingTimer/wear/src/main/res/layout-notround/activity_detail.xml" value="1.0904605263157894" />
         <entry key="..\:/Users/MRSa/AndroidStudioProjects/JoggingTimer/wear/src/main/res/layout-notround/activity_list.xml" value="1.0904605263157894" />
+        <entry key="..\:/Users/MRSa/AndroidStudioProjects/JoggingTimer/wear/src/main/res/layout-notround/activity_main.xml" value="1.1208920187793427" />
         <entry key="..\:/Users/MRSa/AndroidStudioProjects/JoggingTimer/wear/src/main/res/layout-notround/column_detail.xml" value="1.0904605263157894" />
         <entry key="..\:/Users/MRSa/AndroidStudioProjects/JoggingTimer/wear/src/main/res/layout-notround/column_laptime.xml" value="1.0904605263157894" />
         <entry key="..\:/Users/MRSa/AndroidStudioProjects/JoggingTimer/wear/src/main/res/layout-notround/column_list.xml" value="1.0904605263157894" />
         <entry key="..\:/Users/MRSa/AndroidStudioProjects/JoggingTimer/wear/src/main/res/layout-notround/icon_list.xml" value="1.0904605263157894" />
         <entry key="..\:/Users/MRSa/AndroidStudioProjects/JoggingTimer/wear/src/main/res/layout-notround/information_dialog.xml" value="1.0904605263157894" />
+        <entry key="..\:/Users/MRSa/AndroidStudioProjects/JoggingTimer/wear/src/main/res/layout-notround/select_set_reference_dialog.xml" value="1.7570422535211268" />
         <entry key="..\:/Users/MRSa/AndroidStudioProjects/JoggingTimer/wear/src/main/res/layout-notround/time_model_picker.xml" value="1.0904605263157894" />
         <entry key="..\:/Users/MRSa/AndroidStudioProjects/JoggingTimer/wear/src/main/res/layout-round/activity_list.xml" value="0.9636627906976745" />
+        <entry key="..\:/Users/MRSa/AndroidStudioProjects/JoggingTimer/wear/src/main/res/layout-round/activity_main.xml" value="0.8171806167400881" />
         <entry key="..\:/Users/MRSa/AndroidStudioProjects/JoggingTimer/wear/src/main/res/layout-round/column_detail.xml" value="0.9636627906976745" />
         <entry key="..\:/Users/MRSa/AndroidStudioProjects/JoggingTimer/wear/src/main/res/layout-round/column_laptime.xml" value="0.9636627906976745" />
         <entry key="..\:/Users/MRSa/AndroidStudioProjects/JoggingTimer/wear/src/main/res/layout-round/column_list.xml" value="0.9636627906976745" />
         <entry key="..\:/Users/MRSa/AndroidStudioProjects/JoggingTimer/wear/src/main/res/layout-round/icon_list.xml" value="0.9636627906976745" />
         <entry key="..\:/Users/MRSa/AndroidStudioProjects/JoggingTimer/wear/src/main/res/layout-round/information_dialog.xml" value="0.9636627906976745" />
+        <entry key="..\:/Users/MRSa/AndroidStudioProjects/JoggingTimer/wear/src/main/res/layout-round/select_set_reference_dialog.xml" value="1.5658995815899581" />
         <entry key="..\:/Users/MRSa/AndroidStudioProjects/JoggingTimer/wear/src/main/res/layout-round/time_model_picker.xml" value="0.9636627906976745" />
         <entry key="..\:/Users/MRSa/AndroidStudioProjects/JoggingTimer/wear/src/main/res/menu/selector_detail.xml" value="2.1392857142857142" />
       </map>

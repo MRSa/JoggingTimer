@@ -23,6 +23,7 @@ public interface ITimerCounter
     List<Long> getLapTimeList();
     List<Long> getReferenceLapTimeList();
     long getReferenceLapTime(int position);
+    void selectReferenceLapTime(int id);
 
     void setCallback(MyTimerCounter.ICounterStatusNotify callback);
 }

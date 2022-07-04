@@ -1,6 +1,5 @@
 package net.osdn.gokigen.joggingtimer.recorddetail;
 
-import android.app.FragmentManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -8,6 +7,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.wear.ambient.AmbientModeSupport;
 import androidx.wear.widget.WearableLinearLayoutManager;
@@ -18,13 +18,14 @@ import androidx.wear.widget.drawer.WearableNavigationDrawerView;
 import net.osdn.gokigen.joggingtimer.R;
 import net.osdn.gokigen.joggingtimer.utilities.CreateModelData;
 import net.osdn.gokigen.joggingtimer.utilities.DataEditDialog;
+import net.osdn.gokigen.joggingtimer.utilities.SetReferenceDialog;
 
 
 /**
  *
  *
  */
-public class DetailActivity extends AppCompatActivity implements RecordDetailSetup.IDatabaseReadyNotify, MenuItem.OnMenuItemClickListener, DataEditDialog.Callback, CreateModelData.IEditedModelDataCallback, DetailSelectionMenuAdapter.ISelectedMenu, AmbientModeSupport.AmbientCallbackProvider
+public class DetailActivity extends AppCompatActivity implements RecordDetailSetup.IDatabaseReadyNotify, MenuItem.OnMenuItemClickListener, DataEditDialog.Callback, CreateModelData.IEditedModelDataCallback, DetailSelectionMenuAdapter.ISelectedMenu, AmbientModeSupport.AmbientCallbackProvider, SetReferenceDialog.SetReferenceCallback
 {
     private final String TAG = toString();
     public static final String INTENT_EXTRA_DATA_ID = "Detail.dataId";
@@ -275,17 +276,31 @@ public class DetailActivity extends AppCompatActivity implements RecordDetailSet
                 title = data.getTitle();
             }
             DataEditDialog dialog = DataEditDialog.newInstance(iconId, title, this);
-            FragmentManager manager = getFragmentManager();
-            String tag = "dialog";
-            if (manager != null) {
-                dialog.show(manager, tag);
-            }
+            FragmentManager manager = getSupportFragmentManager();
+            dialog.show(manager, "dialog");
             ret = true;
         }
         else if (itemId == R.id.menu_set_reference)
         {
-            // 現在のデータを基準値として設定する
-            setupper.setReferenceData();
+            // 基準値の設定ダイアログを表示する
+            final SetReferenceDialog.SetReferenceCallback callback = this;
+            this.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    try
+                    {
+                        // 基準値設定ダイアログを表示する
+                        SetReferenceDialog dialog = SetReferenceDialog.newInstance("Set Reference", "Please Select Reference Type", callback);
+                        FragmentManager manager = getSupportFragmentManager();
+                        dialog.show(manager, "dialog");
+                    }
+                    catch (Exception e)
+                    {
+                        e.printStackTrace();
+                    }
+                }
+            });
+
             ret = true;
         }
         else if (itemId == R.id.menu_share_data)
@@ -310,7 +325,6 @@ public class DetailActivity extends AppCompatActivity implements RecordDetailSet
 */
         return (ret);
     }
-
 
     /**
      *
@@ -433,7 +447,16 @@ public class DetailActivity extends AppCompatActivity implements RecordDetailSet
     }
 
     @Override
-    public void onPointerCaptureChanged(boolean hasCapture) {
+    public void onPointerCaptureChanged(boolean hasCapture)
+    {
         super.onPointerCaptureChanged(hasCapture);
+    }
+
+    @Override
+    public void confirmed(int id)
+    {
+        // 現在のデータを基準値として設定する
+        Log.v(TAG, " SET REFERENCE DATA ID: " + id);
+        setupper.setReferenceData(id);
     }
 }

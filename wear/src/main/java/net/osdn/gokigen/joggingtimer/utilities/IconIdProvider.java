@@ -10,9 +10,9 @@ public class IconIdProvider
 {
     private static final int[] iconIds = {
             R.drawable.ic_label_outline_black_24dp	,
-            R.drawable.ic_bookmark_border_black_24dp,
-            R.drawable.ic_content_paste_black_24dp,
-            R.drawable.ic_lightbulb_outline_black_24dp,
+            R.drawable.ic_board_1_black_24dp,
+            R.drawable.ic_board_2_black_24dp,
+            R.drawable.ic_board_3_black_24dp,
             R.drawable.ic_done_black_24dp,
             R.drawable.ic_bookmark_black_24dp,
             R.drawable.ic_book_black_24dp,
@@ -61,6 +61,25 @@ public class IconIdProvider
             R.drawable.ic_baseline_hiking_24,
             R.drawable.ic_baseline_self_improvement_24,
             R.drawable.ic_baseline_pedal_bike_24,
+            R.drawable.ic_baseline_boy_24,
+            R.drawable.ic_baseline_android_24,
+            R.drawable.ic_baseline_downhill_skiing_24,
+            R.drawable.ic_baseline_escalator_warning_24,
+            R.drawable.ic_baseline_wc_24,
+            R.drawable.ic_baseline_skateboarding_24,
+            R.drawable.ic_baseline_snowboarding_24,
+            R.drawable.ic_baseline_snowshoeing_24,
+            R.drawable.ic_baseline_sledding_24,
+            R.drawable.ic_baseline_snowmobile_24,
+            R.drawable.ic_baseline_sports_handball_24,
+            R.drawable.ic_baseline_surfing_24,
+            R.drawable.ic_baseline_cruelty_free_24,
+            R.drawable.ic_baseline_accessibility_24,
+            R.drawable.ic_baseline_accessibility_new_24,
+            R.drawable.ic_baseline_123_24,
+            R.drawable.ic_lightbulb_outline_black_24dp,
+            R.drawable.ic_bookmark_border_black_24dp,
+            R.drawable.ic_baseline_sick_24,
     };
 
     public static int getIconResourceId(int id)
@@ -73,6 +92,6 @@ public class IconIdProvider
         {
             e.printStackTrace();
         }
-        return (iconIds[0]);
+        return (R.drawable.ic_label_outline_black_24dp);
     }
 }

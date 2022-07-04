@@ -20,7 +20,10 @@ public class MyTimerCounter implements ITimerCounter, IDatabaseReloadCallback
     private long startTime = 0;
     private long stopTime = 0;
     private List<Long> elapsedTime;
-    private List<Long> referenceTime = null;
+    private List<Long> referenceTimeA = null;
+    private List<Long> referenceTimeB = null;
+    private List<Long> referenceTimeC = null;
+    private int referenceTimeId = 0;
 
     MyTimerCounter()
     {
@@ -177,7 +180,15 @@ public class MyTimerCounter implements ITimerCounter, IDatabaseReloadCallback
     @Override
     public List<Long> getReferenceLapTimeList()
     {
-        return (referenceTime);
+        if (referenceTimeId == 0)
+        {
+            return (referenceTimeA);
+        }
+        else if (referenceTimeId == 1)
+        {
+            return (referenceTimeB);
+        }
+        return (referenceTimeC);
     }
 
     @Override
@@ -217,19 +228,37 @@ public class MyTimerCounter implements ITimerCounter, IDatabaseReloadCallback
     }
 
     @Override
-    public void referenceDataIsReloaded(ArrayList<Long> timelist)
+    public void referenceDataIsReloaded(int id, ArrayList<Long> timelist)
     {
         try
         {
-            referenceTime = null;
+            int size;
             if (timelist != null)
             {
-                referenceTime = new ArrayList<>(timelist);
+                selectReferenceLapTime(id);
+                if (referenceTimeId == 0)
+                {
+                    referenceTimeA = null;
+                    referenceTimeA = new ArrayList<>(timelist);
+                    size = referenceTimeA.size();
+                }
+                if (referenceTimeId == 1)
+                {
+                    referenceTimeB = null;
+                    referenceTimeB = new ArrayList<>(timelist);
+                    size = referenceTimeB.size();
+                }
+                else
+                {
+                    referenceTimeC = null;
+                    referenceTimeC = new ArrayList<>(timelist);
+                    size = referenceTimeC.size();
+                }
                 if (callback != null)
                 {
                     callback.counterStatusChanged(false);
                 }
-                Log.v(TAG, "reference lap time : " + referenceTime.size());
+                Log.v(TAG, "reference lap time : " + size);
             }
         }
         catch (Exception e)
@@ -243,6 +272,19 @@ public class MyTimerCounter implements ITimerCounter, IDatabaseReloadCallback
     {
         try
         {
+            List<Long> referenceTime;
+            if (referenceTimeId == 0)
+            {
+                referenceTime = referenceTimeA;
+            }
+            else if (referenceTimeId == 1)
+            {
+                referenceTime = referenceTimeB;
+            }
+            else
+            {
+                referenceTime = referenceTimeC;
+            }
             int location = position + 1;
             if ((referenceTime == null)||(location < 1)||(referenceTime.size() < location))
             {
@@ -259,6 +301,12 @@ public class MyTimerCounter implements ITimerCounter, IDatabaseReloadCallback
             e.printStackTrace();
         }
         return (0);
+    }
+
+    @Override
+    public void selectReferenceLapTime(int id)
+    {
+        referenceTimeId = id;
     }
 
     public interface ICounterStatusNotify

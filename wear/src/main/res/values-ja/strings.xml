@@ -14,7 +14,7 @@
     <string name="dialog_message_data_edit">記録情報の編集</string>
     <string name="action_edit_title">記録情報の編集</string>
     <string name="action_change_icon">アイコンの変更</string>
-    <string name="action_set_reference">基準値に設定</string>
+    <string name="action_set_reference">基準値を設定</string>
     <string name="action_edited_data">更新しました</string>
     <string name="action_create_model">モデルデータの作成</string>
     <string name="action_share_data">データの共有</string>

@@ -49,6 +49,25 @@
         <item>@drawable/ic_baseline_hiking_24</item>
         <item>@drawable/ic_baseline_self_improvement_24</item>
         <item>@drawable/ic_baseline_pedal_bike_24</item>
+        <item>@drawable/ic_baseline_boy_24</item>
+        <item>@drawable/ic_baseline_android_24</item>
+        <item>@drawable/ic_baseline_downhill_skiing_24</item>
+        <item>@drawable/ic_baseline_escalator_warning_24</item>
+        <item>@drawable/ic_baseline_wc_24</item>
+        <item>@drawable/ic_baseline_skateboarding_24</item>
+        <item>@drawable/ic_baseline_snowboarding_24</item>
+        <item>@drawable/ic_baseline_snowshoeing_24</item>
+        <item>@drawable/ic_baseline_sledding_24</item>
+        <item>@drawable/ic_baseline_snowmobile_24</item>
+        <item>@drawable/ic_baseline_sports_handball_24</item>
+        <item>@drawable/ic_baseline_surfing_24</item>
+        <item>@drawable/ic_baseline_cruelty_free_24</item>
+        <item>@drawable/ic_baseline_accessibility_24</item>
+        <item>@drawable/ic_baseline_accessibility_new_24</item>
+        <item>@drawable/ic_baseline_123_24</item>
+        <item>@drawable/ic_lightbulb_outline_black_24dp</item>
+        <item>@drawable/ic_bookmark_border_black_24dp</item>
+        <item>@drawable/ic_baseline_sick_24</item>
     </array>
     <string-array name="icon_selection_id">
         <item>0</item>
@@ -99,5 +118,29 @@
         <item>49</item>
         <item>50</item>
         <item>51</item>
+        <item>52</item>
+        <item>53</item>
+        <item>54</item>
+        <item>55</item>
+        <item>56</item>
+        <item>57</item>
+        <item>58</item>
+        <item>59</item>
+        <item>60</item>
+        <item>61</item>
+        <item>62</item>
+        <item>63</item>
+        <item>64</item>
+        <item>65</item>
+        <item>66</item>
+        <item>67</item>
+        <item>68</item>
+        <item>69</item>
+        <item>70</item>
+    </string-array>
+    <string-array name="reference_selection_array">
+        <item>A</item>
+        <item>B</item>
+        <item>C</item>
     </string-array>
 </resources>

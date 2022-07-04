@@ -17,13 +17,13 @@ public interface ITimeEntryDatabase
 
     Cursor getAllIndexData();
     Cursor getAllDetailData(long indexId);
-    Cursor getAllReferenceDetailData();
+    Cursor getAllReferenceDetailData(int id);
 
     Cursor getIndexdata(long indexId);
 
     void deleteTimeEntryData(long indexId);
 
-    void setReferenceIndexData(long indexId);
+    void setReferenceIndexData(int id, long indexId);
     void updateIndexData(long indexId, String title, int icon);
     void createIndexData(String title, String memo, int icon, long startTime);
     void appendTimeData(long indexId, long lapTime);

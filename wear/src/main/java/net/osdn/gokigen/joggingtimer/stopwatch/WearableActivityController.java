@@ -41,6 +41,7 @@ class WearableActivityController implements IWearableActivityControl, ITimeEntry
     private final String PREF_KEY_TIMER_STARTED = "TMR_START";
     private final String PREF_KEY_TIMER_INDEXID = "TMR_INDEX";
     private final String PREF_KEY_DISPLAY_LAPGRAPHIC = "DISP_LAPGRPH";
+    private final String PREF_KEY_REFERENCE_TIME_SELECTION = "REF_TIME_SEL";
 
     private SharedPreferences preferences = null;
     private final ButtonClickListener clickListener = new ButtonClickListener();
@@ -324,6 +325,35 @@ class WearableActivityController implements IWearableActivityControl, ITimeEntry
     }
 
     @Override
+    public int getReferenceTimerSelection()
+    {
+        try
+        {
+            return (preferences.getInt(PREF_KEY_REFERENCE_TIME_SELECTION, 0));
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        return (0);
+    }
+
+    @Override
+    public void setReferenceTimerSelection(int id)
+    {
+        try
+        {
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.putInt(PREF_KEY_REFERENCE_TIME_SELECTION, id);
+            editor.apply();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
     public void setupReferenceData()
     {
         try
@@ -389,8 +419,9 @@ class WearableActivityController implements IWearableActivityControl, ITimeEntry
         // load reference data
         try
         {
+            int id = getReferenceTimerSelection();
             ArrayList<Long> refList = null;
-            Cursor cursor = database.getAllReferenceDetailData();
+            Cursor cursor = database.getAllReferenceDetailData(id);
             if (cursor != null)
             {
                 refList = new ArrayList<>();
@@ -399,7 +430,7 @@ class WearableActivityController implements IWearableActivityControl, ITimeEntry
                     refList.add(cursor.getLong(cursor.getColumnIndex(TimeEntryData.EntryData.COLUMN_NAME_TIME_ENTRY)));
                 }
             }
-            dbCallback.referenceDataIsReloaded(refList);
+            dbCallback.referenceDataIsReloaded(id, refList);
         }
         catch (Exception e)
         {

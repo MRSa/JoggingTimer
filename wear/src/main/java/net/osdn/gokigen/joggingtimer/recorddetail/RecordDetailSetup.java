@@ -176,10 +176,10 @@ public class RecordDetailSetup  implements ITimeEntryDatabaseCallback, IDetailEd
      *
      *
      */
-    void setReferenceData()
+    void setReferenceData(final int id)
     {
         Thread thread = new Thread(() -> {
-            database.setReferenceIndexData(indexId);
+            database.setReferenceIndexData(id, indexId);
             callback.updatedIndexData(true);
         });
         thread.start();

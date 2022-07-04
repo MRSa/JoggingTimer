@@ -23,7 +23,9 @@ class TimeEntryDatabase implements ITimeEntryDatabase
     private final String TAG = toString();
     private final TimeEntryDataOpenHelper dbHelper;
     private final ITimeEntryDatabaseCallback callback;
-    private static final int REFERENCE_ICON_ID = 2;
+    private static final int REFERENCE_ICON_ID_A = 2;
+    private static final int REFERENCE_ICON_ID_B = 1;
+    private static final int REFERENCE_ICON_ID_C = 3;
     private static final int MODEL_DATA_ICON_ID = 4;
     private static final int DEFAULT_ICON_ID = 0;
 
@@ -85,15 +87,16 @@ class TimeEntryDatabase implements ITimeEntryDatabase
     }
 
     @Override
-    public Cursor getAllReferenceDetailData()
+    public Cursor getAllReferenceDetailData(int id)
     {
         if (db == null)
         {
             return (null);
         }
+        int iconId = getReferenceIconId(id);
         String queryString = "SELECT * FROM " + TimeEntryIndex.EntryIndex.TABLE_NAME + " INNER JOIN " + TimeEntryData.EntryData.TABLE_NAME +
                 " ON " + TimeEntryIndex.EntryIndex.TABLE_NAME + "." + TimeEntryIndex.EntryIndex._ID + " = " + TimeEntryData.EntryData.TABLE_NAME+ "." + TimeEntryData.EntryData.COLUMN_NAME_INDEX_ID +
-                " WHERE " + TimeEntryIndex.EntryIndex.TABLE_NAME+ "." + TimeEntryIndex.EntryIndex.COLUMN_NAME_ICON_ID + " = " + REFERENCE_ICON_ID +
+                " WHERE " + TimeEntryIndex.EntryIndex.TABLE_NAME+ "." + TimeEntryIndex.EntryIndex.COLUMN_NAME_ICON_ID + " = " + iconId +
                 " ORDER BY " + TimeEntryData.EntryData.TABLE_NAME+ "." + TimeEntryData.EntryData.COLUMN_NAME_TIME_ENTRY;
         //Log.v(TAG, "Query : " + queryString);
         return (db.rawQuery(queryString, null));
@@ -145,16 +148,17 @@ class TimeEntryDatabase implements ITimeEntryDatabase
      *
      */
     @Override
-    public void setReferenceIndexData(long indexId)
+    public void setReferenceIndexData(int id, long indexId)
     {
         try
         {
+            int iconId = getReferenceIconId(id);
             ContentValues clearValues = new ContentValues();
             clearValues.put(TimeEntryIndex.EntryIndex.COLUMN_NAME_ICON_ID, DEFAULT_ICON_ID);
-            db.update(TimeEntryIndex.EntryIndex.TABLE_NAME, clearValues, TimeEntryIndex.EntryIndex.COLUMN_NAME_ICON_ID + " = " + REFERENCE_ICON_ID, null);
+            db.update(TimeEntryIndex.EntryIndex.TABLE_NAME, clearValues, TimeEntryIndex.EntryIndex.COLUMN_NAME_ICON_ID + " = " + iconId, null);
 
             ContentValues referenceValues = new ContentValues();
-            referenceValues.put(TimeEntryIndex.EntryIndex.COLUMN_NAME_ICON_ID, REFERENCE_ICON_ID);
+            referenceValues.put(TimeEntryIndex.EntryIndex.COLUMN_NAME_ICON_ID, iconId);
             db.update(TimeEntryIndex.EntryIndex.TABLE_NAME, referenceValues, _ID + " = " + indexId, null);
         }
         catch (Exception e)
@@ -326,6 +330,17 @@ class TimeEntryDatabase implements ITimeEntryDatabase
         return (rows);
      }
 
+     private int getReferenceIconId(int id)
+     {
+         if (id == 0)
+         {
+             return (REFERENCE_ICON_ID_A);
+         } else if (id == 1)
+         {
+             return (REFERENCE_ICON_ID_B);
+         }
+         return (REFERENCE_ICON_ID_C);
+     }
 /*
     public boolean prepareToRead()
     {

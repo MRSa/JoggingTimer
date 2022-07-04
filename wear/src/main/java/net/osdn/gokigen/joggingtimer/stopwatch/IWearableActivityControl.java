@@ -23,6 +23,8 @@ public interface IWearableActivityControl
     void addTimeStamp(long count, long lapTime, long diffTime);
     void clearTimeStamp();
     int getLapTimeCount();
+    int getReferenceTimerSelection();
+    void setReferenceTimerSelection(int id);
 
     void setupReferenceData();
 }
