@@ -300,7 +300,6 @@ public class DetailActivity extends AppCompatActivity implements RecordDetailSet
                     }
                 }
             });
-
             ret = true;
         }
         else if (itemId == R.id.menu_share_data)

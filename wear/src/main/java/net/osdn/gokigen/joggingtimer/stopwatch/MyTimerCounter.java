@@ -242,7 +242,7 @@ public class MyTimerCounter implements ITimerCounter, IDatabaseReloadCallback
                     referenceTimeA = new ArrayList<>(timelist);
                     size = referenceTimeA.size();
                 }
-                if (referenceTimeId == 1)
+                else if (referenceTimeId == 1)
                 {
                     referenceTimeB = null;
                     referenceTimeB = new ArrayList<>(timelist);

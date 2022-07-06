@@ -26,6 +26,9 @@ import java.util.ArrayList;
 
 import static android.content.Context.VIBRATOR_SERVICE;
 
+import static net.osdn.gokigen.joggingtimer.utilities.SelectReferenceViewModeDialog.PREF_KEY_DISPLAY_LAPGRAPHIC;
+import static net.osdn.gokigen.joggingtimer.utilities.SelectReferenceViewModeDialog.PREF_KEY_REFERENCE_TIME_SELECTION;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -40,8 +43,6 @@ class WearableActivityController implements IWearableActivityControl, ITimeEntry
     private final String TAG = toString();
     private final String PREF_KEY_TIMER_STARTED = "TMR_START";
     private final String PREF_KEY_TIMER_INDEXID = "TMR_INDEX";
-    private final String PREF_KEY_DISPLAY_LAPGRAPHIC = "DISP_LAPGRPH";
-    private final String PREF_KEY_REFERENCE_TIME_SELECTION = "REF_TIME_SEL";
 
     private SharedPreferences preferences = null;
     private final ButtonClickListener clickListener = new ButtonClickListener();

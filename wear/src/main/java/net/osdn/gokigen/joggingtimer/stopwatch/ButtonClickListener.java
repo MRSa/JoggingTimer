@@ -12,7 +12,7 @@ import net.osdn.gokigen.joggingtimer.R;
  *
  *
  */
-public class ButtonClickListener implements View.OnClickListener, View.OnLongClickListener, View.OnTouchListener, Parcelable
+public class  ButtonClickListener implements View.OnClickListener, View.OnLongClickListener, View.OnTouchListener, Parcelable
 {
     private final String TAG = toString();
     private IClickCallback callback = null;

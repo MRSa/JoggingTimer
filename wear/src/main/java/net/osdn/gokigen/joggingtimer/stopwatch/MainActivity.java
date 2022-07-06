@@ -1,8 +1,13 @@
 package net.osdn.gokigen.joggingtimer.stopwatch;
 
+import static net.osdn.gokigen.joggingtimer.utilities.SelectReferenceViewModeDialog.PREF_KEY_DISPLAY_LAPGRAPHIC;
+import static net.osdn.gokigen.joggingtimer.utilities.SelectReferenceViewModeDialog.PREF_KEY_REFERENCE_TIME_SELECTION;
+
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -12,12 +17,15 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
 import androidx.wear.ambient.AmbientModeSupport;
 import androidx.wear.widget.BoxInsetLayout;
 
 import net.osdn.gokigen.joggingtimer.R;
 import net.osdn.gokigen.joggingtimer.recordlist.ListActivity;
 import net.osdn.gokigen.joggingtimer.stopwatch.graphview.LapTimeGraphView;
+import net.osdn.gokigen.joggingtimer.utilities.SelectReferenceViewModeDialog;
+import net.osdn.gokigen.joggingtimer.utilities.SetReferenceDialog;
 import net.osdn.gokigen.joggingtimer.utilities.TimeStringConvert;
 
 import java.text.SimpleDateFormat;
@@ -29,7 +37,7 @@ import java.util.Locale;
  *
  *
  */
-public class MainActivity extends AppCompatActivity implements IClickCallback, MyTimerTrigger.ITimeoutReceiver, MyTimerCounter.ICounterStatusNotify, AmbientModeSupport.AmbientCallbackProvider
+public class MainActivity extends AppCompatActivity implements IClickCallback, MyTimerTrigger.ITimeoutReceiver, MyTimerCounter.ICounterStatusNotify, AmbientModeSupport.AmbientCallbackProvider, SelectReferenceViewModeDialog.SelectReferenceCallback
 {
     private final String TAG = toString();
     private final IWearableActivityControl controller = new WearableActivityController();
@@ -38,6 +46,7 @@ public class MainActivity extends AppCompatActivity implements IClickCallback, M
     private boolean isLaptimeView = true;
     private boolean pendingStart = false;
     private int currentLapCount = 0;
+    private int currentReferenceId = 0;
     private ITimerStopTrigger stopTrigger = null;
 
     /**
@@ -98,6 +107,7 @@ public class MainActivity extends AppCompatActivity implements IClickCallback, M
             }
         }
         isLaptimeView = controller.getDisplayMode();
+        currentReferenceId = controller.getReferenceTimerSelection();
         //Log.v(TAG, "isLaptimeView " + isLaptimeView);
 
         controller.setupReferenceData();
@@ -453,11 +463,32 @@ public class MainActivity extends AppCompatActivity implements IClickCallback, M
     @Override
     public boolean pushedArea()
     {
-        isLaptimeView = !isLaptimeView;
-        controller.setDisplayMode(isLaptimeView);
-        Log.v(TAG, "pushedArea() : " + isLaptimeView);
-        changeGraphicView(isLaptimeView);
-        updateTimerLabel();
+        try
+        {
+            // 基準値の設定ダイアログを表示する
+            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+            final boolean viewMode = preferences.getBoolean(PREF_KEY_DISPLAY_LAPGRAPHIC, false);
+            final int selectionId = preferences.getInt(PREF_KEY_REFERENCE_TIME_SELECTION, 0);
+            final SelectReferenceViewModeDialog.SelectReferenceCallback callback = this;
+
+            this.runOnUiThread(() -> {
+                try
+                {
+                    // 基準値＆表示モード設定ダイアログを表示する
+                    SelectReferenceViewModeDialog dialog = SelectReferenceViewModeDialog.newInstance(getString(R.string.select_reference_title), " ", viewMode, selectionId, callback);
+                    FragmentManager manager = getSupportFragmentManager();
+                    dialog.show(manager, "dialog");
+                }
+                catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
+            });
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
         return (true);
     }
 
@@ -759,6 +790,30 @@ public class MainActivity extends AppCompatActivity implements IClickCallback, M
                 Log.v(TAG, "onExitAmbient()");
                 //updateTimerLabel();
             }
+        });
+    }
+
+    @Override
+    public void selectedReferenceViewMode(int referenceId, int viewMode)
+    {
+        isLaptimeView = (viewMode != 0);
+        currentReferenceId = referenceId;
+
+        controller.setDisplayMode(isLaptimeView);
+        controller.setReferenceTimerSelection(currentReferenceId);
+        controller.setupReferenceData();
+
+        Log.v(TAG, "pushedArea() : " + isLaptimeView + " REF: " + currentReferenceId);
+
+        runOnUiThread(() -> {
+            // ラップタイム表示状態の更新
+            reloadLapTimeList(true);
+
+            // 表示ビューの切り替え
+            changeGraphicView(isLaptimeView);
+
+            // 表示のボタン状態を変更
+            updateTimerLabel();
         });
     }
 }

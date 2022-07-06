@@ -335,7 +335,8 @@ class TimeEntryDatabase implements ITimeEntryDatabase
          if (id == 0)
          {
              return (REFERENCE_ICON_ID_A);
-         } else if (id == 1)
+         }
+         else if (id == 1)
          {
              return (REFERENCE_ICON_ID_B);
          }
