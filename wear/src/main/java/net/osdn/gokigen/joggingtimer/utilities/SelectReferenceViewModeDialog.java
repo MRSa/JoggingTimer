@@ -25,20 +25,16 @@ public class SelectReferenceViewModeDialog extends DialogFragment
 
     int selectedId = 0;
     int selectedMode = 0;
-    String title = "";
-    String message = "";
     SelectReferenceViewModeDialog.SelectReferenceCallback callback = null;
     Dialog myDialog = null;
 
-    public static SelectReferenceViewModeDialog newInstance(String title, String message, boolean viewMode, int referenceId, @NonNull SelectReferenceViewModeDialog.SelectReferenceCallback callback)
+    public static SelectReferenceViewModeDialog newInstance(boolean viewMode, int referenceId, @NonNull SelectReferenceViewModeDialog.SelectReferenceCallback callback)
     {
         SelectReferenceViewModeDialog instance = new SelectReferenceViewModeDialog();
-        instance.prepare(callback, viewMode, referenceId, title, message);
+        instance.prepare(callback, viewMode, referenceId);
 
         // パラメータはBundleにまとめておく
         Bundle arguments = new Bundle();
-        arguments.putString("title", title);
-        arguments.putString("message", message);
         instance.setArguments(arguments);
 
         return (instance);
@@ -48,11 +44,9 @@ public class SelectReferenceViewModeDialog extends DialogFragment
      *
      *
      */
-    private void prepare(SelectReferenceViewModeDialog.SelectReferenceCallback callback, boolean viewMode, int referenceId, String title, String message)
+    private void prepare(SelectReferenceViewModeDialog.SelectReferenceCallback callback, boolean viewMode, int referenceId)
     {
         this.callback = callback;
-        this.title = title;
-        this.message = message;
         selectedMode = (viewMode) ? 1 : 0;
         selectedId = referenceId;
     }
@@ -64,24 +58,15 @@ public class SelectReferenceViewModeDialog extends DialogFragment
     @Override
     public @NonNull Dialog onCreateDialog(Bundle savedInstanceState)
     {
-        String title = this.title;
-        String message = this.message;
-        if (savedInstanceState != null)
-        {
-            title = savedInstanceState.getString("title");
-            message = savedInstanceState.getString("message");
-        }
         Activity activity = getActivity();
         final AlertDialog.Builder alertDialog = new AlertDialog.Builder(activity);
         LayoutInflater inflater = activity.getLayoutInflater();
         final View alertView = inflater.inflate(R.layout.select_reference_dialog, null, false);
         alertDialog.setView(alertView);
 
-
         final String[] viewObjects = activity.getResources().getStringArray(R.array.show_laptime_array);
         final Spinner spinner0 = alertView.findViewById(R.id.show_laptime_mode);
         ArrayAdapter<String> arrayAdapter0 = new ArrayAdapter<>(activity, android.R.layout.simple_list_item_1, viewObjects);
-        // selectedMode = 0;
         try
         {
             spinner0.setAdapter(arrayAdapter0);
@@ -107,7 +92,6 @@ public class SelectReferenceViewModeDialog extends DialogFragment
         final String[] objects = activity.getResources().getStringArray(R.array.reference_selection_array);
         final Spinner spinner = alertView.findViewById(R.id.spinner_select_reference);
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(activity, android.R.layout.simple_list_item_1, objects);
-        // selectedId = 0;
         try
         {
             spinner.setAdapter(arrayAdapter);
@@ -129,9 +113,6 @@ public class SelectReferenceViewModeDialog extends DialogFragment
         {
             e.printStackTrace();
         }
-
-        alertDialog.setTitle(title);
-        alertDialog.setIcon(android.R.drawable.ic_dialog_alert);
         alertDialog.setCancelable(true);
 
         String positiveLabel = activity.getString(R.string.dialog_positive_execute);

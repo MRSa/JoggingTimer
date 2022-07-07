@@ -290,7 +290,7 @@ public class DetailActivity extends AppCompatActivity implements RecordDetailSet
                     try
                     {
                         // 基準値設定ダイアログを表示する
-                        SetReferenceDialog dialog = SetReferenceDialog.newInstance("Set Reference", "Please Select Reference Type", callback);
+                        SetReferenceDialog dialog = SetReferenceDialog.newInstance(callback);
                         FragmentManager manager = getSupportFragmentManager();
                         dialog.show(manager, "dialog");
                     }

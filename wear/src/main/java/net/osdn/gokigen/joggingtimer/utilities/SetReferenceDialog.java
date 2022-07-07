@@ -19,20 +19,16 @@ public class SetReferenceDialog extends DialogFragment
 {
     private final String TAG = toString();
     int selectedId = 0;
-    String title = "";
-    String message = "";
     SetReferenceDialog.SetReferenceCallback callback = null;
     Dialog myDialog = null;
 
-    public static SetReferenceDialog newInstance(String title, String message, @NonNull SetReferenceDialog.SetReferenceCallback callback)
+    public static SetReferenceDialog newInstance(@NonNull SetReferenceDialog.SetReferenceCallback callback)
     {
         SetReferenceDialog instance = new SetReferenceDialog();
-        instance.prepare(callback, title, message);
+        instance.prepare(callback);
 
         // パラメータはBundleにまとめておく
         Bundle arguments = new Bundle();
-        arguments.putString("title", title);
-        arguments.putString("message", message);
         instance.setArguments(arguments);
 
         return (instance);
@@ -42,11 +38,9 @@ public class SetReferenceDialog extends DialogFragment
      *
      *
      */
-    private void prepare(SetReferenceDialog.SetReferenceCallback callback, String title, String message)
+    private void prepare(SetReferenceDialog.SetReferenceCallback callback)
     {
         this.callback = callback;
-        this.title = title;
-        this.message = message;
     }
 
     /**
@@ -56,13 +50,6 @@ public class SetReferenceDialog extends DialogFragment
     @Override
     public @NonNull Dialog onCreateDialog(Bundle savedInstanceState)
     {
-        String title = this.title;
-        String message = this.message;
-        if (savedInstanceState != null)
-        {
-            title = savedInstanceState.getString("title");
-            message = savedInstanceState.getString("message");
-        }
         Activity activity = getActivity();
         final AlertDialog.Builder alertDialog = new AlertDialog.Builder(activity);
         LayoutInflater inflater = activity.getLayoutInflater();
@@ -76,6 +63,7 @@ public class SetReferenceDialog extends DialogFragment
         try
         {
             spinner.setAdapter(arrayAdapter);
+            spinner.setSelection(selectedId);
             spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -93,11 +81,8 @@ public class SetReferenceDialog extends DialogFragment
         {
             e.printStackTrace();
         }
-
-        alertDialog.setTitle(title);
-        alertDialog.setIcon(android.R.drawable.ic_dialog_alert);
         alertDialog.setCancelable(true);
-
+        alertDialog.setTitle(activity.getString(R.string.select_reference_title));
         String positiveLabel = activity.getString(R.string.dialog_positive_execute);
         String negativeLabel = activity.getString(R.string.dialog_negative_cancel);
 

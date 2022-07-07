@@ -24,5 +24,5 @@
     <string name="time_picker_second_separator"> </string>
     <string name="information_time_picker">Set LAP and total Time</string>
     <string name="information_modify_time">Set Target LAP Time</string>
-    <string name="select_reference_title">Set Mode/Ref.</string>
+    <string name="select_reference_title">Reference</string>
 </resources>

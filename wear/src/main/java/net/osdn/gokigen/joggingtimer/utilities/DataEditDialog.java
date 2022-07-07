@@ -117,8 +117,8 @@ public class DataEditDialog  extends DialogFragment
         {
             e.printStackTrace();
         }
-        alertDialog.setIcon(iconResId);
-        alertDialog.setMessage(activity.getString(R.string.dialog_message_data_edit));
+        //alertDialog.setIcon(iconResId);
+        //alertDialog.setMessage(activity.getString(R.string.dialog_message_data_edit));
         alertDialog.setCancelable(true);
 
         // ボタンを設定する（実行ボタン）

@@ -475,7 +475,7 @@ public class MainActivity extends AppCompatActivity implements IClickCallback, M
                 try
                 {
                     // 基準値＆表示モード設定ダイアログを表示する
-                    SelectReferenceViewModeDialog dialog = SelectReferenceViewModeDialog.newInstance(getString(R.string.select_reference_title), " ", viewMode, selectionId, callback);
+                    SelectReferenceViewModeDialog dialog = SelectReferenceViewModeDialog.newInstance(viewMode, selectionId, callback);
                     FragmentManager manager = getSupportFragmentManager();
                     dialog.show(manager, "dialog");
                 }
