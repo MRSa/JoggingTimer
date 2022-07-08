@@ -20,13 +20,13 @@
             android:padding="2dp"
             >
             <Spinner
-                android:id="@+id/show_laptime_mode"
+                android:id="@+id/spinner_select_reference"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/blank"
                 android:visibility="visible" />
             <Spinner
-                android:id="@+id/spinner_select_reference"
+                android:id="@+id/show_laptime_mode"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/blank"
