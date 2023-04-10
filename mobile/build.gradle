@@ -1,12 +1,12 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 32
+    compileSdkVersion 33
     defaultConfig {
         applicationId "net.osdn.gokigen.joggingtimer"
         minSdkVersion 14  // 14
-        targetSdkVersion 32
-        versionCode 100048
+        targetSdkVersion 33
+        versionCode 100050
         versionName "1.0.3"
     }
     buildTypes {
@@ -19,6 +19,6 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'androidx.appcompat:appcompat:1.4.2'
+    implementation 'androidx.appcompat:appcompat:1.6.1'
     wearApp project(':wear')
 }
