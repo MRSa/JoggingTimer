@@ -22,4 +22,6 @@
     <dimen name="list_end_padding">0dp</dimen>
     <dimen name="list_top_padding">0dp</dimen>
     <dimen name="list_bottom_padding">0dp</dimen>
+
+    <dimen name="indicator_layout_margin">2dp</dimen>
 </resources>

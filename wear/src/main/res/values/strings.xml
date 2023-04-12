@@ -5,7 +5,8 @@
     <string name="result_detail">Detail</string>
     <string name="app_title">Jogging Timer</string>
     <string name="blank"> </string>
-    <string name="counter">00\'00\"0</string>
+    <string name="clock_dummy">HH:MM</string>
+    <string name="counter">[88] 00\'00\'00\"0</string>
     <string name="dialog_title_delete">REC. DELETE</string>
     <string name="dialog_message_delete">DELETE OK? </string>
     <string name="dialog_positive_execute">OK</string>
@@ -27,4 +28,5 @@
     <string name="information_time_picker">Set LAP and total Time</string>
     <string name="information_modify_time">Set Target LAP Time</string>
     <string name="select_reference_title">Reference</string>
+    <string name="description_control_button"> </string>
 </resources>

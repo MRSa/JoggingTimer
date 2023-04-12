@@ -4,7 +4,7 @@
     android:orientation="horizontal"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:padding="8dp"
+    android:padding="@dimen/icon_list_padding"
     android:background="@color/white"
     >
     <TextView android:id="@+id/selection_icon"

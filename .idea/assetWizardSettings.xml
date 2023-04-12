@@ -18,7 +18,7 @@
                                 <PersistentState>
                                   <option name="values">
                                     <map>
-                                      <entry key="url" value="file:/$PROJECT_DIR$/../../../../APL/Android/sdk/icons/material/materialicons/123/baseline_123_24.xml" />
+                                      <entry key="url" value="file:/$PROJECT_DIR$/../../../Android/android-sdk/icons/material/materialicons/flag/baseline_flag_24.xml" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -28,7 +28,8 @@
                         </option>
                         <option name="values">
                           <map>
-                            <entry key="outputName" value="ic_baseline_123_24" />
+                            <entry key="color" value="eeeeee" />
+                            <entry key="outputName" value="baseline_flag_24" />
                             <entry key="sourceFile" value="C:\Users\MRSa" />
                           </map>
                         </option>

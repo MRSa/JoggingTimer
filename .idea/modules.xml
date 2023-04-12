@@ -11,6 +11,7 @@
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/wear/JoggingTimer.wear.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/wear/JoggingTimer.wear.androidTest.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/wear/JoggingTimer.wear.main.iml" filepath="$PROJECT_DIR$/.idea/modules/wear/JoggingTimer.wear.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/wear/JoggingTimer.wear.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/wear/JoggingTimer.wear.unitTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/OSDN_repositories.JoggingTimer.iml" filepath="$PROJECT_DIR$/.idea/modules/OSDN_repositories.JoggingTimer.iml" />
     </modules>
   </component>
 </project>

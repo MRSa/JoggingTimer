@@ -1,121 +1,202 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<androidx.wear.widget.BoxInsetLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/box_inset_layout"
+    android:id="@+id/top_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/black"
+    android:background="@color/background_color"
     android:padding="@dimen/box_inset_layout_padding"
+    android:scrollbars="vertical"
     tools:context="net.osdn.gokigen.joggingtimer.stopwatch.MainActivity"
     tools:deviceIds="wear">
 
-    <RelativeLayout
-        android:id="@+id/relative_main_layout"
-        android:layout_width="match_parent"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/main_layout"
         android:layout_height="match_parent"
-        android:background="@color/black"
-        android:padding="@dimen/inner_frame_layout_padding"
-        app:boxedEdges="all">
+        android:layout_width="match_parent"
+        >
+
+        <TextClock
+            android:id="@+id/clock"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:text="@string/clock_dummy"
+            android:format24Hour="HH:mm"
+            android:format12Hour="HH:mm"
+            android:background="@color/background_color"
+            android:textColor="@android:color/white"
+            android:textSize="14sp"
+            android:minHeight="24dp"
+            android:visibility="visible"
+            android:gravity="center"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/main_counter"
             android:textColor="@color/white"
-            android:background="@color/black"
+            android:background="@color/background_color"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAlignment="center"
-            android:textSize="16pt"
+            android:textSize="28sp"
+            android:minHeight="48dp"
             android:focusable="true"
             android:clickable="true"
-            android:text="@string/counter" />
-
-        <ImageButton
-            android:id="@+id/btn2"
-            android:background="@color/black"
-            android:tint="@color/white"
-            android:layout_gravity="bottom"
-            android:layout_width="45dp"
-            android:layout_height="40dp"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentBottom="true"
-            android:clickable="true"
-            android:focusable="true"
-            android:scaleType="fitCenter"
+            android:text="@string/counter"
             android:visibility="visible"
-            android:contentDescription="@string/blank"
-            android:src="@drawable/ic_format_list_bulleted_black_24dp"
-            />
-
-        <ImageButton
-            android:id="@+id/btn3"
-            android:layout_width="45dp"
-            android:layout_height="40dp"
-            android:layout_alignParentBottom="true"
-            android:layout_gravity="bottom"
-            android:layout_toEndOf="@+id/btn2"
-            android:background="@color/black"
-            android:tint="@color/white"
-            android:clickable="true"
-            android:contentDescription="@string/blank"
-            android:focusable="true"
-            android:scaleType="fitCenter"
-            android:src="@drawable/ic_stop_black_24dp"
-            android:visibility="invisible" />
-
-        <ImageButton
-            android:id="@+id/btn1"
-            android:background="@color/black"
-            android:tint="@color/white"
-            android:layout_gravity="bottom"
-            android:layout_width="80dp"
-            android:layout_height="40dp"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentBottom="true"
-            android:clickable="true"
-            android:focusable="true"
-            android:scaleType="fitEnd"
-            android:visibility="visible"
-            android:contentDescription="@string/blank"
-            android:src="@drawable/ic_play_arrow_black_24dp"
-            />
+            android:layout_marginStart="@dimen/indicator_layout_margin"
+            android:layout_marginEnd="@dimen/indicator_layout_margin"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/clock" />
 
         <TextView
             android:id="@+id/sub_counter1"
             android:textColor="@color/white"
-            android:background="@color/black"
+            android:background="@color/background_color"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAlignment="textEnd"
             android:focusable="true"
             android:clickable="true"
-            android:layout_alignStart="@id/main_counter"
-            android:layout_below="@id/main_counter"
-            android:textSize="8pt"
-            android:text="@string/blank" />
+            android:visibility="visible"
+            android:layout_marginStart="@dimen/indicator_layout_margin"
+            android:layout_marginEnd="@dimen/indicator_layout_margin"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/main_counter"
+            android:textSize="14sp"
+            android:text="@string/counter" />
 
         <net.osdn.gokigen.joggingtimer.stopwatch.graphview.LapTimeGraphView
             android:id="@+id/graph_area"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/black"
+            android:layout_height="0dp"
+            app:layout_constraintDimensionRatio="h,4:1"
+            android:background="@color/background_color"
+            app:layout_constraintTop_toBottomOf="@id/sub_counter1"
             android:gravity="center"
             android:clickable="true"
             android:focusable="true"
             android:visibility="gone"
             android:layout_below="@id/sub_counter1"
-            android:layout_above="@id/btn1"
+            android:layout_above="@id/button_area1"
             />
 
         <ListView
             android:id="@+id/laptime_list_area"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/sub_counter1"
-            android:layout_above="@id/btn1"
+            android:layout_height="0dp"
+            app:layout_constraintDimensionRatio="h,4:1"
+            android:background="@color/background_color"
+            app:layout_constraintTop_toBottomOf="@id/sub_counter1"
             android:transcriptMode="alwaysScroll"
             android:visibility="visible"
             />
-    </RelativeLayout>
-</androidx.wear.widget.BoxInsetLayout>
+
+        <LinearLayout
+            android:id="@+id/button_area1"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:background="@color/background_color"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/laptime_list_area"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/btn2"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_gravity="bottom"
+                android:background="@color/background_color"
+                android:clickable="true"
+                android:tint="@color/white"
+                android:contentDescription="@string/description_control_button"
+                android:focusable="true"
+                android:src="@drawable/baseline_format_list_bulleted_grey_24"
+                android:visibility="invisible" />
+
+            <ImageButton
+                android:id="@+id/btn3"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_gravity="bottom"
+                android:background="@color/background_color"
+                android:clickable="true"
+                android:contentDescription="@string/description_control_button"
+                android:focusable="true"
+                android:tint="@color/white"
+                android:visibility="visible"
+                android:src="@drawable/baseline_stop_grey_24" />
+
+            <ImageButton
+                android:id="@+id/btn1"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_gravity="bottom"
+                android:clickable="true"
+                android:contentDescription="@string/description_control_button"
+                android:focusable="true"
+                android:tint="@color/white"
+                android:background="@color/background_color"
+                android:src="@drawable/baseline_play_arrow_grey_24"
+                android:visibility="visible" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/button_area2"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/button_area1"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/btn_01"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_gravity="bottom"
+                android:background="@null"
+                android:clickable="true"
+                android:contentDescription="@string/description_control_button"
+                android:focusable="true"
+                android:src="@drawable/ic_play_arrow_black_24dp"
+                android:visibility="visible" />
+
+            <ImageButton
+                android:id="@+id/btn_02"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_gravity="bottom"
+                android:background="@null"
+                android:clickable="true"
+                android:contentDescription="@string/description_control_button"
+                android:focusable="true"
+                android:src="@drawable/ic_format_list_bulleted_black_24dp"
+                android:visibility="visible" />
+
+            <ImageButton
+                android:id="@+id/btn_03"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_gravity="bottom"
+                android:background="@null"
+                android:clickable="true"
+                android:contentDescription="@string/description_control_button"
+                android:focusable="true"
+                android:visibility="visible"
+                android:src="@drawable/ic_stop_black_24dp" />
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.core.widget.NestedScrollView>

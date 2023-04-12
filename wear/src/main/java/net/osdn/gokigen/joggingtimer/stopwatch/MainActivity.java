@@ -17,6 +17,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.FragmentManager;
 import androidx.wear.ambient.AmbientModeSupport;
 import androidx.wear.widget.BoxInsetLayout;
@@ -192,8 +194,8 @@ public class MainActivity extends AppCompatActivity implements IClickCallback, M
     {
         ITimerCounter timerCounter = counter;
         int bgColor;
-        BoxInsetLayout insetLayout = findViewById(R.id.box_inset_layout);
-        RelativeLayout layout = findViewById(R.id.relative_main_layout);
+        NestedScrollView insetLayout = findViewById(R.id.top_layout);
+        ConstraintLayout layout = findViewById(R.id.main_layout);
 
         ImageButton btn1 = findViewById(R.id.btn1);
         ImageButton btn2 = findViewById(R.id.btn2);
