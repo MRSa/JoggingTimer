@@ -7,7 +7,7 @@
     android:nestedScrollingEnabled="true"
     android:paddingStart="@dimen/list_start_padding"
     android:paddingEnd="@dimen/list_end_padding"
-    android:background="@color/white"
+    android:background="@color/background_color"
 >
     <ScrollView
         android:layout_width="match_parent"
@@ -26,8 +26,8 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/blank"
-                android:background="@color/white"
-                android:foregroundTint="@color/black"
+                android:background="@color/background_color"
+                android:foregroundTint="@color/white"
                 android:visibility="visible" />
 
             <EditText android:id="@+id/edit_title"
@@ -37,7 +37,7 @@
                 android:linksClickable="true"
                 android:inputType="text"
                 android:hint="@string/dialog_title_hint"
-                android:textColor="#000"
+                android:textColor="@color/white"
                 android:autofillHints="" />
         </LinearLayout>
     </ScrollView>

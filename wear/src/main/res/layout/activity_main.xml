@@ -92,6 +92,8 @@
             android:id="@+id/laptime_list_area"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:layout_marginStart="@dimen/indicator_layout_margin"
+            android:layout_marginEnd="@dimen/indicator_layout_margin"
             app:layout_constraintDimensionRatio="h,4:1"
             android:background="@color/background_color"
             app:layout_constraintTop_toBottomOf="@id/sub_counter1"
@@ -102,7 +104,7 @@
         <LinearLayout
             android:id="@+id/button_area1"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
+            android:layout_height="@dimen/button_height"
             android:background="@color/background_color"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -112,8 +114,8 @@
 
             <ImageButton
                 android:id="@+id/btn2"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
+                android:layout_width="@dimen/button_width"
+                android:layout_height="@dimen/button_height"
                 android:layout_gravity="bottom"
                 android:background="@color/background_color"
                 android:clickable="true"
@@ -125,8 +127,8 @@
 
             <ImageButton
                 android:id="@+id/btn3"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
+                android:layout_width="@dimen/button_width"
+                android:layout_height="@dimen/button_height"
                 android:layout_gravity="bottom"
                 android:background="@color/background_color"
                 android:clickable="true"
@@ -138,8 +140,8 @@
 
             <ImageButton
                 android:id="@+id/btn1"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
+                android:layout_width="@dimen/button_width"
+                android:layout_height="@dimen/button_height"
                 android:layout_gravity="bottom"
                 android:clickable="true"
                 android:contentDescription="@string/description_control_button"
@@ -163,8 +165,8 @@
 
             <ImageButton
                 android:id="@+id/btn_01"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
+                android:layout_width="@dimen/button_width"
+                android:layout_height="@dimen/button_height"
                 android:layout_gravity="bottom"
                 android:background="@null"
                 android:clickable="true"
@@ -175,8 +177,8 @@
 
             <ImageButton
                 android:id="@+id/btn_02"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
+                android:layout_width="@dimen/button_width"
+                android:layout_height="@dimen/button_height"
                 android:layout_gravity="bottom"
                 android:background="@null"
                 android:clickable="true"
@@ -187,8 +189,8 @@
 
             <ImageButton
                 android:id="@+id/btn_03"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
+                android:layout_width="@dimen/button_width"
+                android:layout_height="@dimen/button_height"
                 android:layout_gravity="bottom"
                 android:background="@null"
                 android:clickable="true"

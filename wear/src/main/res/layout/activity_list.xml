@@ -17,6 +17,21 @@
         android:orientation="vertical"
         android:scrollbarAlwaysDrawVerticalTrack="true">
 
+        <TextClock
+            android:id="@+id/list_time_area"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:text="@string/clock_dummy"
+            android:format24Hour="HH:mm"
+            android:format12Hour="HH:mm"
+            android:background="@color/background_color"
+            android:textColor="@android:color/white"
+            android:textSize="14sp"
+            android:minHeight="24dp"
+            android:visibility="visible"
+            android:gravity="center"
+            />
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
