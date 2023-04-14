@@ -99,6 +99,8 @@
             app:layout_constraintTop_toBottomOf="@id/sub_counter1"
             android:transcriptMode="alwaysScroll"
             android:visibility="visible"
+            android:layout_below="@id/sub_counter1"
+            android:layout_above="@id/button_area1"
             />
 
         <LinearLayout
@@ -161,6 +163,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/button_area1"
             android:gravity="center"
+            android:visibility="gone"
             android:orientation="horizontal">
 
             <ImageButton
