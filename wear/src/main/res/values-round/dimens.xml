@@ -13,7 +13,8 @@
     <dimen name="list_top_padding">40dp</dimen>
     <dimen name="list_bottom_padding">40dp</dimen>
 
-    <dimen name="indicator_layout_margin">32dp</dimen>
+    <dimen name="indicator_layout_margin">26dp</dimen>
+    <dimen name="list_layout_margin">8dp</dimen>
 
     <dimen name="button_width">50dp</dimen>
     <dimen name="button_height">50dp</dimen>

@@ -15,6 +15,8 @@
         android:layout_height="match_parent"
         android:id="@+id/time_list"
         android:orientation="vertical"
+        android:layout_marginStart="@dimen/list_layout_margin"
+        android:layout_marginEnd="@dimen/list_layout_margin"
         android:scrollbarAlwaysDrawVerticalTrack="true">
 
         <TextClock
@@ -27,8 +29,8 @@
             android:format12Hour="HH:mm"
             android:background="@color/background_color"
             android:textColor="@android:color/white"
-            android:textSize="14sp"
-            android:minHeight="24dp"
+            android:textSize="12sp"
+            android:minHeight="22dp"
             android:visibility="visible"
             android:gravity="center"
             />

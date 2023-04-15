@@ -23,6 +23,7 @@
     <dimen name="list_top_padding">0dp</dimen>
     <dimen name="list_bottom_padding">0dp</dimen>
 
+    <dimen name="list_layout_margin">4dp</dimen>
     <dimen name="indicator_layout_margin">2dp</dimen>
 
     <dimen name="button_width">50dp</dimen>

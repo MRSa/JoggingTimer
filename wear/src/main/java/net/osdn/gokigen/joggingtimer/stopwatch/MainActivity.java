@@ -766,11 +766,11 @@ public class MainActivity extends AppCompatActivity implements IClickCallback, M
             {
                 graphView.setITimerCounter(counter);
                 graphView.setVisibility(View.VISIBLE);
-                listView.setVisibility(View.GONE);
+                listView.setVisibility(View.INVISIBLE);
             }
             else
             {
-                graphView.setVisibility(View.GONE);
+                graphView.setVisibility(View.INVISIBLE);
                 listView.setVisibility(View.VISIBLE);
             }
             //controller.vibrate(30);
