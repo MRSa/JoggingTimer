@@ -6,8 +6,10 @@
     android:orientation="horizontal"
     android:clipChildren="true"
     android:clipToPadding="true"
-    android:paddingTop="@dimen/header_top_padding"
-    android:paddingBottom="@dimen/header_bottom_padding"
+    android:paddingTop="@dimen/recordlist_top_padding"
+    android:paddingBottom="@dimen/recordlist_bottom_padding"
+    android:layout_marginStart="@dimen/list_layout_margin"
+    android:layout_marginEnd="@dimen/list_layout_margin"
     >
     <ImageView
         android:id="@+id/gokigen_icon"
@@ -32,7 +34,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textStyle="normal"
-            android:textSize="10pt"
+            android:textSize="18sp"
+            android:textColor="@color/white"
             android:clickable="false"
             android:focusable="false"
             android:tag="main"
@@ -41,7 +44,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="8pt"
+            android:textSize="16sp"
             android:clickable="false"
             android:focusable="false"
             android:tag="sub"

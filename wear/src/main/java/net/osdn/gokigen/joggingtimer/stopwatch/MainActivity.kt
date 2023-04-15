@@ -11,6 +11,7 @@ import android.widget.ListView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.widget.NestedScrollView
 import androidx.wear.ambient.AmbientModeSupport
 import net.osdn.gokigen.joggingtimer.R
@@ -45,10 +46,28 @@ class MainActivity : AppCompatActivity(), IClickCallback, ITimeoutReceiver, ICou
      */
     override fun onCreate(savedInstanceState: Bundle?)
     {
+        try
+        {
+            ///////// SHOW SPLASH SCREEN : call before super.onCreate() /////////
+            installSplashScreen()
+        }
+        catch (e: Exception)
+        {
+            e.printStackTrace()
+        }
         super.onCreate(savedInstanceState)
         Log.v(TAG, "onCreate()")
-        setContentView(R.layout.activity_main)
-        controller.setup(this, this, counter)
+
+        try
+        {
+            setContentView(R.layout.activity_main)
+            controller.setup(this, this, counter)
+        }
+        catch (e: Exception)
+        {
+            e.printStackTrace()
+        }
+
         try
         {
             val ambientController = AmbientModeSupport.attach(this)

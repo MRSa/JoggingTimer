@@ -8,6 +8,10 @@
     <dimen name="header_bottom_padding">6dp</dimen>
     <dimen name="header_start_padding">6dp</dimen>
     <dimen name="header_end_padding">6dp</dimen>
+    <dimen name="detail_top_padding">8dp</dimen>
+    <dimen name="detail_bottom_padding">6dp</dimen>
+    <dimen name="recordlist_top_padding">8dp</dimen>
+    <dimen name="recordlist_bottom_padding">6dp</dimen>
     <dimen name="list_start_padding">6dp</dimen>
     <dimen name="list_end_padding">6dp</dimen>
     <dimen name="list_top_padding">40dp</dimen>
