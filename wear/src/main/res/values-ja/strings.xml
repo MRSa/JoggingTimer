@@ -3,6 +3,8 @@
     <string name="app_name">JoggingTimer</string>
     <string name="result_list">記録一覧</string>
     <string name="result_detail">ラップタイム詳細</string>
+    <string name="confirmation">確認</string>
+    <string name="main">Main</string>
     <string name="app_title">ジョギングタイマ</string>
     <string name="blank"> </string>
     <string name="clock_dummy">HH:MM</string>

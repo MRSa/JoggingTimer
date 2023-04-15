@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="net.osdn.gokigen.joggingtimer">
 
     <uses-feature android:name="android.hardware.type.watch" />
 
@@ -23,6 +24,7 @@
 
         <activity
             android:name=".stopwatch.MainActivity"
+            android:label="@string/main"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -62,7 +64,8 @@
             android:label="@string/result_detail">
         </activity>
         <activity
-            android:name="androidx.wear.activity.ConfirmationActivity">
+            android:name="androidx.wear.activity.ConfirmationActivity"
+            android:label="@string/confirmation">
         </activity>
     </application>
 </manifest>

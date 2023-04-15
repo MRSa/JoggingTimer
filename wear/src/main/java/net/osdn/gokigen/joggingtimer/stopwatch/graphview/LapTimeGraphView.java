@@ -280,7 +280,7 @@ public class LapTimeGraphView extends View
         Paint paint = new Paint();
 
         paint.setColor(Color.WHITE);
-        paint.setStyle(Paint.Style.STROKE);
+        paint.setStyle(Paint.Style.FILL);
         paint.setStrokeWidth(0.0f);
         paint.setAntiAlias(true);
         //canvas.drawRect(rect, paint);
@@ -343,7 +343,7 @@ public class LapTimeGraphView extends View
         try
         {
             float density = context.getResources().getDisplayMetrics().density;
-            paint.setTextSize(density * 20.0f + 0.5f);
+            paint.setTextSize(density * 16.0f + 0.5f);
         }
         catch (Exception e)
         {

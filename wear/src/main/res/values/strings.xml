@@ -3,6 +3,8 @@
     <string name="app_name">JoggingTimer</string>
     <string name="result_list">Records</string>
     <string name="result_detail">Detail</string>
+    <string name="confirmation">Confirmation</string>
+    <string name="main">Main</string>
     <string name="app_title">Jogging Timer</string>
     <string name="blank"> </string>
     <string name="clock_dummy">HH:MM</string>
