@@ -8,7 +8,7 @@ android {
         minSdkVersion 23
         targetSdkVersion 33
         versionCode 100051
-        versionName "1.0.4"
+        versionName "1.0.5"
     }
     buildTypes {
         release {
@@ -17,7 +17,6 @@ android {
         }
     }
     namespace 'net.osdn.gokigen.joggingtimer'
-
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
@@ -27,6 +26,8 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'com.google.android.support:wearable:2.9.0'
+    //implementation 'com.google.android.gms:play-services-wearable:18.0.0'
+
     implementation 'androidx.preference:preference-ktx:1.2.0'
     implementation "androidx.core:core-splashscreen:1.0.0"
     implementation 'androidx.recyclerview:recyclerview:1.3.0'

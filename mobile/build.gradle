@@ -4,10 +4,10 @@ android {
     compileSdkVersion 33
     defaultConfig {
         applicationId "net.osdn.gokigen.joggingtimer"
-        minSdkVersion 14  // 14
+        minSdkVersion 14
         targetSdkVersion 33
         versionCode 100050
-        versionName "1.0.3"
+        versionName "1.0.5"
     }
     buildTypes {
         release {
@@ -16,6 +16,10 @@ android {
         }
     }
     namespace 'net.osdn.gokigen.joggingtimer'
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
 }
 
 dependencies {
