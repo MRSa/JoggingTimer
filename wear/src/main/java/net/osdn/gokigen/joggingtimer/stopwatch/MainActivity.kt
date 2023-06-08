@@ -77,6 +77,26 @@ class MainActivity : AppCompatActivity(), IClickCallback, ITimeoutReceiver, ICou
         {
             e.printStackTrace()
         }
+
+        try
+        {
+            val receivedAction = intent.action
+            if (receivedAction == Intent.ACTION_SEND)
+            {
+                val thread = Thread {
+                    // 取得したSENDインテントを処理する
+                    val importer = IntentSendImporter()
+                    importer.handleIntent(intent)
+                }
+                thread.start()
+            }
+        }
+        catch (e: Exception)
+        {
+            e.printStackTrace()
+        }
+
+
     }
 
     /**
