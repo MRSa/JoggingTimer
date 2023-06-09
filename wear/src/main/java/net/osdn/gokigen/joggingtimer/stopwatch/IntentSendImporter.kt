@@ -1,12 +1,21 @@
 package net.osdn.gokigen.joggingtimer.stopwatch
 
+import android.content.Context
 import android.content.Intent
 import android.util.Log
+import net.osdn.gokigen.joggingtimer.storage.ITimeEntryDatabaseCallback
+import net.osdn.gokigen.joggingtimer.storage.TimeEntryDatabaseFactory
 import java.lang.Exception
 
-class IntentSendImporter
+class IntentSendImporter(context: Context, val intent: Intent) : ITimeEntryDatabaseCallback
 {
-    fun handleIntent(receivedIntent: Intent)
+    val database =  TimeEntryDatabaseFactory(context, this).entryDatabase
+
+    fun start()
+    {
+        database.prepare()
+    }
+    private fun handleIntent(receivedIntent: Intent)
     {
         try
         {
@@ -19,8 +28,8 @@ class IntentSendImporter
             }
             Log.v(TAG, " ===== handleIntent: ${receivedIntent.action} : $title")
 
-            var nofLapTime = 0
-            val timeValueList = ArrayList<String>()
+            var totalTime: Long = 0
+            val lapTimeList = ArrayList<Long>()
             val lines = data.split("\r?\n".toRegex())
             for ((currentLine, line) in lines.withIndex())
             {
@@ -41,35 +50,72 @@ class IntentSendImporter
                         // 正当なデータがないので抜ける
                         break
                     }
-                    timeValueList.add(timeValue[3])
-                    nofLapTime++
+                    val lapTime = timeValue[3].toLong()
+                    totalTime += lapTime
+                    lapTimeList.add(lapTime)
                 }
             }
             val dataTitle = title ?: "imported data"
-            importLapTime(dataTitle, timeValueList)
+            importLapTime(dataTitle, totalTime, lapTimeList)
         }
         catch (e: Exception)
         {
             e.printStackTrace()
         }
     }
-
-    private fun importLapTime(title: String, lapTimeList: ArrayList<String>)
+    private fun importLapTime(dataTitle: String, totalTime: Long, lapTimeList: ArrayList<Long>)
     {
-        //  ここでデータベースにデータを入れる
-        //  題名 : title (String型)
-        //  ラップタイムの配列 : timeValueList (Int型、単位は ms)
-        Log.v(TAG, " ----- $title ----- ")
+        //  ここでデータベースにデータを入れる (入れたあとはコールバックで戻る）
+        database.createImportedTimeEntryData(dataTitle, "imported data", totalTime, lapTimeList)
+/*
+        //  題名 : dataTitle (String型)
+        //  ラップタイムの配列 : lapTimeList (Int型、単位は ms)
+        Log.v(TAG, " ----- $dataTitle ----- ")
         for ((index, timeValue) in lapTimeList.withIndex())
         {
             Log.v(TAG, "  $index $timeValue")
         }
         Log.v(TAG, " ---------- ")
-
+*/
     }
 
     companion object
     {
         private val TAG = IntentSendImporter::class.java.simpleName
+    }
+
+    override fun prepareFinished(isReady: Boolean)
+    {
+        handleIntent(intent)
+    }
+
+    override fun dataEntryFinished(
+        operationType: ITimeEntryDatabaseCallback.OperationType?,
+        result: Boolean,
+        id: Long,
+        title: String?
+    )
+    {
+        Log.v(TAG, "dataEntryFinished()")
+    }
+
+    override fun timeEntryFinished(
+        operationType: ITimeEntryDatabaseCallback.OperationType?,
+        result: Boolean,
+        indexId: Long,
+        dataId: Long
+    )
+    {
+        Log.v(TAG, "timeEntryFinished()")
+    }
+
+    override fun modelDataEntryFinished(
+        operationType: ITimeEntryDatabaseCallback.OperationType?,
+        result: Boolean,
+        indexId: Long,
+        title: String?
+    )
+    {
+        Log.v(TAG, "modelDataEntryFinished()")
     }
 }

@@ -13,6 +13,8 @@ import static android.provider.BaseColumns._ID;
 
 import androidx.annotation.NonNull;
 
+import java.util.ArrayList;
+
 /**
  *
  *
@@ -307,6 +309,30 @@ class TimeEntryDatabase implements ITimeEntryDatabase
         callback.modelDataEntryFinished(ITimeEntryDatabaseCallback.OperationType.FINISHED, false, -1, title);
         return (-1);
     }
+
+    @Override
+    public long createImportedTimeEntryData(String title, String memo, long totalTime, ArrayList<Long> lapTimeList)
+    {
+        try
+        {
+            long lapTime = 0;
+            long indexId = createIndexDataImpl(false, title, memo, MODEL_DATA_ICON_ID, 0, totalTime);
+            for (long currentTime :lapTimeList)
+            {
+                lapTime = lapTime + currentTime;
+                appendTimeDataImpl(false, indexId, lapTime, EDITABLE_RECORD_TYPE);
+            }
+            callback.modelDataEntryFinished(ITimeEntryDatabaseCallback.OperationType.FINISHED, true, indexId, title);
+            return (indexId);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        callback.modelDataEntryFinished(ITimeEntryDatabaseCallback.OperationType.FINISHED, false, -1, title);
+        return (-1);
+    }
+
 
     /**
      *

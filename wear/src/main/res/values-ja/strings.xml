@@ -8,6 +8,7 @@
     <string name="app_title">ジョギングタイマ</string>
     <string name="blank"> </string>
     <string name="clock_dummy">HH:MM</string>
+    <string name="data_imported">登録: </string>
     <string name="counter">[88] 00\'00\'00\"0</string>
     <string name="counter_sub">[88] 00\'00\'00\"0</string>
     <string name="dialog_title_delete">記録の削除</string>

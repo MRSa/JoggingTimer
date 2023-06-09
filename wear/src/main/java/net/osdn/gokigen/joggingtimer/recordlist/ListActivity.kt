@@ -1,5 +1,6 @@
 package net.osdn.gokigen.joggingtimer.recordlist
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -29,29 +30,34 @@ import kotlin.math.roundToInt
  */
 class ListActivity : AppCompatActivity(),
     IDetailLauncher, RecordSummarySetup.IDatabaseReadyNotify, ICreatedModelDataCallback,
-    ListSelectionMenuAdapter.ISelectedMenu, AmbientModeSupport.AmbientCallbackProvider {
-    private val TAG = toString()
+    ListSelectionMenuAdapter.ISelectedMenu, AmbientModeSupport.AmbientCallbackProvider
+{
     private var summaryAdapter: RecordSummaryAdapter? = null
     private var setupper: RecordSummarySetup? = null
 
     /**
      *
      */
-    override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?)
+    {
         super.onCreate(savedInstanceState)
         Log.v(TAG, "onCreate()")
         setContentView(R.layout.activity_list)
 
         // Enables Always-on
         //setAmbientEnabled();
-        try {
+        try
+        {
             val ambientController = AmbientModeSupport.attach(this)
             ambientController.setAutoResumeEnabled(true)
             //boolean isAmbient = ambientController.isAmbient();
-        } catch (e: Exception) {
+        }
+        catch (e: Exception)
+        {
             e.printStackTrace()
         }
-        try {
+        try
+        {
             val naviView =
                 findViewById<WearableNavigationDrawerView>(R.id.list_top_navigation_drawer)
             val menuAdapter = ListSelectionMenuAdapter(this, this)
@@ -66,7 +72,9 @@ class ListActivity : AppCompatActivity(),
             view.addItemDecoration(dividerDecoration)
             view.layoutManager = layoutManager
             view.adapter = summaryAdapter
-        } catch (e: Exception) {
+        }
+        catch (e: Exception)
+        {
             e.printStackTrace()
             summaryAdapter = null
         }
@@ -75,27 +83,17 @@ class ListActivity : AppCompatActivity(),
     /**
      *
      */
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-    }
-
-    /**
-     *
-     */
-    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
-        super.onRestoreInstanceState(savedInstanceState)
-    }
-
-    /**
-     *
-     */
-    override fun onResume() {
+    override fun onResume()
+    {
         super.onResume()
         Log.v(TAG, "onResume()")
-        try {
+        try
+        {
             setupper = RecordSummarySetup(this, this, this, summaryAdapter, this)
-            setupper!!.setup()
-        } catch (e: Exception) {
+            setupper?.setup()
+        }
+        catch (e: Exception)
+        {
             e.printStackTrace()
         }
     }
@@ -103,15 +101,20 @@ class ListActivity : AppCompatActivity(),
     /**
      *
      */
-    override fun onPause() {
+    override fun onPause()
+    {
         super.onPause()
         Log.v(TAG, "onPause()")
-        try {
-            if (setupper != null) {
-                setupper!!.closeDatabase()
+        try
+        {
+            if (setupper != null)
+            {
+                setupper?.closeDatabase()
                 setupper = null
             }
-        } catch (e: Exception) {
+        }
+        catch (e: Exception)
+        {
             e.printStackTrace()
         }
         System.gc()
@@ -121,7 +124,8 @@ class ListActivity : AppCompatActivity(),
      *
      *
      */
-    public override fun onStart() {
+    public override fun onStart()
+    {
         super.onStart()
         Log.v(TAG, "onStart()")
     }
@@ -130,32 +134,11 @@ class ListActivity : AppCompatActivity(),
      *
      *
      */
-    public override fun onStop() {
+    public override fun onStop()
+    {
         super.onStop()
         Log.v(TAG, "onStop()")
     }
-    /*
-    @Override
-    public void onEnterAmbient(Bundle ambientDetails)
-    {
-        super.onEnterAmbient(ambientDetails);
-        Log.v(TAG, "onEnterAmbient()");
-    }
-
-    @Override
-    public void onExitAmbient()
-    {
-        super.onExitAmbient();
-        Log.v(TAG, "onExitAmbient()");
-    }
-
-    @Override
-    public void onUpdateAmbient()
-    {
-        super.onUpdateAmbient();
-        Log.v(TAG, "onUpdateAmbient()");
-    }
-*/
 
     override fun onGenericMotionEvent(ev: MotionEvent?): Boolean
     {
@@ -183,13 +166,17 @@ class ListActivity : AppCompatActivity(),
      *
      *
      */
-    override fun launchDetail(recordId: Long) {
+    override fun launchDetail(recordId: Long)
+    {
         Log.v(TAG, "launchDetail() id:$recordId")
-        try {
+        try
+        {
             val intent = Intent(this, DetailActivity::class.java)
             intent.putExtra(DetailActivity.INTENT_EXTRA_DATA_ID, recordId)
             startActivity(intent)
-        } catch (e: Exception) {
+        }
+        catch (e: Exception)
+        {
             e.printStackTrace()
         }
     }
@@ -198,15 +185,16 @@ class ListActivity : AppCompatActivity(),
      *
      *
      */
-    private fun itemSelected(itemId: Int) {
-        //String toastMessage = "";
-        if (itemId == R.id.menu_create_model) {
+    private fun itemSelected(itemId: Int)
+    {
+        if (itemId == R.id.menu_create_model)
+        {
             // モデルデータの作成
             val dialog2 = CreateModelDataDialog.newInstance(
                 true,
                 getString(R.string.information_time_picker),
                 0,
-                setupper!!.getCreateModelDataCallback(
+                setupper?.getCreateModelDataCallback(
                     ITimeEntryDatabase.DONT_USE_ID,
                     ITimeEntryDatabase.DONT_USE_ID
                 ),
@@ -214,28 +202,16 @@ class ListActivity : AppCompatActivity(),
             )
             dialog2.show(supportFragmentManager, "dialog2")
         }
-        /*
-        try
-        {
-            if (toastMessage.length() > 0)
-            {
-                Toast toast = Toast.makeText(getApplicationContext(), toastMessage, Toast.LENGTH_SHORT);
-                toast.show();
-            }
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
- */
     }
 
     /**
      *
      *
      */
-    override fun deleteRecord(targetRecord: DataRecord) {
-        try {
+    override fun deleteRecord(targetRecord: DataRecord)
+    {
+        try
+        {
             val positionId = targetRecord.positionId
             val title = targetRecord.title
             Log.v(TAG, "deleteRecord() : $title")
@@ -262,7 +238,9 @@ class ListActivity : AppCompatActivity(),
                 }
             }
             dialog.show(supportFragmentManager, "dialog")
-        } catch (e: Exception) {
+        }
+        catch (e: Exception)
+        {
             e.printStackTrace()
         }
     }
@@ -271,7 +249,8 @@ class ListActivity : AppCompatActivity(),
      *
      *
      */
-    override fun databaseSetupFinished(result: Boolean) {
+    override fun databaseSetupFinished(result: Boolean)
+    {
         Log.v(TAG, "databaseSetupFinished() : $result")
     }
 
@@ -279,7 +258,8 @@ class ListActivity : AppCompatActivity(),
      *
      *
      */
-    override fun selectedMenu(itemId: Int) {
+    override fun selectedMenu(itemId: Int)
+    {
         itemSelected(itemId)
     }
 
@@ -287,42 +267,50 @@ class ListActivity : AppCompatActivity(),
      *
      *
      */
-    override fun createdModelData(indexId: Long) {
-        // データの登録
-        setupper!!.setIndexData(indexId)
+    @SuppressLint("NotifyDataSetChanged")
+    override fun createdModelData(indexId: Long)
+    {
+        try
+        {
+            // データの登録
+            setupper?.setIndexData(indexId)
 
-        // 一覧の更新
-        runOnUiThread {
-            if (summaryAdapter != null) {
-                val count = summaryAdapter!!.itemCount
-                summaryAdapter!!.notifyItemChanged(count - 1)
-                summaryAdapter!!.notifyDataSetChanged()
+            // 一覧の更新
+            runOnUiThread {
+                if (summaryAdapter != null)
+                {
+                    val count = summaryAdapter?.itemCount ?: 1
+                    summaryAdapter?.notifyItemChanged(count - 1)
+                    summaryAdapter?.notifyDataSetChanged()
+                }
+
+                // Toastで作成を通知する
+                val toast = Toast.makeText(
+                    applicationContext,
+                    getString(R.string.created_model_data),
+                    Toast.LENGTH_SHORT
+                )
+                toast.show()
             }
-
-            // Toastで作成を通知する
-            val toast = Toast.makeText(
-                applicationContext,
-                getString(R.string.created_model_data),
-                Toast.LENGTH_SHORT
-            )
-            toast.show()
+        }
+        catch (e: Exception)
+        {
+            e.printStackTrace()
         }
     }
 
-    override fun getAmbientCallback(): AmbientModeSupport.AmbientCallback {
+    override fun getAmbientCallback(): AmbientModeSupport.AmbientCallback
+    {
         return object : AmbientModeSupport.AmbientCallback() {
-            override fun onEnterAmbient(ambientDetails: Bundle) {
+            override fun onEnterAmbient(ambientDetails: Bundle)
+            {
                 Log.v(TAG, "onEnterAmbient()")
             }
-
-            fun onExitAmbient(ambientDetails: Bundle?) {
-                Log.v(TAG, "onExitAmbient()")
-                //updateTimerLabel();
-            }
         }
     }
 
-    override fun onPointerCaptureChanged(hasCapture: Boolean) {
-        super.onPointerCaptureChanged(hasCapture)
+    companion object
+    {
+        private val TAG = ListActivity::class.java.simpleName
     }
 }

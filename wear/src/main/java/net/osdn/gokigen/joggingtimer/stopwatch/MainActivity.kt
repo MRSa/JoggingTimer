@@ -9,6 +9,7 @@ import android.view.View
 import android.widget.ImageButton
 import android.widget.ListView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
@@ -80,24 +81,38 @@ class MainActivity : AppCompatActivity(), IClickCallback, ITimeoutReceiver, ICou
 
         try
         {
-            val receivedAction = intent.action
-            if (receivedAction == Intent.ACTION_SEND)
+            if (Intent.ACTION_SEND == intent.action)
             {
-                val thread = Thread {
-                    // 取得したSENDインテントを処理する
-                    val importer = IntentSendImporter()
-                    importer.handleIntent(intent)
-                }
-                thread.start()
+                importReceivedIntent()
             }
         }
         catch (e: Exception)
         {
             e.printStackTrace()
         }
-
-
     }
+
+    private fun importReceivedIntent()
+    {
+        try
+        {
+            val thread = Thread {
+                // 取得したSENDインテントを処理する
+                IntentSendImporter(this.applicationContext, intent).start()
+                val title = intent.getStringExtra(Intent.EXTRA_SUBJECT)
+                runOnUiThread {
+                    Toast.makeText(this, getString(R.string.data_imported) + title, Toast.LENGTH_SHORT).show()
+                }
+            }
+            thread.start()
+        }
+        catch (e: Exception)
+        {
+            e.printStackTrace()
+        }
+    }
+
+
 
     /**
      *

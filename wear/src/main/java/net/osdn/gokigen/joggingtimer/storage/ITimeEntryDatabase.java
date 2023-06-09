@@ -2,6 +2,8 @@ package net.osdn.gokigen.joggingtimer.storage;
 
 import android.database.Cursor;
 
+import java.util.ArrayList;
+
 /**
  *    ITimeEntryDatabase
  *
@@ -30,5 +32,8 @@ public interface ITimeEntryDatabase
     void finishTimeData(long indexId, long startTime, long endTime);
 
     long createTimeEntryModelData(int lap, long totalTime, String memo);
+
+    long createImportedTimeEntryData(String title, String memo, long totalTime, ArrayList<Long> lapTimeList);
+
     int updateTimeEntryData(long detailId, long totalTime);
 }
