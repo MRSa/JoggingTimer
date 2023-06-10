@@ -1,6 +1,7 @@
 package net.osdn.gokigen.joggingtimer.stopwatch
 
 import android.content.Intent
+import android.content.Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
@@ -79,16 +80,14 @@ class MainActivity : AppCompatActivity(), IClickCallback, ITimeoutReceiver, ICou
             e.printStackTrace()
         }
 
-        try
-        {
-            if (Intent.ACTION_SEND == intent.action)
-            {
-                importReceivedIntent()
-            }
-        }
-        catch (e: Exception)
-        {
-            e.printStackTrace()
+    }
+
+    override fun onNewIntent(intent: Intent?)
+    {
+        super.onNewIntent(intent)
+        Log.v(TAG, "onNewIntent")
+        runOnUiThread {
+            Toast.makeText(this, "onNewIntent" + title, Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -102,6 +101,8 @@ class MainActivity : AppCompatActivity(), IClickCallback, ITimeoutReceiver, ICou
                 val title = intent.getStringExtra(Intent.EXTRA_SUBJECT)
                 runOnUiThread {
                     Toast.makeText(this, getString(R.string.data_imported) + title, Toast.LENGTH_SHORT).show()
+                    //setResult(RESULT_OK, intent)
+                    finish()
                 }
             }
             thread.start()
@@ -111,8 +112,6 @@ class MainActivity : AppCompatActivity(), IClickCallback, ITimeoutReceiver, ICou
             e.printStackTrace()
         }
     }
-
-
 
     /**
      *
@@ -126,20 +125,40 @@ class MainActivity : AppCompatActivity(), IClickCallback, ITimeoutReceiver, ICou
         val action = intent.action
         Log.v(TAG, "onResume() : $action")
         var isStartTimer = false
+
         if (action != null)
         {
-            if (action == "com.google.android.wearable.action.STOPWATCH")
+            try
             {
-                isStartTimer = true
-            }
-            else if (action == "vnd.google.fitness.TRACK")
-            {
-                if (intent.getStringExtra("actionStatus") == "ActiveActionStatus")
+                if (Intent.ACTION_SEND == action)
+                {
+                    val flags = intent.flags
+                    val checkFlags = FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY // + FLAG_ACTIVITY_BROUGHT_TO_FRONT
+                    Log.v(TAG, "INTENT : $intent")
+                    if ((flags.and(checkFlags)) == 0)
+                    {
+                        Log.v(TAG, " IMPORT DATA ")
+                        importReceivedIntent()
+                    }
+                }
+                else if (action == "com.google.android.wearable.action.STOPWATCH")
                 {
                     isStartTimer = true
                 }
+                else if (action == "vnd.google.fitness.TRACK")
+                {
+                    if (intent.getStringExtra("actionStatus") == "ActiveActionStatus")
+                    {
+                        isStartTimer = true
+                    }
+                }
+            }
+            catch (e: Exception)
+            {
+                e.printStackTrace()
             }
         }
+
         isLaptimeView = controller.displayMode
         currentReferenceId = controller.referenceTimerSelection
         controller.setupReferenceData()

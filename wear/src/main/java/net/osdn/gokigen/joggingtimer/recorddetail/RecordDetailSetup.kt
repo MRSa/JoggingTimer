@@ -305,16 +305,20 @@ class RecordDetailSetup internal constructor(
         }
 
         // Intent発行(ACTION_SEND)
+        shareIntentActionSend(title, dataToExport.toString())
+        //shareIntentActionCreateNote(title, dataToExport.toString())
+    }
+
+    private fun shareIntentActionSend(title: String, message: String)
+    {
         try
         {
             val sendIntent = Intent().apply {
                 action = Intent.ACTION_SEND  // NoteIntents.ACTION_CREATE_NOTE
                 type = "text/plain"
                 putExtra(Intent.EXTRA_SUBJECT, title)
-                putExtra(Intent.EXTRA_TEXT, dataToExport.toString())
+                putExtra(Intent.EXTRA_TEXT, message)
             }
-            //val shareIntent = Intent.createChooser(sendIntent, null)
-            //activity.startActivity(shareIntent)
             activity.startActivity(sendIntent)
             Log.v(TAG, "<<< SEND INTENT >>> : $title")
         }
@@ -324,6 +328,26 @@ class RecordDetailSetup internal constructor(
         }
     }
 
+/*
+    private fun shareIntentActionCreateNote(title: String, message: String)
+    {
+        try
+        {
+            val sendIntent = Intent().apply {
+                action = NoteIntents.ACTION_CREATE_NOTE
+                type = "text/plain"
+                putExtra(NoteIntents.EXTRA_NAME, title)
+                putExtra(NoteIntents.EXTRA_TEXT, message)
+            }
+            activity.startActivity(sendIntent)
+            Log.v(TAG, "<<< SEND INTENT(NOTE) >>> : $title")
+        }
+        catch (e: Exception)
+        {
+            e.printStackTrace()
+        }
+    }
+*/
     class EditIndexData(val title: String, val icon: Int)
     {
         fun title(): String
