@@ -6,6 +6,8 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
+import androidx.annotation.NonNull;
+
 import net.osdn.gokigen.joggingtimer.R;
 
 /**
@@ -30,6 +32,7 @@ public class  ButtonClickListener implements View.OnClickListener, View.OnLongCl
     @Override
     public void onClick(View v)
     {
+        //Log.v(TAG, "onClick()");
         int id = v.getId();
         if (callback != null)
         {
@@ -96,19 +99,16 @@ public class  ButtonClickListener implements View.OnClickListener, View.OnLongCl
     }
 
     @Override
-    public void writeToParcel(Parcel dest, int flags)
+    public void writeToParcel(@NonNull Parcel dest, int flags)
     {
         Log.v(TAG, "writeToParcel() ");
     }
-    public static final Parcelable.Creator<ButtonClickListener> CREATOR = new Parcelable.Creator<ButtonClickListener>()
-    {
-        public ButtonClickListener createFromParcel(Parcel in)
-        {
+    public static final Parcelable.Creator<ButtonClickListener> CREATOR = new Parcelable.Creator<>() {
+        public ButtonClickListener createFromParcel(Parcel in) {
             return (new ButtonClickListener(in));
         }
 
-        public ButtonClickListener[] newArray(int size)
-        {
+        public ButtonClickListener[] newArray(int size) {
             return (new ButtonClickListener[size]);
         }
     };
@@ -134,6 +134,12 @@ public class  ButtonClickListener implements View.OnClickListener, View.OnLongCl
             Log.v(TAG, "onTouch()");
             return (v.performClick());
         }
+        if (id == R.id.laptime_list_area)
+        {
+            Log.v(TAG, "onTouch() : List Area");
+            return (v.performClick());
+        }
+
         return (false);
     }
 }

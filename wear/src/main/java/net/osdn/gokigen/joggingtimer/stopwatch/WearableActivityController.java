@@ -6,7 +6,6 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.os.Vibrator;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.ImageButton;
 import android.widget.ListView;
@@ -32,6 +31,7 @@ import static net.osdn.gokigen.joggingtimer.utilities.SelectReferenceViewModeDia
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.preference.PreferenceManager;
 
 /**
  *
@@ -99,7 +99,7 @@ class WearableActivityController implements IWearableActivityControl, ITimeEntry
         // バイブレータをつかまえる
         vibrator = (Vibrator) activity.getSystemService(VIBRATOR_SERVICE);
 
-        //// パワーマネージャをつかまえる
+        // パワーマネージャをつかまえる
         //powerManager = (PowerManager) activity.getSystemService(POWER_SERVICE);
     }
 
@@ -178,11 +178,13 @@ class WearableActivityController implements IWearableActivityControl, ITimeEntry
             ListView lap = activity.findViewById(R.id.laptime_list_area);
             //lap.setOnClickListener(clickListener);
             lap.setOnLongClickListener(clickListener);
+            //lap.setOnTouchListener(clickListener);
 
             LapTimeGraphView graphView = activity.findViewById(R.id.graph_area);
             graphView.setOnTouchListener(clickListener);
             graphView.setOnClickListener(clickListener);
             graphView.setOnLongClickListener(clickListener);
+
         }
         catch (Exception e)
         {
@@ -294,7 +296,6 @@ class WearableActivityController implements IWearableActivityControl, ITimeEntry
             e.printStackTrace();
         }
     }
-
 
     @Override
     public void addTimeStamp(long count, long lapTime, long diffTime)
@@ -475,7 +476,6 @@ class WearableActivityController implements IWearableActivityControl, ITimeEntry
             e.printStackTrace();
         }
     }
-
 
     @Override
     public void createIndex(final String title, final long startTime)

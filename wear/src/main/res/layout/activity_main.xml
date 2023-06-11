@@ -81,6 +81,7 @@
             android:layout_marginStart="@dimen/indicator_layout_margin"
             android:layout_marginEnd="@dimen/indicator_layout_margin"
             app:layout_constraintDimensionRatio="h,10:3"
+            android:nestedScrollingEnabled = "true"
             android:background="@color/background_color"
             app:layout_constraintTop_toBottomOf="@id/sub_counter1"
             android:transcriptMode="alwaysScroll"

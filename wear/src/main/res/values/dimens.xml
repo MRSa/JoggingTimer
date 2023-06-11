@@ -18,6 +18,9 @@
     <dimen name="header_top_padding">0dp</dimen>
     <dimen name="header_bottom_padding">0dp</dimen>
 
+    <dimen name="lap_top_padding">0dp</dimen>
+    <dimen name="lap_bottom_padding">0dp</dimen>
+
     <dimen name="detail_top_padding">0dp</dimen>
     <dimen name="detail_bottom_padding">0dp</dimen>
     <dimen name="recordlist_top_padding">0dp</dimen>

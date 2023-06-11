@@ -82,15 +82,6 @@ class MainActivity : AppCompatActivity(), IClickCallback, ITimeoutReceiver, ICou
 
     }
 
-    override fun onNewIntent(intent: Intent?)
-    {
-        super.onNewIntent(intent)
-        Log.v(TAG, "onNewIntent")
-        runOnUiThread {
-            Toast.makeText(this, "onNewIntent" + title, Toast.LENGTH_SHORT).show()
-        }
-    }
-
     private fun importReceivedIntent()
     {
         try
