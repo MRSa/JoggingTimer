@@ -2,13 +2,13 @@ apply plugin: 'com.android.application'
 apply plugin: 'org.jetbrains.kotlin.android'
 
 android {
-    compileSdkVersion 33
+    compileSdkVersion 34
     defaultConfig {
         applicationId "net.osdn.gokigen.joggingtimer"
         minSdkVersion 23
-        targetSdkVersion 33
-        versionCode 100101
-        versionName "1.1.0"
+        targetSdkVersion 34
+        versionCode 1001001
+        versionName "1.1.1"
     }
     buildTypes {
         release {
