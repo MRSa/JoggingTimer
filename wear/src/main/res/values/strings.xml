@@ -3,6 +3,7 @@
     <string name="app_name">JoggingTimer</string>
     <string name="result_list">Records</string>
     <string name="result_detail">Detail</string>
+    <string name="settings">Settings</string>
     <string name="confirmation">Confirmation</string>
     <string name="main">JoggingTimer</string>
     <string name="app_title">Jogging Timer</string>
@@ -36,4 +37,7 @@
     <string name="description_start_button">Start</string>
     <string name="description_stop_button">Stop</string>
     <string name="description_time_counter">Time</string>
+    <string name="permission_not_granted">Permissions not granted by the user.</string>
+    <string name="channel_name">JoggingTimer</string>
+    <string name="channel_description">Running</string>
 </resources>
