@@ -17,7 +17,7 @@ class MyTimerCounter internal constructor() : ITimerCounter, ITimeoutReceiver, I
     private var currentTimer = mutableLongStateOf(0)
     private var currentLapCount = mutableIntStateOf(0)
     private var referenceTimeId = 0
-    private var elapsedTime: MutableList<Long>
+    private var lapTime: MutableList<Long>
     private var referenceTimeA: List<Long>? = null
     private var referenceTimeB: List<Long>? = null
     private var referenceTimeC: List<Long>? = null
@@ -28,7 +28,7 @@ class MyTimerCounter internal constructor() : ITimerCounter, ITimeoutReceiver, I
 
     init
     {
-        elapsedTime = ArrayList()
+        lapTime = ArrayList()
         currentLapCount.intValue = 0
         currentTimer.longValue = 0L
     }
@@ -74,8 +74,8 @@ class MyTimerCounter internal constructor() : ITimerCounter, ITimeoutReceiver, I
         {
             startTime = System.currentTimeMillis()
             stopTime = 0L
-            elapsedTime.clear()
-            elapsedTime.add(startTime)
+            lapTime.clear()
+            lapTime.add(startTime)
             currentTimer.longValue = startTime
             currentLapCount.intValue = 1
             counterStatus.value = ICounterStatus.START
@@ -90,7 +90,7 @@ class MyTimerCounter internal constructor() : ITimerCounter, ITimeoutReceiver, I
         if (counterStatus.value == ICounterStatus.START)
         {
             timeToSet = System.currentTimeMillis()
-            elapsedTime.add(timeToSet)
+            lapTime.add(timeToSet)
             ++(currentLapCount.intValue)
         }
         return timeToSet
@@ -101,7 +101,7 @@ class MyTimerCounter internal constructor() : ITimerCounter, ITimeoutReceiver, I
         if (counterStatus.value == ICounterStatus.START)
         {
             stopTime = System.currentTimeMillis()
-            elapsedTime.add(stopTime)
+            lapTime.add(stopTime)
             ++(currentLapCount.intValue)
             counterStatus.value = ICounterStatus.FINISHED
         }
@@ -116,13 +116,13 @@ class MyTimerCounter internal constructor() : ITimerCounter, ITimeoutReceiver, I
             stopTime = 0L
             currentTimer.longValue = 0L
             currentLapCount.intValue = 0
-            elapsedTime.clear()
+            lapTime.clear()
             counterStatus.value = ICounterStatus.STOP
         }
         myTimer.forceStop()
     }
 
-    override fun getElapsedCount(): Int
+    override fun getLapTimeCount(): Int
     {
         return (currentLapCount.intValue)
     }
@@ -145,26 +145,26 @@ class MyTimerCounter internal constructor() : ITimerCounter, ITimeoutReceiver, I
         }
     }
 
-    override fun getElapsedTime(lapCount: Int): Long
+    override fun getLapTime(lapCount: Int): Long
     {
         try
         {
-            return if (lapCount < 0) 0 else elapsedTime[lapCount] - startTime
+            return if (lapCount < 0) 0 else lapTime[lapCount] - startTime
         }
         catch (e: Exception)
         {
             e.printStackTrace()
         }
-        return getLastElapsedTime()
+        return getLastLapTime()
     }
 
-    override fun getLastElapsedTime(): Long
+    override fun getLastLapTime(): Long
     {
         try
         {
-            if (elapsedTime.size > 0)
+            if (lapTime.size > 0)
             {
-                return (elapsedTime[elapsedTime.size - 1] - startTime)
+                return (lapTime[lapTime.size - 1] - startTime)
             }
         }
         catch (e: Exception)
@@ -174,14 +174,14 @@ class MyTimerCounter internal constructor() : ITimerCounter, ITimeoutReceiver, I
         return 0L
     }
 
-    override fun getCurrentElapsedTime(): Long
+    override fun getCurrentLapTime(): Long
     {
         val currentTime = System.currentTimeMillis()
         try
         {
-            if (elapsedTime.size > 0)
+            if (lapTime.size > 0)
             {
-                return currentTime - elapsedTime[elapsedTime.size - 1]
+                return currentTime - lapTime[lapTime.size - 1]
             }
         }
         catch (e: Exception)
@@ -212,7 +212,7 @@ class MyTimerCounter internal constructor() : ITimerCounter, ITimeoutReceiver, I
     }
     override fun getLapTimeList(): List<Long>
     {
-        return elapsedTime
+        return lapTime
     }
 
     override fun setCallback(callback: ICounterStatusNotify)
@@ -230,9 +230,9 @@ class MyTimerCounter internal constructor() : ITimerCounter, ITimeoutReceiver, I
             myTimer.startTimer()
             Log.v(TAG, "pastTime : $pastTime")
             this.startTime = startTime
-            elapsedTime = ArrayList(timelist)
+            lapTime = ArrayList(timelist)
             stopTime = 0L
-            currentLapCount.intValue = elapsedTime.size
+            currentLapCount.intValue = lapTime.size
             counterStatus.value = ICounterStatus.START
             callback?.counterStatusChanged(true)
         }

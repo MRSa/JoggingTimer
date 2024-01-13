@@ -15,7 +15,7 @@ import net.osdn.ja.gokigen.wearos.timerapp.counter.TimeStringConvert
 fun MainCounter(counterManager: ITimerCounter)
 {
     val totalTimeValue = counterManager.getPastTime() //- counterManager.getStartTime()
-    val lapTimeValue = counterManager.getPastTime() - if (counterManager.getLastElapsedTime() <= 0 ) { 0 } else { counterManager.getLastElapsedTime() }
+    val lapTimeValue = counterManager.getPastTime() - if (counterManager.getLastLapTime() <= 0 ) { 0 } else { counterManager.getLastLapTime() }
     val finishTimeValue = counterManager.getStopTime() - counterManager.getStartTime()
     val timeString = if (counterManager.getCounterMode()) {
         // メインカウンタはトータル時間を表示する
@@ -40,7 +40,7 @@ fun MainCounter(counterManager: ITimerCounter)
         when (counterManager.getCurrentCountStatus()) {
             ICounterStatus.START -> {
                 // 実行中
-                "[${counterManager.getElapsedCount()}] ${TimeStringConvert.getTimeString(lapTimeValue)}"
+                "[${counterManager.getLapTimeCount()}] ${TimeStringConvert.getTimeString(lapTimeValue)}"
             }
             ICounterStatus.STOP -> {
                 // 開始前
@@ -48,7 +48,7 @@ fun MainCounter(counterManager: ITimerCounter)
             }
             ICounterStatus.FINISHED -> {
                 // カウント終了
-                "[${counterManager.getElapsedCount()}] ${TimeStringConvert.getTimeString(lapTimeValue)}"
+                "[${counterManager.getLapTimeCount()}] ${TimeStringConvert.getTimeString(lapTimeValue)}"
             }
         }
     }

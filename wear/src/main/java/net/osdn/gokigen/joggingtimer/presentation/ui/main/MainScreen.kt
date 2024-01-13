@@ -105,7 +105,7 @@ fun MainScreen(navController: NavHostController, counterManager: ITimerCounter)
                 }
 
                 // ラップタイム一覧の表示
-                LapTimeList(navController)
+                LapTimeList(counterManager)
 
                 // 現在の状態によって、サブボタンの表示を切り替える
                 when (counterManager.getCurrentCountStatus())

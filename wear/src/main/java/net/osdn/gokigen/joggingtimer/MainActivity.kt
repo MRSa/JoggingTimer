@@ -24,7 +24,7 @@ import net.osdn.gokigen.joggingtimer.stopwatch.timer.ICounterStatusNotify
 class MainActivity : ComponentActivity(), ICounterStatusNotify
 {
     private lateinit var rootComponent : ViewRoot
-    //private var pendingStart = false
+    private var pendingStart = false
     //private var stopTrigger: ITimerStopTrigger? = null
 
     /**
@@ -182,11 +182,11 @@ class MainActivity : ComponentActivity(), ICounterStatusNotify
             }
         }
 
-        //AppSingleton.controller.setupReferenceData()
-        //if (isStartTimer)
-        //{
-        //    pendingStart = true
-        //}
+        AppSingleton.controller.setupReferenceData()
+        if (isStartTimer)
+        {
+            pendingStart = true
+        }
     }
 
     /**
@@ -239,18 +239,18 @@ class MainActivity : ComponentActivity(), ICounterStatusNotify
     {
         try
         {
-            Log.v(TAG, "counterStatusChanged($forceStartTimer)")
+            Log.v(TAG, "counterStatusChanged($forceStartTimer),  pendingStart:v$pendingStart")
             if (forceStartTimer)
             {
                 AppSingleton.timerCounter.start()
             }
-            //runOnUiThread {
-            //    if (pendingStart)
-            //    {
-            //        AppSingleton.timerCounter.start()
-            //        pendingStart = false
-            //    }
-            //}
+            runOnUiThread {
+                if (pendingStart)
+                {
+                    AppSingleton.timerCounter.start()
+                    pendingStart = false
+                }
+            }
         }
         catch (e: Exception)
         {

@@ -11,12 +11,12 @@ interface ITimerCounter
     fun stop()
     fun timeStamp(): Long
     fun reset()
-    fun getElapsedCount(): Int
+    fun getLapTimeCount(): Int
     fun getPastTime(): Long
 
-    fun getElapsedTime(lapCount: Int): Long
-    fun getLastElapsedTime(): Long
-    fun getCurrentElapsedTime(): Long
+    fun getLapTime(lapCount: Int): Long
+    fun getLastLapTime(): Long
+    fun getCurrentLapTime(): Long
     fun getStartTime(): Long
     fun getStopTime(): Long
     fun getLapTimeList(): List<Long>
