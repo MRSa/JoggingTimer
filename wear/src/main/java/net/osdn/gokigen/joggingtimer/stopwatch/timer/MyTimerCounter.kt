@@ -105,21 +105,6 @@ class MyTimerCounter internal constructor() : ITimerCounter, ITimeoutReceiver, I
         }
     }
 
-    private fun appendRecordDatabase(lapCount: Int, lapTime: Long)
-    {
-        try
-        {
-            //val refLapTime = getReferenceLapTime(lapCount)
-            //val diffTime = if (refLapTime == 0L) { 0L } else { (getCurrentLapTime() - refLapTime) }
-            AppSingleton.controller.appendTimeData(lapTime)
-        }
-        catch (e: Exception)
-        {
-            e.printStackTrace()
-        }
-    }
-
-
     override fun timeStamp(): Long
     {
         var timeToSet: Long = 0
@@ -129,8 +114,8 @@ class MyTimerCounter internal constructor() : ITimerCounter, ITimeoutReceiver, I
             lapTime.add(timeToSet)
             ++(currentLapCount.intValue)
 
-            appendRecordDatabase(currentLapCount.intValue, timeToSet)
-            //AppSingleton.controller.appendTimeData()
+            AppSingleton.controller.appendTimeData(timeToSet)
+
             executeUserFeedback(ICounterStatus.LAPTIME)
 
         }
