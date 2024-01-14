@@ -15,6 +15,7 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:fullBackupContent="true"
+        android:enableOnBackInvokedCallback="true"
         android:name=".AppSingleton"
         android:theme="@style/AppTheme">
         <uses-library

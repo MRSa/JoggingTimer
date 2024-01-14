@@ -2,5 +2,5 @@ package net.osdn.gokigen.joggingtimer.stopwatch.timer
 
 enum class ICounterStatus
 {
-    STOP, START, FINISHED
+    STOP, START, LAPTIME, FINISHED
 }

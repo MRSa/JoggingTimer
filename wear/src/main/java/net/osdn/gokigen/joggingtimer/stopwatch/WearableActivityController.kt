@@ -4,16 +4,19 @@ import android.annotation.SuppressLint
 import android.content.SharedPreferences
 import android.os.Build
 import android.os.VibrationEffect
+import android.os.VibrationEffect.DEFAULT_AMPLITUDE
 import android.os.Vibrator
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.preference.PreferenceManager
+import net.osdn.gokigen.joggingtimer.presentation.ui.list.ResultListItems
 import net.osdn.gokigen.joggingtimer.stopwatch.laptime.ILapTimeHolder
 import net.osdn.gokigen.joggingtimer.stopwatch.laptime.LapTimeItems
 import net.osdn.gokigen.joggingtimer.storage.ITimeEntryDatabase
 import net.osdn.gokigen.joggingtimer.storage.ITimeEntryDatabaseCallback
 import net.osdn.gokigen.joggingtimer.storage.TimeEntryDatabaseFactory
 import net.osdn.gokigen.joggingtimer.storage.contract.TimeEntryData
+import net.osdn.gokigen.joggingtimer.storage.contract.TimeEntryIndex
 
 /**
  *
@@ -31,7 +34,7 @@ class WearableActivityController : IWearableActivityControl, ITimeEntryDatabaseC
     private var isReadyDatabase = false
     private var pendingLoadReference = false
     private var recordingIndexId: Long = -1
-    private var lapTimeHolder: ILapTimeHolder? = null
+    //private var lapTimeHolder: ILapTimeHolder? = null
     private var vibrator: Vibrator? = null
     //private PowerManager powerManager = null;
 
@@ -189,7 +192,9 @@ class WearableActivityController : IWearableActivityControl, ITimeEntryDatabaseC
             val thread = Thread {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
                 {
-                    vibrator?.vibrate(VibrationEffect.createPredefined(VibrationEffect.EFFECT_HEAVY_CLICK))
+                    val effect = VibrationEffect.createOneShot(duration.toLong(), DEFAULT_AMPLITUDE)
+                    vibrator?.vibrate(effect)
+                    //vibrator?.vibrate(VibrationEffect.createPredefined(VibrationEffect.EFFECT_HEAVY_CLICK))
                 }
                 else
                 {
@@ -250,7 +255,7 @@ class WearableActivityController : IWearableActivityControl, ITimeEntryDatabaseC
             e.printStackTrace()
         }
     }
-
+/*
     override fun addTimeStamp(count: Long, lapTime: Long, diffTime: Long)
     {
         if (lapTimeHolder != null)
@@ -276,7 +281,7 @@ class WearableActivityController : IWearableActivityControl, ITimeEntryDatabaseC
         }
         return count
     }
-
+*/
     override fun getReferenceTimerSelection(): Int
     {
         try
@@ -355,6 +360,39 @@ class WearableActivityController : IWearableActivityControl, ITimeEntryDatabaseC
         }
     }
 
+    override fun getCounterRecordList(): List<ResultListItems>
+    {
+        val recordList: ArrayList<ResultListItems> = ArrayList()
+        try
+        {
+            val cursor = database?.allIndexData
+            if (cursor != null)
+            {
+                while (cursor.moveToNext())
+                {
+                    val indexIdNumber = cursor.getColumnIndex(TimeEntryData.EntryData.COLUMN_NAME_TIME_ENTRY)
+                    val titleNumber = cursor.getColumnIndex(TimeEntryIndex.EntryIndex.COLUMN_NAME_TITLE)
+                    val memoNumber = cursor.getColumnIndex(TimeEntryIndex.EntryIndex.COLUMN_NAME_MEMO)
+                    val iconIdNumber = cursor.getColumnIndex(TimeEntryIndex.EntryIndex.COLUMN_NAME_ICON_ID)
+
+                    val indexId = if (indexIdNumber > 0) { cursor.getLong(indexIdNumber) } else { -1 }
+                    val title = if (titleNumber > 0) { cursor.getString(titleNumber) } else { "" }
+                    val memo = if (memoNumber > 0) { cursor.getString(memoNumber) } else { "" }
+                    val iconId = if (iconIdNumber > 0) { cursor.getInt(iconIdNumber) } else { -1 }
+
+                    Log.v(TAG, " Record ($indexId, $title, $memo, $iconId)")
+
+                    recordList.add(ResultListItems(indexId, title, memo, iconId))
+                }
+            }
+        }
+        catch (e: Exception)
+        {
+            e.printStackTrace()
+        }
+        return (recordList)
+    }
+
     @SuppressLint("Range")
     private fun loadReferenceData()
     {
@@ -429,7 +467,7 @@ class WearableActivityController : IWearableActivityControl, ITimeEntryDatabaseC
         val thread = Thread {
             if (isReadyDatabase) {
                 try {
-                    database!!.createIndexData(title, memo, icon, startTime)
+                    database?.createIndexData(title, memo, icon, startTime)
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }
@@ -443,7 +481,7 @@ class WearableActivityController : IWearableActivityControl, ITimeEntryDatabaseC
         val thread = Thread {
             if (isReadyDatabase) {
                 try {
-                    database!!.appendTimeData(recordingIndexId, elapsedTime)
+                    database?.appendTimeData(recordingIndexId, elapsedTime)
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }
@@ -457,7 +495,7 @@ class WearableActivityController : IWearableActivityControl, ITimeEntryDatabaseC
         val thread = Thread {
             if (isReadyDatabase) {
                 try {
-                    database!!.finishTimeData(recordingIndexId, startTime, endTime)
+                    database?.finishTimeData(recordingIndexId, startTime, endTime)
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }

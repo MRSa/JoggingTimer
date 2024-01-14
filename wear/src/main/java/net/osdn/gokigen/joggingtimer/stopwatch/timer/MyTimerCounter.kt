@@ -4,7 +4,11 @@ import android.util.Log
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
+import net.osdn.gokigen.joggingtimer.AppSingleton
 import net.osdn.gokigen.joggingtimer.stopwatch.IDatabaseReloadCallback
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 /**
  * My Timer counter
@@ -78,11 +82,43 @@ class MyTimerCounter internal constructor() : ITimerCounter, ITimeoutReceiver, I
             lapTime.add(startTime)
             currentTimer.longValue = startTime
             currentLapCount.intValue = 1
+            executeUserFeedback(ICounterStatus.START)
             counterStatus.value = ICounterStatus.START
+            createRecordDatabase()
             myTimer.startTimer()
-            Log.v(TAG, "start() startTime : ${startTime}")
+            Log.v(TAG, "start() startTime : $startTime")
         }
     }
+
+    private fun createRecordDatabase()
+    {
+        try
+        {
+            val date = Date()
+            val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US)
+            val title = simpleDateFormat.format(date)
+            AppSingleton.controller.createIndex(title, startTime)
+        }
+        catch (e: Exception)
+        {
+            e.printStackTrace()
+        }
+    }
+
+    private fun appendRecordDatabase(lapCount: Int, lapTime: Long)
+    {
+        try
+        {
+            //val refLapTime = getReferenceLapTime(lapCount)
+            //val diffTime = if (refLapTime == 0L) { 0L } else { (getCurrentLapTime() - refLapTime) }
+            AppSingleton.controller.appendTimeData(lapTime)
+        }
+        catch (e: Exception)
+        {
+            e.printStackTrace()
+        }
+    }
+
 
     override fun timeStamp(): Long
     {
@@ -92,6 +128,11 @@ class MyTimerCounter internal constructor() : ITimerCounter, ITimeoutReceiver, I
             timeToSet = System.currentTimeMillis()
             lapTime.add(timeToSet)
             ++(currentLapCount.intValue)
+
+            appendRecordDatabase(currentLapCount.intValue, timeToSet)
+            //AppSingleton.controller.appendTimeData()
+            executeUserFeedback(ICounterStatus.LAPTIME)
+
         }
         return timeToSet
     }
@@ -103,10 +144,33 @@ class MyTimerCounter internal constructor() : ITimerCounter, ITimeoutReceiver, I
             stopTime = System.currentTimeMillis()
             lapTime.add(stopTime)
             ++(currentLapCount.intValue)
+            executeUserFeedback(ICounterStatus.FINISHED)
             counterStatus.value = ICounterStatus.FINISHED
+            AppSingleton.controller.finishTimeData(startTime = startTime, endTime = stopTime)
         }
         myTimer.forceStop()
     }
+
+    private fun executeUserFeedback(counterStatus: ICounterStatus)
+    {
+        when (counterStatus) {
+            ICounterStatus.FINISHED -> {
+                AppSingleton.controller.timerStarted(false)
+                AppSingleton.controller.vibrate(120)
+            }
+            ICounterStatus.START -> {
+                AppSingleton.controller.timerStarted(true)
+                AppSingleton.controller.vibrate(120)
+            }
+            ICounterStatus.LAPTIME -> {
+                AppSingleton.controller.vibrate(50)
+            }
+            ICounterStatus.STOP -> {
+                AppSingleton.controller.vibrate(50)
+            }
+        }
+    }
+
 
     override fun reset()
     {
@@ -131,6 +195,10 @@ class MyTimerCounter internal constructor() : ITimerCounter, ITimeoutReceiver, I
     {
         return when (getCurrentCountStatus()) {
             ICounterStatus.START -> {
+                // 実行中...タイマースタートからの時間を返す
+                (currentTimer.longValue - startTime)
+            }
+            ICounterStatus.LAPTIME -> {
                 // 実行中...タイマースタートからの時間を返す
                 (currentTimer.longValue - startTime)
             }

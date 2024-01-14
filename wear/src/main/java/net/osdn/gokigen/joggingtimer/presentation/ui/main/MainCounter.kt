@@ -24,6 +24,10 @@ fun MainCounter(counterManager: ITimerCounter)
                 // 実行中
                 TimeStringConvert.getTimeString(totalTimeValue)
             }
+            ICounterStatus.LAPTIME -> {
+                // 実行中(その2)
+                TimeStringConvert.getTimeString(totalTimeValue)
+            }
             ICounterStatus.STOP -> {
                 // 開始前
                 TimeStringConvert.getTimeString(0)
@@ -40,6 +44,10 @@ fun MainCounter(counterManager: ITimerCounter)
         when (counterManager.getCurrentCountStatus()) {
             ICounterStatus.START -> {
                 // 実行中
+                "[${counterManager.getLapTimeCount()}] ${TimeStringConvert.getTimeString(lapTimeValue)}"
+            }
+            ICounterStatus.LAPTIME -> {
+                // 実行中(その2)
                 "[${counterManager.getLapTimeCount()}] ${TimeStringConvert.getTimeString(lapTimeValue)}"
             }
             ICounterStatus.STOP -> {

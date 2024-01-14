@@ -29,6 +29,10 @@ fun SubCounter(counterManager: ITimerCounter)
                     // 実行中
                     "[${counterManager.getLapTimeCount()}] ${TimeStringConvert.getTimeString(lapTimeValue)}"
                 }
+                ICounterStatus.LAPTIME -> {
+                    // 実行中(その２)
+                    "[${counterManager.getLapTimeCount()}] ${TimeStringConvert.getTimeString(lapTimeValue)}"
+                }
                 ICounterStatus.STOP -> {
                     // 開始前
                     TimeStringConvert.getTimeString(0)
@@ -44,6 +48,10 @@ fun SubCounter(counterManager: ITimerCounter)
             // サブカウンタはトータル時間を表示する
             when (counterManager.getCurrentCountStatus()) {
                 ICounterStatus.START -> {
+                    // 実行中
+                    TimeStringConvert.getTimeString(totalTimeValue)
+                }
+                ICounterStatus.LAPTIME -> {
                     // 実行中
                     TimeStringConvert.getTimeString(totalTimeValue)
                 }

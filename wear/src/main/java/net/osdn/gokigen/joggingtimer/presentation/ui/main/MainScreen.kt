@@ -100,6 +100,7 @@ fun MainScreen(navController: NavHostController, counterManager: ITimerCounter)
                 when (counterManager.getCurrentCountStatus())
                 {
                     ICounterStatus.START -> BtnStart(counterManager) // 実行中
+                    ICounterStatus.LAPTIME -> BtnStart(counterManager) // 実行中(その2)
                     ICounterStatus.STOP -> BtnStop(navController, counterManager) // 開始前
                     ICounterStatus.FINISHED -> BtnFinished(navController, counterManager)  // 終了
                 }
@@ -111,6 +112,7 @@ fun MainScreen(navController: NavHostController, counterManager: ITimerCounter)
                 when (counterManager.getCurrentCountStatus())
                 {
                     ICounterStatus.START -> BtnSubStart(counterManager) // 実行中
+                    ICounterStatus.LAPTIME -> BtnSubStart(counterManager) // 実行中 (その2)
                     ICounterStatus.STOP -> BtnSubStop(navController, counterManager) // 開始前
                     ICounterStatus.FINISHED -> BtnSubFinished(navController, counterManager)  // 終了
                 }
