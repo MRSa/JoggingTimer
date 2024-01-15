@@ -1,13 +1,25 @@
 package net.osdn.gokigen.joggingtimer.presentation.ui.main
 
+import android.util.Log
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import androidx.wear.compose.material.Button
+import androidx.wear.compose.material.ButtonDefaults
 import net.osdn.gokigen.joggingtimer.R
 import net.osdn.gokigen.joggingtimer.stopwatch.timer.ITimerCounter
 
@@ -19,12 +31,21 @@ import net.osdn.gokigen.joggingtimer.stopwatch.timer.ITimerCounter
 @Composable
 fun BtnStop(navController: NavHostController, timerCounter: ITimerCounter)
 {
-    // ストップ状態時のボタン
-    Row(
+    // 計測ストップ状態時のボタン配置
+    Row(modifier = Modifier
+        .padding(horizontal = 10.dp)
+        .fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
         ////////////////////  記録一覧画面へ遷移  ////////////////////
-        IconButton(
+        Button(
+            modifier = Modifier
+                .height(48.dp)
+                .width(48.dp)
+                .padding(2.dp)
+                .background(color = Color.Black),
+            shape = RoundedCornerShape(10.dp),
+            colors = ButtonDefaults.primaryButtonColors(backgroundColor =  Color.Black),
             onClick = { navController.navigate("RecordListScreen") },
             enabled = true,
         ) {
@@ -36,7 +57,14 @@ fun BtnStop(navController: NavHostController, timerCounter: ITimerCounter)
         }
 
         ////////////////////  カウンター表示の切り替え  ////////////////////
-        IconButton(
+        Button(
+            modifier = Modifier
+                .height(48.dp)
+                .width(48.dp)
+                .padding(2.dp)
+                .background(color = Color.Black),
+            shape = RoundedCornerShape(10.dp),
+            colors = ButtonDefaults.primaryButtonColors(backgroundColor =  Color.Black),
             onClick = { timerCounter.toggleCounterMode() },
             enabled = true
         ) {
@@ -48,7 +76,14 @@ fun BtnStop(navController: NavHostController, timerCounter: ITimerCounter)
         }
 
         ////////////////////  カウンターのスタート  ////////////////////
-        IconButton(
+        Button(
+            modifier = Modifier
+                .height(48.dp)
+                .width(48.dp)
+                .padding(2.dp)
+                .background(color = Color.Black),
+            shape = RoundedCornerShape(10.dp),
+            colors = ButtonDefaults.primaryButtonColors(backgroundColor =  Color.Black),
             onClick = { timerCounter.start() },
             enabled = true
         ) {
@@ -61,16 +96,34 @@ fun BtnStop(navController: NavHostController, timerCounter: ITimerCounter)
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun BtnStart(timerCounter: ITimerCounter)
 {
-    // スタート状態時のボタン
-    Row(
-        horizontalArrangement = Arrangement.SpaceBetween
+    // タイム計測実行中時のボタン配置
+    Row(modifier = Modifier
+        .padding(horizontal = 10.dp)
+        .fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween,
     ) {
-        ////////////////////  カウンターのストップ  ////////////////////
-        IconButton(
-            onClick = { timerCounter.stop() },
+        ////////////////////  カウンターのストップ (長押し)  ////////////////////
+        Button(
+            modifier = Modifier
+                .height(48.dp)
+                .width(48.dp)
+                .padding(2.dp)
+                .background(color = Color.Black)
+                .combinedClickable(
+                    enabled = true,
+                    onClick = { },
+                    onLongClick = {
+                        Log.v("STOP", "STOP: onLongClick (2)")
+                        timerCounter.stop()
+                    }
+                ),
+            shape = RoundedCornerShape(10.dp),
+            colors = ButtonDefaults.primaryButtonColors(backgroundColor =  Color.Black),
+            onClick = { },
             enabled = true
         ) {
             Icon(
@@ -81,7 +134,14 @@ fun BtnStart(timerCounter: ITimerCounter)
         }
 
         ////////////////////  カウンター表示の切り替え  ////////////////////
-        IconButton(
+        Button(
+            modifier = Modifier
+                .height(48.dp)
+                .width(48.dp)
+                .padding(2.dp)
+                .background(color = Color.Black),
+            shape = RoundedCornerShape(10.dp),
+            colors = ButtonDefaults.primaryButtonColors(backgroundColor =  Color.Black),
             onClick = { timerCounter.toggleCounterMode() },
             enabled = true
         ) {
@@ -93,7 +153,14 @@ fun BtnStart(timerCounter: ITimerCounter)
         }
 
         ////////////////////  タイムスタンプ記録  ////////////////////
-        IconButton(
+        Button(
+            modifier = Modifier
+                .height(48.dp)
+                .width(48.dp)
+                .padding(2.dp)
+                .background(color = Color.Black),
+            shape = RoundedCornerShape(10.dp),
+            colors = ButtonDefaults.primaryButtonColors(backgroundColor =  Color.Black),
             onClick = { timerCounter.timeStamp() },
             enabled = true
         ) {
@@ -109,12 +176,21 @@ fun BtnStart(timerCounter: ITimerCounter)
 @Composable
 fun BtnFinished(navController: NavHostController, timerCounter: ITimerCounter)
 {
-    // カウントストップ時のボタン
-    Row(
-        horizontalArrangement = Arrangement.SpaceBetween
+    // 計測終了時のボタン
+    Row(modifier = Modifier
+        .padding(horizontal = 10.dp)
+        .fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween,
     ) {
         ////////////////////  記録一覧画面へ遷移  ////////////////////
-        IconButton(
+        Button(
+            modifier = Modifier
+                .height(48.dp)
+                .width(48.dp)
+                .padding(2.dp)
+                .background(color = Color.Black),
+            shape = RoundedCornerShape(10.dp),
+            colors = ButtonDefaults.primaryButtonColors(backgroundColor =  Color.Black),
             onClick = { navController.navigate("RecordListScreen") },
             enabled = true,
         ) {
@@ -126,7 +202,14 @@ fun BtnFinished(navController: NavHostController, timerCounter: ITimerCounter)
         }
 
         ////////////////////  カウンターのリセット  ////////////////////
-        IconButton(
+        Button(
+            modifier = Modifier
+                .height(48.dp)
+                .width(48.dp)
+                .padding(2.dp)
+                .background(color = Color.Black),
+            shape = RoundedCornerShape(10.dp),
+            colors = ButtonDefaults.primaryButtonColors(backgroundColor =  Color.Black),
             onClick = { timerCounter.reset() },
             enabled = true
         ) {
@@ -138,7 +221,14 @@ fun BtnFinished(navController: NavHostController, timerCounter: ITimerCounter)
         }
 
         ////////////////////  カウンターのスタート  ////////////////////
-        IconButton(
+        Button(
+            modifier = Modifier
+                .height(48.dp)
+                .width(48.dp)
+                .padding(2.dp)
+                .background(color = Color.Black),
+            shape = RoundedCornerShape(10.dp),
+            colors = ButtonDefaults.primaryButtonColors(backgroundColor =  Color.Black),
             onClick = { timerCounter.start() },
             enabled = true
         ) {
