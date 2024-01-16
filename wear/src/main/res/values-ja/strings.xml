@@ -41,4 +41,5 @@
     <string name="channel_name">JoggingTimer</string>
     <string name="channel_description">Running</string>
     <string name="record_data_empty">記録データはありません。</string>
+    <string name="notification_description">計測中</string>
 </resources>

@@ -13,7 +13,6 @@ class AppSingleton : Application()
 
         controller = WearableActivityController()
         timerCounter = MyTimerCounter()
-
     }
 
     companion object

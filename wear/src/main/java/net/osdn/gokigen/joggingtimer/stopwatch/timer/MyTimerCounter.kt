@@ -142,10 +142,12 @@ class MyTimerCounter internal constructor() : ITimerCounter, ITimeoutReceiver, I
             ICounterStatus.FINISHED -> {
                 AppSingleton.controller.timerStarted(false)
                 AppSingleton.controller.vibrate(120)
+                AppSingleton.controller.launchNotify(false)  // onGoing Activity (STOP)
             }
             ICounterStatus.START -> {
                 AppSingleton.controller.timerStarted(true)
                 AppSingleton.controller.vibrate(120)
+                AppSingleton.controller.launchNotify(true)  // onGoing Activity (START)
             }
             ICounterStatus.LAPTIME -> {
                 AppSingleton.controller.vibrate(50)
@@ -155,7 +157,6 @@ class MyTimerCounter internal constructor() : ITimerCounter, ITimeoutReceiver, I
             }
         }
     }
-
 
     override fun reset()
     {
@@ -287,6 +288,7 @@ class MyTimerCounter internal constructor() : ITimerCounter, ITimeoutReceiver, I
             stopTime = 0L
             currentLapCount.intValue = lapTime.size
             counterStatus.value = ICounterStatus.START
+            AppSingleton.controller.launchNotify(true) // onGoing Activity (START)
             callback?.counterStatusChanged(true)
         }
         catch (e: Exception)

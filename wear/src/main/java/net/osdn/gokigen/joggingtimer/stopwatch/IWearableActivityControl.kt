@@ -1,5 +1,6 @@
 package net.osdn.gokigen.joggingtimer.stopwatch
 
+import android.content.Context
 import androidx.activity.ComponentActivity
 import net.osdn.gokigen.joggingtimer.presentation.ui.list.ResultListItems
 
@@ -28,7 +29,8 @@ interface IWearableActivityControl
     fun getReferenceTimerSelection(): Int
     fun setReferenceTimerSelection(id: Int)
     fun setupReferenceData()
-
     fun getCounterRecordList(): List<ResultListItems>
+
+    fun launchNotify(isShow: Boolean)
 
 }

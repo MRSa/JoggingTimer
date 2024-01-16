@@ -1,17 +1,28 @@
 package net.osdn.gokigen.joggingtimer.stopwatch
 
+import android.Manifest
 import android.annotation.SuppressLint
+import android.app.PendingIntent
+import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
+import android.content.pm.PackageManager
 import android.os.Build
 import android.os.VibrationEffect
 import android.os.VibrationEffect.DEFAULT_AMPLITUDE
 import android.os.Vibrator
 import android.util.Log
 import androidx.activity.ComponentActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import androidx.preference.PreferenceManager
+import androidx.wear.ongoing.OngoingActivity
+import androidx.wear.ongoing.Status
+import net.osdn.gokigen.joggingtimer.MainActivity
+import net.osdn.gokigen.joggingtimer.MainActivity.Companion.CHANNEL_ID
+import net.osdn.gokigen.joggingtimer.R
 import net.osdn.gokigen.joggingtimer.presentation.ui.list.ResultListItems
-import net.osdn.gokigen.joggingtimer.stopwatch.laptime.ILapTimeHolder
-import net.osdn.gokigen.joggingtimer.stopwatch.laptime.LapTimeItems
 import net.osdn.gokigen.joggingtimer.storage.ITimeEntryDatabase
 import net.osdn.gokigen.joggingtimer.storage.ITimeEntryDatabaseCallback
 import net.osdn.gokigen.joggingtimer.storage.TimeEntryDatabaseFactory
@@ -25,17 +36,15 @@ import net.osdn.gokigen.joggingtimer.storage.contract.TimeEntryIndex
  */
 class WearableActivityController : IWearableActivityControl, ITimeEntryDatabaseCallback, IDataEntry
 {
-    private val PREF_KEY_TIMER_STARTED = "TMR_START"
-    private val PREF_KEY_TIMER_INDEXID = "TMR_INDEX"
+
     private var preferences: SharedPreferences? = null
-    //private val clickListener = ButtonClickListener()
     private var database: ITimeEntryDatabase? = null
     private var dbCallback: IDatabaseReloadCallback? = null
     private var isReadyDatabase = false
     private var pendingLoadReference = false
     private var recordingIndexId: Long = -1
-    //private var lapTimeHolder: ILapTimeHolder? = null
     private var vibrator: Vibrator? = null
+    private lateinit var myActivity : ComponentActivity
     //private PowerManager powerManager = null;
 
     init {
@@ -48,11 +57,10 @@ class WearableActivityController : IWearableActivityControl, ITimeEntryDatabaseC
     )
     {
         preferences = PreferenceManager.getDefaultSharedPreferences(activity)
+        this.myActivity = activity
         this.dbCallback = dbCallback
         setupHardwares(activity)
-        setupScreen(activity)
-        setupDatabase(activity, false); // change true if when database file should be cleared.
-        //setupListeners(activity, callback)
+        setupDatabase(activity, false) // change true if when database file should be cleared.
     }
 
     /**
@@ -66,21 +74,6 @@ class WearableActivityController : IWearableActivityControl, ITimeEntryDatabaseC
 
         // パワーマネージャをつかまえる
         //powerManager = (PowerManager) activity.getSystemService(POWER_SERVICE);
-    }
-
-    /**
-     *
-     *
-     */
-    private fun setupScreen(activity: ComponentActivity)
-    {
-        //val mTextView = activity.findViewById<TextView>(R.id.text)
-        //mTextView?.setText(R.string.app_name)
-        //val adapter = LapTimeArrayAdapter(activity.applicationContext, R.layout.column_laptime)
-        //adapter.clearLapTime()
-        //lapTimeHolder = adapter
-        //val lapTimeArea = activity.findViewById<ListView>(R.id.laptime_list_area)
-        //lapTimeArea.adapter = adapter
     }
 
     /**
@@ -106,45 +99,6 @@ class WearableActivityController : IWearableActivityControl, ITimeEntryDatabaseC
         }
         thread.start()
     }
-
-    /**
-     * リスナのセットアップ
-     */
-/*
-    private fun setupListeners(
-        activity: AppCompatActivity,
-        callback: IClickCallback
-    ) {
-        try {
-            clickListener.setCallback(callback)
-            val btn1 = activity.findViewById<ImageButton>(R.id.btn1)
-            btn1.setOnClickListener(clickListener)
-            btn1.setOnLongClickListener(clickListener)
-            val btn2 = activity.findViewById<ImageButton>(R.id.btn2)
-            btn2.setOnClickListener(clickListener)
-            btn2.setOnLongClickListener(clickListener)
-            val btn3 = activity.findViewById<ImageButton>(R.id.btn3)
-            btn3.setOnClickListener(clickListener)
-            btn3.setOnLongClickListener(clickListener)
-            val main = activity.findViewById<TextView>(R.id.main_counter)
-            main.setOnClickListener(clickListener)
-            main.setOnLongClickListener(clickListener)
-            val sub1 = activity.findViewById<TextView>(R.id.sub_counter1)
-            sub1.setOnClickListener(clickListener)
-            sub1.setOnLongClickListener(clickListener)
-            val lap = activity.findViewById<ListView>(R.id.laptime_list_area)
-            //lap.setOnClickListener(clickListener);
-            lap.setOnLongClickListener(clickListener)
-            //lap.setOnTouchListener(clickListener);
-            val graphView: LapTimeGraphView = activity.findViewById(R.id.graph_area)
-            graphView.setOnTouchListener(clickListener)
-            graphView.setOnClickListener(clickListener)
-            graphView.setOnLongClickListener(clickListener)
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-    }
-*/
 
     /**
      *
@@ -448,7 +402,8 @@ class WearableActivityController : IWearableActivityControl, ITimeEntryDatabaseC
         }
     }
 
-    private fun setIndexId(id: Long) {
+    private fun setIndexId(id: Long)
+    {
         try {
             recordingIndexId = id
             val editor = preferences!!.edit()
@@ -457,6 +412,11 @@ class WearableActivityController : IWearableActivityControl, ITimeEntryDatabaseC
         } catch (e: Exception) {
             e.printStackTrace()
         }
+    }
+
+    private fun onGoingTextTemplate(context : Context) : String
+    {
+        return (context.getString(R.string.notification_description))
     }
 
     override fun createIndex(title: String, startTime: Long)
@@ -504,10 +464,85 @@ class WearableActivityController : IWearableActivityControl, ITimeEntryDatabaseC
         thread.start()
     }
 
+    override fun launchNotify(isShow: Boolean)
+    {
+        try
+        {
+            if (::myActivity.isInitialized)
+            {
+                val icon = R.drawable.baseline_directions_run_24
+                val title = myActivity.getString(R.string.app_name)
+                val description = myActivity.getString(R.string.notification_description)
+
+                Log.v(TAG, "launchNotify(${title} : ${description})")
+                val builder = NotificationCompat.Builder(myActivity, CHANNEL_ID)
+                    .setSmallIcon(icon)
+                    .setContentTitle(title)
+                    .setContentText(description)
+                    .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                    .setOngoing(true)
+
+                val ongoingActivityStatus = Status.Builder()
+                    .addTemplate(onGoingTextTemplate(myActivity))
+                    .build()
+
+                val intent = Intent(myActivity, MainActivity::class.java)
+
+                val activityPendingIntent = PendingIntent
+                    .getActivity(
+                        myActivity,
+                        0,
+                        intent,
+                        (PendingIntent.FLAG_UPDATE_CURRENT) or (PendingIntent.FLAG_IMMUTABLE)
+                    )
+
+                val ongoingActivity =
+                    OngoingActivity.Builder(
+                        myActivity, R.string.app_name, builder
+                    )
+                        .setAnimatedIcon(R.drawable.baseline_directions_run_24)
+                        .setStaticIcon(R.drawable.baseline_directions_run_24)
+                        .setTouchIntent(activityPendingIntent)
+                        .setStatus(ongoingActivityStatus)
+                        .build()
+
+                ongoingActivity.apply(myActivity)
+
+                val notificationManager = NotificationManagerCompat.from(myActivity)
+
+                if (ActivityCompat.checkSelfPermission(
+                        myActivity,
+                        Manifest.permission.POST_NOTIFICATIONS
+                    ) != PackageManager.PERMISSION_GRANTED
+                ) {
+                    Log.v(TAG, " Permission denied to notify.")
+                    //ActivityCompat.requestPermissions(context, REQUIRED_PERMISSIONS, REQUEST_CODE_PERMISSIONS)
+                    return
+                }
+                if (isShow)
+                {
+                    // Notificationの発報
+                    notificationManager.notify(R.string.app_name, builder.build())
+                }
+                else
+                {
+                    // Notificationの解除
+                    notificationManager.cancel(R.string.app_name)
+                }
+            }
+        }
+        catch(e: Exception)
+        {
+            e.printStackTrace()
+        }
+    }
+
     companion object
     {
         private val TAG = WearableActivityController::class.java.simpleName
         const val PREF_KEY_DISPLAY_LAPGRAPHIC = "DISP_LAPGRPH"
         const val PREF_KEY_REFERENCE_TIME_SELECTION = "REF_TIME_SEL"
+        private const val PREF_KEY_TIMER_STARTED = "TMR_START"
+        private const val PREF_KEY_TIMER_INDEXID = "TMR_INDEX"
     }
 }
