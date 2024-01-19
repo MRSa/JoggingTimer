@@ -78,7 +78,22 @@ object IconIdProvider {
         R.drawable.ic_baseline_123_24,
         R.drawable.ic_lightbulb_outline_black_24dp,
         R.drawable.ic_bookmark_border_black_24dp,
-        R.drawable.ic_baseline_sick_24
+        R.drawable.ic_baseline_sick_24,
+        R.drawable.baseline_face_24,
+        R.drawable.baseline_face_2_24,
+        R.drawable.baseline_face_3_24,
+        R.drawable.baseline_face_4_24,
+        R.drawable.baseline_face_5_24,
+        R.drawable.baseline_face_6_24,
+        R.drawable.baseline_face_retouching_natural_24,
+        R.drawable.baseline_mood_24,
+        R.drawable.baseline_mood_bad_24,
+        R.drawable.baseline_man_24,
+        R.drawable.baseline_man_2_24,
+        R.drawable.baseline_man_3_24,
+        R.drawable.baseline_man_4_24,
+        R.drawable.baseline_woman_24,
+        R.drawable.baseline_woman_2_24
     )
 
     fun getIconResourceId(id: Int): Int
