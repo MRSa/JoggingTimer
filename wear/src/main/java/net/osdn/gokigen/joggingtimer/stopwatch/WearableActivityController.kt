@@ -324,19 +324,23 @@ class WearableActivityController : IWearableActivityControl, ITimeEntryDatabaseC
             {
                 while (cursor.moveToNext())
                 {
-                    val indexIdNumber = cursor.getColumnIndex(TimeEntryData.EntryData.COLUMN_NAME_TIME_ENTRY)
+                    val indexIdNumber = cursor.getColumnIndex(TimeEntryIndex.EntryIndex._ID)
                     val titleNumber = cursor.getColumnIndex(TimeEntryIndex.EntryIndex.COLUMN_NAME_TITLE)
                     val memoNumber = cursor.getColumnIndex(TimeEntryIndex.EntryIndex.COLUMN_NAME_MEMO)
                     val iconIdNumber = cursor.getColumnIndex(TimeEntryIndex.EntryIndex.COLUMN_NAME_ICON_ID)
+                    val startTimeNumber = cursor.getColumnIndex(TimeEntryIndex.EntryIndex.COLUMN_NAME_START_TIME)
+                    val durationNumber = cursor.getColumnIndex(TimeEntryIndex.EntryIndex.COLUMN_NAME_TIME_DURATION)
 
-                    val indexId = if (indexIdNumber > 0) { cursor.getLong(indexIdNumber) } else { -1 }
-                    val title = if (titleNumber > 0) { cursor.getString(titleNumber) } else { "" }
-                    val memo = if (memoNumber > 0) { cursor.getString(memoNumber) } else { "" }
-                    val iconId = if (iconIdNumber > 0) { cursor.getInt(iconIdNumber) } else { -1 }
+                    val indexId = cursor.getLong(indexIdNumber)
+                    val title =  cursor.getString(titleNumber)
+                    val memo =  cursor.getString(memoNumber)
+                    val iconId =  cursor.getInt(iconIdNumber)
+                    val startTime = cursor.getLong(startTimeNumber)
+                    val durationTime = cursor.getLong(durationNumber)
 
-                    Log.v(TAG, " Record ($indexId, $title, $memo, $iconId)")
+                    Log.v(TAG, " Record ($indexId, $title, $memo, $iconId : [$startTime][$durationTime])")
 
-                    recordList.add(ResultListItems(indexId, title, memo, iconId))
+                    recordList.add(ResultListItems(indexId, title, memo, iconId, startTime, durationTime))
                 }
             }
         }

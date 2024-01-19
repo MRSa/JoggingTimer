@@ -1,6 +1,5 @@
 package net.osdn.gokigen.joggingtimer.stopwatch
 
-import android.content.Context
 import androidx.activity.ComponentActivity
 import net.osdn.gokigen.joggingtimer.presentation.ui.list.ResultListItems
 
