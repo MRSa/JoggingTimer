@@ -22,7 +22,7 @@ import androidx.wear.ongoing.Status
 import net.osdn.gokigen.joggingtimer.MainActivity
 import net.osdn.gokigen.joggingtimer.MainActivity.Companion.CHANNEL_ID
 import net.osdn.gokigen.joggingtimer.R
-import net.osdn.gokigen.joggingtimer.presentation.ui.list.ResultListData
+import net.osdn.gokigen.joggingtimer.ResultListData
 import net.osdn.gokigen.joggingtimer.storage.ITimeEntryDatabase
 import net.osdn.gokigen.joggingtimer.storage.ITimeEntryDatabaseCallback
 import net.osdn.gokigen.joggingtimer.storage.TimeEntryDatabaseFactory
@@ -338,7 +338,7 @@ class WearableActivityController : IWearableActivityControl, ITimeEntryDatabaseC
                     val startTime = cursor.getLong(startTimeNumber)
                     val durationTime = cursor.getLong(durationNumber)
 
-                    Log.v(TAG, " Record ($indexId, $title, $memo, $iconId : [$startTime][$durationTime])")
+                    //Log.v(TAG, " Record ($indexId, $title, $memo, $iconId : [$startTime][$durationTime])")
 
                     recordList.add(ResultListData(indexId, title, memo, iconId, startTime, durationTime))
                 }
@@ -349,6 +349,68 @@ class WearableActivityController : IWearableActivityControl, ITimeEntryDatabaseC
             e.printStackTrace()
         }
         return (recordList)
+    }
+
+    override fun getRecordItem(id: Int): ResultListData
+    {
+        try
+        {
+            //Log.v(TAG, " GET Record ($id)")
+            val cursor = database?.getIndexdata(id.toLong())
+            if (cursor != null)
+            {
+                while (cursor.moveToNext())
+                {
+                    val indexIdNumber = cursor.getColumnIndex(TimeEntryIndex.EntryIndex._ID)
+                    val titleNumber =
+                        cursor.getColumnIndex(TimeEntryIndex.EntryIndex.COLUMN_NAME_TITLE)
+                    val memoNumber =
+                        cursor.getColumnIndex(TimeEntryIndex.EntryIndex.COLUMN_NAME_MEMO)
+                    val iconIdNumber =
+                        cursor.getColumnIndex(TimeEntryIndex.EntryIndex.COLUMN_NAME_ICON_ID)
+                    val startTimeNumber =
+                        cursor.getColumnIndex(TimeEntryIndex.EntryIndex.COLUMN_NAME_START_TIME)
+                    val durationNumber =
+                        cursor.getColumnIndex(TimeEntryIndex.EntryIndex.COLUMN_NAME_TIME_DURATION)
+
+                    val indexId = cursor.getLong(indexIdNumber)
+                    val title = cursor.getString(titleNumber)
+                    val memo = cursor.getString(memoNumber)
+                    val iconId = cursor.getInt(iconIdNumber)
+                    val startTime = cursor.getLong(startTimeNumber)
+                    val durationTime = cursor.getLong(durationNumber)
+                    return (ResultListData(indexId, title, memo, iconId, startTime, durationTime))
+                }
+            }
+        }
+        catch (e: Exception)
+        {
+            e.printStackTrace()
+        }
+        return (ResultListData(indexId = -1, title = "", memo = "", iconId = 0, startTime = 0, duration = 0))
+    }
+
+    override fun getLapTimeList(id: Int): List<Long>
+    {
+        val lapTimeList = ArrayList<Long>()
+        try
+        {
+            val cursor = database?.getAllDetailData(id.toLong())
+            if (cursor != null)
+            {
+                while (cursor.moveToNext())
+                {
+                    val lapTimeId = cursor.getColumnIndex(TimeEntryData.EntryData.COLUMN_NAME_TIME_ENTRY)
+                    val lapTime = cursor.getLong(lapTimeId)
+                    lapTimeList.add(lapTime)
+                }
+            }
+        }
+        catch (e: Exception)
+        {
+            e.printStackTrace()
+        }
+        return (lapTimeList)
     }
 
     @SuppressLint("Range")

@@ -20,6 +20,7 @@ import androidx.wear.compose.material.Chip
 import androidx.wear.compose.material.ChipDefaults
 import androidx.wear.compose.material.Icon
 import androidx.wear.compose.material.Text
+import net.osdn.gokigen.joggingtimer.ResultListData
 import net.osdn.gokigen.joggingtimer.utilities.IconIdProvider
 import net.osdn.ja.gokigen.wearos.timerapp.counter.TimeStringConvert
 
@@ -57,7 +58,6 @@ fun ResultListItem(navController: NavHostController, dataItem: ResultListData)
                 Text(
                     text = dataItem.title,
                     fontSize = 12.sp,
-                    //maxLines = 3,
                     overflow = TextOverflow.Ellipsis
                 )
             },

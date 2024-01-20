@@ -42,4 +42,5 @@
     <string name="channel_description">Running</string>
     <string name="record_data_empty">記録データはありません。</string>
     <string name="notification_description">計測中</string>
+    <string name="failed_to_get_details">記録データの取得に失敗しました。</string>
 </resources>

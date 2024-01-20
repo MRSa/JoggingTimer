@@ -62,7 +62,7 @@ fun ResultListTitle(navController: NavHostController)
                 enabled = true,
             ) {
                 Icon(
-                    painter = painterResource(id = R.drawable.baseline_list_24),
+                    painter = painterResource(id = R.drawable.baseline_post_add_24),
                     contentDescription = "CreateReference",
                     tint = Color.White
                 )
