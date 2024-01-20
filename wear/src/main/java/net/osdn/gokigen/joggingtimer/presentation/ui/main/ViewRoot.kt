@@ -11,9 +11,6 @@ import androidx.wear.compose.material.MaterialTheme
 import androidx.wear.compose.navigation.rememberSwipeDismissableNavController
 import net.osdn.gokigen.joggingtimer.AppSingleton
 import net.osdn.gokigen.joggingtimer.presentation.theme.JoggingTimerTheme
-import net.osdn.gokigen.joggingtimer.stopwatch.IWearableActivityControl
-import net.osdn.gokigen.joggingtimer.stopwatch.WearableActivityController
-import net.osdn.gokigen.joggingtimer.stopwatch.timer.MyTimerCounter
 
 class ViewRoot @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) : AbstractComposeView(context, attrs, defStyleAttr)
 {
@@ -30,7 +27,6 @@ class ViewRoot @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
         }
         Log.v(TAG, " ... ViewRoot ...")
     }
-
     companion object
     {
         private val TAG = ViewRoot::class.java.simpleName

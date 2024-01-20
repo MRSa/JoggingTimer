@@ -11,6 +11,7 @@ import net.osdn.gokigen.joggingtimer.presentation.theme.JoggingTimerTheme
 import net.osdn.gokigen.joggingtimer.presentation.ui.detail.DetailRecordScreen
 import net.osdn.gokigen.joggingtimer.presentation.ui.list.ResultListScreen
 import net.osdn.gokigen.joggingtimer.presentation.ui.preference.PreferenceScreen
+import net.osdn.gokigen.joggingtimer.presentation.ui.reference.CreateReferenceScreen
 import net.osdn.gokigen.joggingtimer.stopwatch.timer.ITimerCounter
 
 @Composable
@@ -32,15 +33,19 @@ fun NavigationMain(context: Context, navController: NavHostController, counterMa
                 route = "RecordListScreen"
             ) {
                 // 記録一覧画面
-                backStackEntry ->
                 ResultListScreen(navController = navController)
             }
             composable(
                 route = "PreferenceScreen"
             ) {
                 // 設定画面
-                backStackEntry ->
                 PreferenceScreen(navController = navController)
+            }
+            composable(
+                route = "CreateReferenceScreen"
+            ) {
+                // 基準値作成画面
+                CreateReferenceScreen(context = context, navController = navController)
             }
             composable(
                 route = "DetailRecordScreen/{id}",

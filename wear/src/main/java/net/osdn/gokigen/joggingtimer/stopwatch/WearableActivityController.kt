@@ -22,7 +22,7 @@ import androidx.wear.ongoing.Status
 import net.osdn.gokigen.joggingtimer.MainActivity
 import net.osdn.gokigen.joggingtimer.MainActivity.Companion.CHANNEL_ID
 import net.osdn.gokigen.joggingtimer.R
-import net.osdn.gokigen.joggingtimer.presentation.ui.list.ResultListItems
+import net.osdn.gokigen.joggingtimer.presentation.ui.list.ResultListData
 import net.osdn.gokigen.joggingtimer.storage.ITimeEntryDatabase
 import net.osdn.gokigen.joggingtimer.storage.ITimeEntryDatabaseCallback
 import net.osdn.gokigen.joggingtimer.storage.TimeEntryDatabaseFactory
@@ -314,9 +314,9 @@ class WearableActivityController : IWearableActivityControl, ITimeEntryDatabaseC
         }
     }
 
-    override fun getCounterRecordList(): List<ResultListItems>
+    override fun getCounterRecordList(): List<ResultListData>
     {
-        val recordList: ArrayList<ResultListItems> = ArrayList()
+        val recordList: ArrayList<ResultListData> = ArrayList()
         try
         {
             val cursor = database?.allIndexData
@@ -340,7 +340,7 @@ class WearableActivityController : IWearableActivityControl, ITimeEntryDatabaseC
 
                     Log.v(TAG, " Record ($indexId, $title, $memo, $iconId : [$startTime][$durationTime])")
 
-                    recordList.add(ResultListItems(indexId, title, memo, iconId, startTime, durationTime))
+                    recordList.add(ResultListData(indexId, title, memo, iconId, startTime, durationTime))
                 }
             }
         }

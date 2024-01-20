@@ -1,4 +1,4 @@
-package net.osdn.gokigen.joggingtimer.presentation.ui.detail
+package net.osdn.gokigen.joggingtimer.presentation.ui.reference
 
 import android.content.Context
 import android.text.format.DateFormat
@@ -24,7 +24,7 @@ import net.osdn.gokigen.joggingtimer.R
 import java.util.Locale
 
 @Composable
-fun DetailRecordScreen(context: Context, navController: NavHostController, id: Int)
+fun CreateReferenceScreen(context: Context, navController: NavHostController)
 {
     Scaffold(
         timeText = {
@@ -54,7 +54,7 @@ fun DetailRecordScreen(context: Context, navController: NavHostController, id: I
                 textAlign = TextAlign.Center,
                 color = MaterialTheme.colors.primary,
                 fontSize = 12.sp,
-                text = "${stringResource(R.string.result_detail)} : $id "
+                text = stringResource(R.string.action_create_model)
             )
         }
     }
