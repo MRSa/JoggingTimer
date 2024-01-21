@@ -57,14 +57,15 @@ fun ResultListItem(navController: NavHostController, dataItem: ResultListData)
             label = {
                 Text(
                     text = dataItem.title,
-                    fontSize = 12.sp,
+                    fontSize = 14.sp,
+                    maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
             },
             secondaryLabel = {
                 Text(
                     text = totalTime.toString(),
-                    fontSize = 10.sp,
+                    fontSize = 12.sp,
                     overflow = TextOverflow.Ellipsis
                 )
             }

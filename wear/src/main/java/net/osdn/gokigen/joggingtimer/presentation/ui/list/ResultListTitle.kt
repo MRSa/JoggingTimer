@@ -24,11 +24,12 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.wear.compose.material.Button
 import androidx.wear.compose.material.ButtonDefaults
+import androidx.wear.compose.material.MaterialTheme
 import androidx.wear.compose.material.Text
 import net.osdn.gokigen.joggingtimer.R
 
 @Composable
-fun ResultListTitle(navController: NavHostController)
+fun ResultListTitle(navController: NavHostController, message: String)
 {
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -41,6 +42,7 @@ fun ResultListTitle(navController: NavHostController)
             textAlign = TextAlign.Center,
             fontSize = 16.sp
         )
+        //Divider(color = Color.Gray, thickness = 1.dp)
         Row(modifier = Modifier
             .fillMaxWidth()
             .padding(
@@ -68,5 +70,15 @@ fun ResultListTitle(navController: NavHostController)
                 )
             }
         }
+        if (message.isNotEmpty())
+        {
+            Text(
+                text = message,
+                color = MaterialTheme.colors.primary,
+                fontSize = 12.sp,
+                textAlign = TextAlign.Center,
+            )
+        }
+        //Divider(color = Color.Gray, thickness = 1.dp)
     }
 }

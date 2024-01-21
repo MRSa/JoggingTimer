@@ -16,21 +16,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.rotary.onRotaryScrollEvent
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.wear.compose.foundation.lazy.ScalingLazyColumn
 import androidx.wear.compose.foundation.lazy.items
 import androidx.wear.compose.foundation.lazy.rememberScalingLazyListState
 import androidx.wear.compose.material.ListHeader
-import androidx.wear.compose.material.MaterialTheme
 import androidx.wear.compose.material.PositionIndicator
 import androidx.wear.compose.material.Scaffold
-import androidx.wear.compose.material.Text
 import androidx.wear.compose.material.TimeText
 import androidx.wear.compose.material.TimeTextDefaults
 import androidx.wear.compose.material.Vignette
@@ -71,18 +66,12 @@ fun ResultListScreen(navController: NavHostController)
             {
                 // recorded data is nothing...
                 Column(
-                    modifier = Modifier.fillMaxSize(),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .focusRequester(focusRequester),
                 )
                 {
-                    ResultListTitle(navController)
-                    Text(
-                        text = stringResource(id = R.string.record_data_empty),
-                        color = MaterialTheme.colors.primary,
-                        fontSize = 12.sp,
-                        textAlign = TextAlign.Center,
-                    )
+                    ResultListTitle(navController, stringResource(id = R.string.record_data_empty))
                 }
             }
             else
@@ -114,7 +103,7 @@ fun ResultListScreen(navController: NavHostController)
                             modifier = Modifier
                                 .fillMaxSize(),
                         ) {
-                            ResultListTitle(navController)
+                            ResultListTitle(navController, "")
                         }
                     }
                     this.items(items = recordList) {
