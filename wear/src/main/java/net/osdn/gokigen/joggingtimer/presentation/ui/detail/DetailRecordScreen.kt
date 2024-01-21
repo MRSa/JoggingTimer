@@ -56,6 +56,18 @@ fun DetailRecordScreen(context: Context, navController: NavHostController, id: I
     val lapTimeList = AppSingleton.controller.getLapTimeList(id)
     val lapCount = if (lapTimeList.isEmpty()) { 0 } else if (lapTimeList.size < 2) { 0 } else { lapTimeList.size - 1 }
 
+    val lapTimeDataList : ArrayList<LapTimeDataItem> = ArrayList()
+
+    var previousTime = dataItem.startTime
+    var previousLapTime = 0L
+    for (recordTime in lapTimeList)
+    {
+        val lapTime = recordTime - previousTime
+        lapTimeDataList.add(LapTimeDataItem(recordTime, lapTime, lapTime - previousLapTime, 0L))
+        previousLapTime = lapTime
+        previousTime = recordTime
+    }
+
     JoggingTimerTheme {
         val focusRequester = remember { FocusRequester() }
         val coroutineScope = rememberCoroutineScope()
@@ -136,10 +148,10 @@ fun DetailRecordScreen(context: Context, navController: NavHostController, id: I
                             DetailRecordTitle(navController, dataItem.title, id, lapCount)
                         }
                     }
-                    this.itemsIndexed(items = lapTimeList) { indexNo, lapTime ->
+                    this.itemsIndexed(items = lapTimeDataList) { indexNo, lapTimeData ->
                         if (indexNo > 0)
                         {
-                            LapTimeItem(navController, indexNo, lapTime, dataItem.startTime)
+                            LapTimeItem(navController, indexNo, lapTimeData)
                         }
                     }
                 }

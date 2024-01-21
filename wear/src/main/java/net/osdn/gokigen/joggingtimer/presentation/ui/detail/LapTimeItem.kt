@@ -19,7 +19,7 @@ import net.osdn.ja.gokigen.wearos.timerapp.counter.TimeStringConvert
 
 
 @Composable
-fun LapTimeItem(navController: NavHostController, lapCount: Int, endTime: Long, startTime: Long)
+fun LapTimeItem(navController: NavHostController, lapCount: Int, data: LapTimeDataItem)
 {
     Column(
         modifier = Modifier
@@ -28,13 +28,14 @@ fun LapTimeItem(navController: NavHostController, lapCount: Int, endTime: Long, 
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.Start
     ) {
-        val lapTime = endTime - startTime
         Text(
-            text = "[$lapCount] ${TimeStringConvert.getTimeString(lapTime)}", // (${TimeStringConvert.getDiffTimeString(diffTime)})",
+            //text = "[$lapCount] ${TimeStringConvert.getTimeString(data.lapTime)} (${TimeStringConvert.getDiffTimeString(data.diffTime)})",
+            text = "[%02d] %s (%s)".format(lapCount, TimeStringConvert.getTimeString(data.lapTime), TimeStringConvert.getDiffTimeString(data.diffTime)),
             modifier = Modifier.fillMaxWidth(),
             textAlign = TextAlign.Start,
             fontSize = 12.sp,
+            color = Color.White
         )
-        Divider(color = Color.Gray, thickness = 1.dp)
+        Divider(color = Color.DarkGray, thickness = 1.dp)
     }
 }
