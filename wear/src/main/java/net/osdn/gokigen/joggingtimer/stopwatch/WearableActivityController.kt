@@ -530,6 +530,31 @@ class WearableActivityController : IWearableActivityControl, ITimeEntryDatabaseC
         thread.start()
     }
 
+    override fun deleteRecord(id: Long)
+    {
+        try
+        {
+            val thread = Thread {
+                if (isReadyDatabase)
+                {
+                    try
+                    {
+                        database?.deleteTimeEntryData(id)
+                    }
+                    catch (e: Exception)
+                    {
+                        e.printStackTrace()
+                    }
+                }
+            }
+            thread.start()
+        }
+        catch (ee: Exception)
+        {
+            ee.printStackTrace()
+        }
+    }
+
     override fun launchNotify(isShow: Boolean)
     {
         try

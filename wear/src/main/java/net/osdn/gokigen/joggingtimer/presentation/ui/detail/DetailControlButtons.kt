@@ -11,20 +11,34 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.wear.compose.material.Button
 import androidx.wear.compose.material.ButtonDefaults
+import androidx.wear.compose.material.Chip
+import androidx.wear.compose.material.ChipDefaults
+import androidx.wear.compose.material.MaterialTheme
+import androidx.wear.compose.material.dialog.Alert
+import androidx.wear.compose.material.dialog.Dialog
+import net.osdn.gokigen.joggingtimer.AppSingleton
 import net.osdn.gokigen.joggingtimer.R
 import net.osdn.gokigen.joggingtimer.ResultListData
 
 @Composable
 fun DetailControlButtons(context: Context, navController: NavHostController, indexId: Int, dataItem: ResultListData, lapData: ArrayList<LapTimeDataItem>)
 {
+    val deleteDialog = remember { mutableStateOf(false) }
+
     // 詳細画面の操作ボタン
     Row(modifier = Modifier
         .padding(horizontal = 5.dp)
@@ -81,7 +95,7 @@ fun DetailControlButtons(context: Context, navController: NavHostController, ind
                 .background(color = Color.Black),
             shape = RoundedCornerShape(5.dp),
             colors = ButtonDefaults.primaryButtonColors(backgroundColor =  Color.Black),
-            onClick = {  },
+            onClick = { deleteDialog.value = true }, // Delete Confirmation
             enabled = true
         ) {
             Icon(
@@ -89,6 +103,75 @@ fun DetailControlButtons(context: Context, navController: NavHostController, ind
                 contentDescription = "Delete",
                 tint = Color.LightGray
             )
+        }
+    }
+
+    // データ削除の確認
+    Dialog(showDialog = deleteDialog.value, onDismissRequest = { deleteDialog.value = false })
+    {
+        Alert(
+            //icon = {
+            //    Icon(
+            //        painter = painterResource(id = R.drawable.ic_warning_black_24dp),
+            //        contentDescription = "Confirmation",
+            //        tint = MaterialTheme.colors.secondary
+            //    )
+            //},
+            title = {
+                Text(
+                    text = stringResource(id = R.string.dialog_message_delete),
+                    color = Color.White
+                )
+            },
+            message = {
+                Text(
+                    text =  " " + dataItem.title,
+                    color = MaterialTheme.colors.secondary
+                )
+            },
+        ) {
+            item {
+                Chip(
+                    modifier = Modifier
+                        //.fillMaxSize()
+                        .height(48.dp)
+                        .width(96.dp)
+                        .background(color = Color.Black),
+                    label = {
+                        Text(
+                            stringResource(id = R.string.dialog_positive_execute),
+                            fontSize = 14.sp,
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.fillMaxWidth()
+                            ) },
+                    onClick = {
+                        deleteDialog.value = false
+                        AppSingleton.controller.deleteRecord(indexId.toLong())
+                        navController.popBackStack()  // 前の画面に戻る
+                        },
+                    colors = ChipDefaults.primaryChipColors(),
+                )
+            }
+            item {
+                Chip(
+                    modifier = Modifier
+                        //.fillMaxSize()
+                        .height(48.dp)
+                        .width(96.dp)
+                        .background(color = Color.Black),
+                    label = {
+                        Text(
+                            stringResource(id = R.string.dialog_negative_cancel),
+                            fontSize = 14.sp,
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.fillMaxWidth()
+                            ) },
+                    onClick = { deleteDialog.value = false },
+                    colors = ChipDefaults.secondaryChipColors(
+                        backgroundColor = Color.LightGray
+                    ),
+                )
+            }
         }
     }
 }

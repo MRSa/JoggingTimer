@@ -31,7 +31,7 @@ interface IWearableActivityControl
     fun getCounterRecordList(): List<ResultListData>
     fun getRecordItem(id: Int): ResultListData
     fun getLapTimeList(id: Int): List<Long>
-
+    fun deleteRecord(id: Long)
     fun launchNotify(isShow: Boolean)
 
 }

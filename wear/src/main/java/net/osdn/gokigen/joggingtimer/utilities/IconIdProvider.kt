@@ -9,8 +9,8 @@ import net.osdn.gokigen.joggingtimer.R
 object IconIdProvider {
     private val iconIds = intArrayOf(
         R.drawable.ic_label_outline_black_24dp,   // default icon
-        R.drawable.alpha_a_box, // R.drawable.ic_board_1_black_24dp,    // reference data A
-        R.drawable.alpha_b_box, // R.drawable.ic_board_2_black_24dp,    // reference data B
+        R.drawable.alpha_b_box, // R.drawable.ic_board_1_black_24dp,    // reference data B
+        R.drawable.alpha_a_box, // R.drawable.ic_board_2_black_24dp,    // reference data A
         R.drawable.alpha_c_box, // .drawable.ic_board_3_black_24dp,     // reference data C
         R.drawable.ic_done_black_24dp,
         R.drawable.ic_bookmark_black_24dp,
