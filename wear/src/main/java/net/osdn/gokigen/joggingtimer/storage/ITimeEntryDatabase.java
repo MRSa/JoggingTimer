@@ -13,6 +13,7 @@ public interface ITimeEntryDatabase
     long DONT_USE_ID = -1;
     long DEFAULT_RECORD_TYPE = 0;
     long EDITABLE_RECORD_TYPE = 1;
+    long PASSAGE_RECORD_TYPE = 2;
 
     void prepare();
     void close();

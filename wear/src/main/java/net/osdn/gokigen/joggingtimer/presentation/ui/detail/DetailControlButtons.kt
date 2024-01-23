@@ -146,7 +146,7 @@ fun DetailControlButtons(context: Context, navController: NavHostController, ind
                             ) },
                     onClick = {
                         deleteDialog.value = false
-                        AppSingleton.controller.deleteRecord(indexId.toLong())
+                        AppSingleton.controller.deleteRecord(indexId)
                         navController.popBackStack()  // 前の画面に戻る
                         },
                     colors = ChipDefaults.primaryChipColors(),

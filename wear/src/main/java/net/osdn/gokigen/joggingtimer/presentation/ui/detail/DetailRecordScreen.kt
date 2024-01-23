@@ -49,18 +49,16 @@ fun DetailRecordScreen(context: Context, navController: NavHostController, id: I
 {
     val dataItem = AppSingleton.controller.getRecordItem(id)
     val lapTimeList = AppSingleton.controller.getLapTimeList(id)
-    //val lapCount = if (lapTimeList.isEmpty()) { 0 } else if (lapTimeList.size < 2) { 0 } else { lapTimeList.size - 1 }
-
     val lapTimeDataList : ArrayList<LapTimeDataItem> = ArrayList()
 
     var previousTime = dataItem.startTime
     var previousLapTime = 0L
     for (recordTime in lapTimeList)
     {
-        val lapTime = recordTime - previousTime
-        lapTimeDataList.add(LapTimeDataItem(recordTime, lapTime, lapTime - previousLapTime, 0L))
+        val lapTime = recordTime.recordTime - previousTime
+        lapTimeDataList.add(LapTimeDataItem(recordTime.recordType, recordTime.recordTime, lapTime, lapTime - previousLapTime, 0L))
         previousLapTime = lapTime
-        previousTime = recordTime
+        previousTime = recordTime.recordTime
     }
 
     JoggingTimerTheme {

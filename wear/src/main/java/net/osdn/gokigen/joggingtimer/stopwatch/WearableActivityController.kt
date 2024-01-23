@@ -390,9 +390,9 @@ class WearableActivityController : IWearableActivityControl, ITimeEntryDatabaseC
         return (ResultListData(indexId = -1, title = "", memo = "", iconId = 0, startTime = 0, duration = 0))
     }
 
-    override fun getLapTimeList(id: Int): List<Long>
+    override fun getLapTimeList(id: Int): List<LapTimeRecord>
     {
-        val lapTimeList = ArrayList<Long>()
+        val lapTimeList = ArrayList<LapTimeRecord>()
         try
         {
             val cursor = database?.getAllDetailData(id.toLong())
@@ -402,7 +402,11 @@ class WearableActivityController : IWearableActivityControl, ITimeEntryDatabaseC
                 {
                     val lapTimeId = cursor.getColumnIndex(TimeEntryData.EntryData.COLUMN_NAME_TIME_ENTRY)
                     val lapTime = cursor.getLong(lapTimeId)
-                    lapTimeList.add(lapTime)
+
+                    val recordTypeId = cursor.getColumnIndex(TimeEntryData.EntryData.COLUMN_NAME_RECORD_TYPE)
+                    val recordType = cursor.getInt(recordTypeId)
+
+                    lapTimeList.add(LapTimeRecord(recordType, lapTime))
                 }
             }
         }
@@ -530,7 +534,7 @@ class WearableActivityController : IWearableActivityControl, ITimeEntryDatabaseC
         thread.start()
     }
 
-    override fun deleteRecord(id: Long)
+    override fun deleteRecord(id: Int)
     {
         try
         {
@@ -539,7 +543,7 @@ class WearableActivityController : IWearableActivityControl, ITimeEntryDatabaseC
                 {
                     try
                     {
-                        database?.deleteTimeEntryData(id)
+                        database?.deleteTimeEntryData(id.toLong())
                     }
                     catch (e: Exception)
                     {
