@@ -17,7 +17,6 @@ import androidx.navigation.NavHostController
 import androidx.wear.compose.material.Text
 import net.osdn.ja.gokigen.wearos.timerapp.counter.TimeStringConvert
 
-
 @Composable
 fun LapTimeItem(navController: NavHostController, lapCount: Int, data: LapTimeDataItem)
 {
@@ -33,7 +32,7 @@ fun LapTimeItem(navController: NavHostController, lapCount: Int, data: LapTimeDa
             text = "[%02d] %s (%s)".format(lapCount, TimeStringConvert.getTimeString(data.lapTime), TimeStringConvert.getDiffTimeString(data.diffTime)),
             modifier = Modifier.fillMaxWidth(),
             textAlign = TextAlign.Start,
-            fontSize = 12.sp,
+            fontSize = 14.sp,
             color = Color.White
         )
         Divider(color = Color.DarkGray, thickness = 1.dp)

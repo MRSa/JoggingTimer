@@ -1,5 +1,7 @@
 package net.osdn.gokigen.joggingtimer.presentation.ui.detail
 
+import android.content.Context
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -18,13 +20,14 @@ import androidx.navigation.NavHostController
 import androidx.wear.compose.material.Button
 import androidx.wear.compose.material.ButtonDefaults
 import net.osdn.gokigen.joggingtimer.R
+import net.osdn.gokigen.joggingtimer.ResultListData
 
 @Composable
-fun DetailControlButtons(navController: NavHostController, indexId: Int)
+fun DetailControlButtons(context: Context, navController: NavHostController, indexId: Int, dataItem: ResultListData, lapData: ArrayList<LapTimeDataItem>)
 {
     // 詳細画面の操作ボタン
     Row(modifier = Modifier
-        .padding(horizontal = 10.dp)
+        .padding(horizontal = 5.dp)
         .fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
@@ -35,7 +38,7 @@ fun DetailControlButtons(navController: NavHostController, indexId: Int)
                 .width(48.dp)
                 .padding(2.dp)
                 .background(color = Color.Black),
-            shape = RoundedCornerShape(10.dp),
+            shape = RoundedCornerShape(5.dp),
             colors = ButtonDefaults.primaryButtonColors(backgroundColor =  Color.Black),
             onClick = {  },
             enabled = true,
@@ -54,9 +57,12 @@ fun DetailControlButtons(navController: NavHostController, indexId: Int)
                 .width(48.dp)
                 .padding(2.dp)
                 .background(color = Color.Black),
-            shape = RoundedCornerShape(10.dp),
+            shape = RoundedCornerShape(5.dp),
             colors = ButtonDefaults.primaryButtonColors(backgroundColor =  Color.Black),
-            onClick = {  },
+            onClick = {
+                ShareContent.shareLapTimeData(context, dataItem, lapData)
+                Toast.makeText(context, context.getString(R.string.intent_issued), Toast.LENGTH_SHORT).show()  // UIスレッドで実行が必要
+            },
             enabled = true
         ) {
             Icon(
@@ -73,13 +79,13 @@ fun DetailControlButtons(navController: NavHostController, indexId: Int)
                 .width(48.dp)
                 .padding(2.dp)
                 .background(color = Color.Black),
-            shape = RoundedCornerShape(10.dp),
+            shape = RoundedCornerShape(5.dp),
             colors = ButtonDefaults.primaryButtonColors(backgroundColor =  Color.Black),
             onClick = {  },
             enabled = true
         ) {
             Icon(
-                painter = painterResource(id = R.drawable.baseline_delete_forever_24),
+                painter = painterResource(id = R.drawable.baseline_delete_24),
                 contentDescription = "Delete",
                 tint = Color.LightGray
             )

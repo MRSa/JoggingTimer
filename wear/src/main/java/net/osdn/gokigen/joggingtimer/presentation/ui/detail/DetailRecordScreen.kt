@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.Divider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
@@ -20,7 +19,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.rotary.onRotaryScrollEvent
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -28,7 +26,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.wear.compose.foundation.lazy.ScalingLazyColumn
-import androidx.wear.compose.foundation.lazy.items
 import androidx.wear.compose.foundation.lazy.itemsIndexed
 import androidx.wear.compose.foundation.lazy.rememberScalingLazyListState
 import androidx.wear.compose.material.ListHeader
@@ -45,8 +42,6 @@ import kotlinx.coroutines.launch
 import net.osdn.gokigen.joggingtimer.AppSingleton
 import net.osdn.gokigen.joggingtimer.R
 import net.osdn.gokigen.joggingtimer.presentation.theme.JoggingTimerTheme
-import net.osdn.gokigen.joggingtimer.presentation.ui.list.ResultListItem
-import net.osdn.gokigen.joggingtimer.presentation.ui.list.ResultListTitle
 import java.util.Locale
 
 @Composable
@@ -54,7 +49,7 @@ fun DetailRecordScreen(context: Context, navController: NavHostController, id: I
 {
     val dataItem = AppSingleton.controller.getRecordItem(id)
     val lapTimeList = AppSingleton.controller.getLapTimeList(id)
-    val lapCount = if (lapTimeList.isEmpty()) { 0 } else if (lapTimeList.size < 2) { 0 } else { lapTimeList.size - 1 }
+    //val lapCount = if (lapTimeList.isEmpty()) { 0 } else if (lapTimeList.size < 2) { 0 } else { lapTimeList.size - 1 }
 
     val lapTimeDataList : ArrayList<LapTimeDataItem> = ArrayList()
 
@@ -111,7 +106,7 @@ fun DetailRecordScreen(context: Context, navController: NavHostController, id: I
                         modifier = Modifier.fillMaxWidth(),
                         textAlign = TextAlign.Center,
                         color = MaterialTheme.colors.primary,
-                        fontSize = 14.sp,
+                        fontSize = 16.sp,
                         text = stringResource(R.string.failed_to_get_details)
                     )
                 }
@@ -130,22 +125,42 @@ fun DetailRecordScreen(context: Context, navController: NavHostController, id: I
                         }
                         .focusRequester(focusRequester)
                         .focusable(),
-                    //contentPadding = PaddingValues(
-                    //    top = 16.dp,
-                    //    start = 6.dp,
-                    //    end = 6.dp,
-                    //    bottom = 16.dp,
-                    //),
-                    //verticalArrangement = Arrangement.Top,
-                    //horizontalAlignment = Alignment.Start,
+                    contentPadding = PaddingValues(
+                        top = 16.dp,
+                        start = 8.dp,
+                        end = 8.dp,
+                        bottom = 16.dp,
+                    ),
                     state = listState
                 ) {
                     this.item {
                         ListHeader(
-                            modifier = Modifier
-                                .fillMaxSize(),
+                            modifier = Modifier.fillMaxSize(),
                         ) {
-                            DetailRecordTitle(navController, dataItem.title, id, lapCount)
+                            Column(
+                                modifier = Modifier.fillMaxSize()
+                                    .focusRequester(focusRequester),
+                                verticalArrangement = Arrangement.Top,
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {        // データの題名を表示
+                                // タイトル（記録詳細）を表示
+                                //Text(
+                                //    //modifier = Modifier.fillMaxWidth(),
+                                //    textAlign = TextAlign.Center,
+                                //    color = Color.White,
+                                //    fontSize = 14.sp,
+                                //    text = stringResource(id = R.string.result_detail)
+                                //)
+                                Text(
+                                    //modifier = Modifier.fillMaxWidth(),
+                                    textAlign = TextAlign.Center,
+                                    color = MaterialTheme.colors.primary,
+                                    fontSize = 14.sp,
+                                    text = dataItem.title
+                                )
+                                // 制御ボタン群を表示
+                                DetailControlButtons(context, navController, id, dataItem, lapTimeDataList)
+                            }
                         }
                     }
                     this.itemsIndexed(items = lapTimeDataList) { indexNo, lapTimeData ->

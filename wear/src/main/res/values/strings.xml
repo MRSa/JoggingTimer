@@ -43,4 +43,5 @@
     <string name="record_data_empty">Record data is none.</string>
     <string name="notification_description">Timer active</string>
     <string name="failed_to_get_details">Failed to get details.</string>
+    <string name="intent_issued">Intent Issued.</string>
 </resources>
