@@ -27,7 +27,7 @@ fun NavigationMain(context: Context, navController: NavHostController, counterMa
                 route = "MainScreen"
             ) {
                 // メイン画面
-                MainScreen(navController = navController, counterManager = counterManager)
+                MainScreen(context = context, navController = navController, counterManager = counterManager)
             }
             composable(
                 route = "RecordListScreen"

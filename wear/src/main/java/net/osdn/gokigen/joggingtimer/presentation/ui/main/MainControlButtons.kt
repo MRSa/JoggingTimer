@@ -1,6 +1,8 @@
 package net.osdn.gokigen.joggingtimer.presentation.ui.main
 
+import android.content.Context
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
@@ -98,7 +100,7 @@ fun BtnStop(navController: NavHostController, timerCounter: ITimerCounter)
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun BtnStart(timerCounter: ITimerCounter)
+fun BtnStart(timerCounter: ITimerCounter, context: Context)
 {
     // タイム計測実行中時のボタン配置
     Row(modifier = Modifier
@@ -115,7 +117,10 @@ fun BtnStart(timerCounter: ITimerCounter)
                 .background(color = Color.Black)
                 .combinedClickable(
                     enabled = true,
-                    onClick = { },
+                    onClick = {
+                        // UIスレッドで実行が必要、ボタンは長押しで止まることを表示する
+                        Toast.makeText(context, context.getString(R.string.long_press_to_stop), Toast.LENGTH_SHORT).show()
+                    },
                     onLongClick = {
                         Log.v("STOP", "STOP: onLongClick (2)")
                         timerCounter.stop()

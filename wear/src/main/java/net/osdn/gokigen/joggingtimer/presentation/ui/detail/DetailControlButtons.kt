@@ -33,24 +33,46 @@ import androidx.wear.compose.material.dialog.Dialog
 import net.osdn.gokigen.joggingtimer.AppSingleton
 import net.osdn.gokigen.joggingtimer.R
 import net.osdn.gokigen.joggingtimer.ResultListData
+import net.osdn.gokigen.joggingtimer.utilities.IconIdProvider
 
 @Composable
 fun DetailControlButtons(context: Context, navController: NavHostController, indexId: Int, dataItem: ResultListData, lapData: ArrayList<LapTimeDataItem>)
 {
     val deleteDialog = remember { mutableStateOf(false) }
+    val iconId = remember { dataItem.iconId }
 
     // 詳細画面の操作ボタン
     Row(modifier = Modifier
-        .padding(horizontal = 5.dp)
+        .padding(horizontal = 0.dp)
         .fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
+        ////////////////////  データのアイコン  ////////////////////
+        val drawableIconId = IconIdProvider.getIconResourceId(iconId)
+        Button(
+            modifier = Modifier
+                .height(48.dp)
+                .width(26.dp)
+                .padding(1.dp)
+                .background(color = Color.Black),
+            //shape = RoundedCornerShape(5.dp),
+            colors = ButtonDefaults.primaryButtonColors(backgroundColor =  Color.Black),
+            onClick = {  },
+            enabled = false,
+        ) {
+            Icon(
+                painter = painterResource(id = drawableIconId),
+                contentDescription = "Icon",
+                tint = Color.DarkGray
+            )
+        }
+
         ////////////////////  データの編集  ////////////////////
         Button(
             modifier = Modifier
                 .height(48.dp)
                 .width(48.dp)
-                .padding(2.dp)
+                .padding(1.dp)
                 .background(color = Color.Black),
             shape = RoundedCornerShape(5.dp),
             colors = ButtonDefaults.primaryButtonColors(backgroundColor =  Color.Black),
@@ -69,7 +91,7 @@ fun DetailControlButtons(context: Context, navController: NavHostController, ind
             modifier = Modifier
                 .height(48.dp)
                 .width(48.dp)
-                .padding(2.dp)
+                .padding(1.dp)
                 .background(color = Color.Black),
             shape = RoundedCornerShape(5.dp),
             colors = ButtonDefaults.primaryButtonColors(backgroundColor =  Color.Black),
@@ -91,7 +113,7 @@ fun DetailControlButtons(context: Context, navController: NavHostController, ind
             modifier = Modifier
                 .height(48.dp)
                 .width(48.dp)
-                .padding(2.dp)
+                .padding(1.dp)
                 .background(color = Color.Black),
             shape = RoundedCornerShape(5.dp),
             colors = ButtonDefaults.primaryButtonColors(backgroundColor =  Color.Black),

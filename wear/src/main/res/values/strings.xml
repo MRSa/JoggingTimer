@@ -44,4 +44,5 @@
     <string name="notification_description">Timer active</string>
     <string name="failed_to_get_details">Failed to get details.</string>
     <string name="intent_issued">Intent Issued.</string>
+    <string name="long_press_to_stop">Long press to finish.</string>
 </resources>

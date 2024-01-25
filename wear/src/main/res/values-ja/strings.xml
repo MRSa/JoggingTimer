@@ -44,4 +44,5 @@
     <string name="notification_description">計測中</string>
     <string name="failed_to_get_details">記録データの取得に失敗しました。</string>
     <string name="intent_issued">データを共有します。</string>
+    <string name="long_press_to_stop">長押しで終了</string>
 </resources>

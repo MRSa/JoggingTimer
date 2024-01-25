@@ -1,5 +1,6 @@
 package net.osdn.gokigen.joggingtimer.presentation.ui.main
 
+import android.content.Context
 import android.text.format.DateFormat
 import androidx.compose.foundation.background
 import androidx.compose.foundation.focusable
@@ -37,7 +38,7 @@ import net.osdn.gokigen.joggingtimer.stopwatch.timer.ITimerCounter
 import java.util.Locale
 
 @Composable
-fun MainScreen(navController: NavHostController, counterManager: ITimerCounter)
+fun MainScreen(context: Context, navController: NavHostController, counterManager: ITimerCounter)
 {
     val focusRequester = remember { FocusRequester() }
     val coroutineScope = rememberCoroutineScope()
@@ -99,8 +100,8 @@ fun MainScreen(navController: NavHostController, counterManager: ITimerCounter)
                 // 現在の状態によって、メインボタンの表示を切り替える
                 when (counterManager.getCurrentCountStatus())
                 {
-                    ICounterStatus.START -> BtnStart(counterManager) // 実行中
-                    ICounterStatus.LAPTIME -> BtnStart(counterManager) // 実行中(その2)
+                    ICounterStatus.START -> BtnStart(counterManager, context) // 実行中
+                    ICounterStatus.LAPTIME -> BtnStart(counterManager, context) // 実行中(その2)
                     ICounterStatus.STOP -> BtnStop(navController, counterManager) // 開始前
                     ICounterStatus.FINISHED -> BtnFinished(navController, counterManager)  // 終了
                 }
