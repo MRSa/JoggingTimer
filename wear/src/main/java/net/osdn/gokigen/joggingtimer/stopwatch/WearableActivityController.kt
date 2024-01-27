@@ -506,12 +506,13 @@ class WearableActivityController : IWearableActivityControl, ITimeEntryDatabaseC
         thread.start()
     }
 
-    override fun appendTimeData(elapsedTime: Long) {
-        Log.v(TAG, "appendTimeData()  $elapsedTime")
+    override fun appendTimeData(elapsedTime: Long, recordType: Long)
+    {
+        Log.v(TAG, "appendTimeData()  $elapsedTime [$recordType]")
         val thread = Thread {
             if (isReadyDatabase) {
                 try {
-                    database?.appendTimeData(recordingIndexId, elapsedTime)
+                    database?.appendTimeData(recordingIndexId, elapsedTime, recordType)
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }

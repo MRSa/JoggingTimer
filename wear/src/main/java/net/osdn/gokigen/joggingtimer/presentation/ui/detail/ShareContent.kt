@@ -28,7 +28,7 @@ object ShareContent
             dataToExport.append(",")
             dataToExport.append("\r\n")
             dataToExport.append("; \r\n")
-            dataToExport.append("; LapCount,LapTime,TotalTime,LapTime(ms),TotalTime(ms),;\r\n")
+            dataToExport.append("; LapCount,LapTime,TotalTime,LapTime(ms),TotalTime(ms),recordType,;\r\n")
 
             for ((index, lapItem) in lapData.withIndex())
             {
@@ -44,6 +44,8 @@ object ShareContent
                     dataToExport.append(lapItem.lapTime)  // ラップタイム
                     dataToExport.append(",")
                     dataToExport.append(totalTime) // 開始からの時間
+                    dataToExport.append(",")
+                    dataToExport.append(lapItem.recordType)  // レコードデータのタイプ
                     dataToExport.append(",")
                     dataToExport.append(";")
                     dataToExport.append("\r\n")

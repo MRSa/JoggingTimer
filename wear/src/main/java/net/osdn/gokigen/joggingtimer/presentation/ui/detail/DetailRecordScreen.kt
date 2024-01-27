@@ -164,7 +164,7 @@ fun DetailRecordScreen(context: Context, navController: NavHostController, id: I
                     this.itemsIndexed(items = lapTimeDataList) { indexNo, lapTimeData ->
                         if (indexNo > 0)
                         {
-                            LapTimeItem(navController, indexNo, lapTimeData)
+                            LapTimeItem(context, navController, indexNo, lapTimeData)
                         }
                     }
                 }

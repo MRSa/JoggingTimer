@@ -166,7 +166,7 @@ fun BtnStart(timerCounter: ITimerCounter, context: Context)
                 .background(color = Color.Black),
             shape = RoundedCornerShape(10.dp),
             colors = ButtonDefaults.primaryButtonColors(backgroundColor =  Color.Black),
-            onClick = { timerCounter.timeStamp() },
+            onClick = { timerCounter.timeStamp(false) },
             enabled = true
         ) {
             Icon(

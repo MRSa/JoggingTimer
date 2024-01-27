@@ -11,7 +11,7 @@ object IconIdProvider {
         R.drawable.ic_label_outline_black_24dp,   // default icon
         R.drawable.alpha_b_box, // R.drawable.ic_board_1_black_24dp,    // reference data B
         R.drawable.alpha_a_box, // R.drawable.ic_board_2_black_24dp,    // reference data A
-        R.drawable.alpha_c_box, // .drawable.ic_board_3_black_24dp,     // reference data C
+        R.drawable.alpha_c_box, // R.drawable.ic_board_3_black_24dp,    // reference data C
         R.drawable.ic_done_black_24dp,
         R.drawable.ic_bookmark_black_24dp,
         R.drawable.ic_book_black_24dp,
@@ -93,7 +93,12 @@ object IconIdProvider {
         R.drawable.baseline_man_3_24,
         R.drawable.baseline_man_4_24,
         R.drawable.baseline_woman_24,
-        R.drawable.baseline_woman_2_24
+        R.drawable.baseline_woman_2_24,
+        R.drawable.baseline_ramen_dining_24,
+        R.drawable.baseline_wind_power_24,
+        R.drawable.baseline_diversity_1_24,
+        R.drawable.baseline_diversity_2_24,
+        R.drawable.baseline_diversity_3_24,
     )
 
     fun getIconResourceId(id: Int): Int

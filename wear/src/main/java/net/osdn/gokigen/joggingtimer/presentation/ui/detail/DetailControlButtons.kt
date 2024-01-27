@@ -63,7 +63,7 @@ fun DetailControlButtons(context: Context, navController: NavHostController, ind
             Icon(
                 painter = painterResource(id = drawableIconId),
                 contentDescription = "Icon",
-                tint = Color.DarkGray
+                tint = Color(0xffaaaaaa)
             )
         }
 
@@ -82,7 +82,7 @@ fun DetailControlButtons(context: Context, navController: NavHostController, ind
             Icon(
                 painter = painterResource(id = R.drawable.ic_edit_black_24dp),
                 contentDescription = "Edit",
-                tint = Color.LightGray
+                tint = Color.White
             )
         }
 
@@ -104,7 +104,7 @@ fun DetailControlButtons(context: Context, navController: NavHostController, ind
             Icon(
                 painter = painterResource(id = R.drawable.ic_share_black_24dp),
                 contentDescription = "Share",
-                tint = Color.LightGray
+                tint = Color.White
             )
         }
 
@@ -123,7 +123,7 @@ fun DetailControlButtons(context: Context, navController: NavHostController, ind
             Icon(
                 painter = painterResource(id = R.drawable.baseline_delete_24),
                 contentDescription = "Delete",
-                tint = Color.LightGray
+                tint = Color.White
             )
         }
     }

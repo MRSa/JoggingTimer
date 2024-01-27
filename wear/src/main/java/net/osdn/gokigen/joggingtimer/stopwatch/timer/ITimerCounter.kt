@@ -9,7 +9,7 @@ interface ITimerCounter
     fun getCurrentCountStatus() : ICounterStatus
     fun start()
     fun stop()
-    fun timeStamp(): Long
+    fun timeStamp(isPass: Boolean): Long
     fun reset()
     fun getLapTimeCount(): Int
     fun getPastTime(): Long

@@ -29,7 +29,7 @@ public interface ITimeEntryDatabase
     void setReferenceIndexData(int id, long indexId);
     void updateIndexData(long indexId, String title, int icon);
     void createIndexData(String title, String memo, int icon, long startTime);
-    void appendTimeData(long indexId, long lapTime);
+    void appendTimeData(long indexId, long lapTime, long recordType);
     void finishTimeData(long indexId, long startTime, long endTime);
 
     long createTimeEntryModelData(int lap, long totalTime, String memo);

@@ -45,4 +45,7 @@
     <string name="failed_to_get_details">Failed to get details.</string>
     <string name="intent_issued">Intent Issued.</string>
     <string name="long_press_to_stop">Long press to finish.</string>
+    <string name="long_press_to_pass">Long press to pass.</string>
+    <string name="long_press_to_edit">Long press to edit.</string>
+    <string name="cannot_edit_record">Cannot edit record.</string>
 </resources>

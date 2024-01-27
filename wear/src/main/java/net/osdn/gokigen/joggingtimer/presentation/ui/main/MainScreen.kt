@@ -112,8 +112,8 @@ fun MainScreen(context: Context, navController: NavHostController, counterManage
                 // 現在の状態によって、サブボタンの表示を切り替える
                 when (counterManager.getCurrentCountStatus())
                 {
-                    ICounterStatus.START -> BtnSubStart(counterManager) // 実行中
-                    ICounterStatus.LAPTIME -> BtnSubStart(counterManager) // 実行中 (その2)
+                    ICounterStatus.START -> BtnSubStart(counterManager, context) // 実行中
+                    ICounterStatus.LAPTIME -> BtnSubStart(counterManager, context) // 実行中 (その2)
                     ICounterStatus.STOP -> BtnSubStop(navController, counterManager) // 開始前
                     ICounterStatus.FINISHED -> BtnSubFinished(navController, counterManager)  // 終了
                 }

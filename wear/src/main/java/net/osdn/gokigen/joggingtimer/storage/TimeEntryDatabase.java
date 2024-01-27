@@ -207,10 +207,10 @@ class TimeEntryDatabase implements ITimeEntryDatabase
     }
 
     @Override
-    public void appendTimeData(long indexId, long lapTime)
+    public void appendTimeData(long indexId, long lapTime, long recordType)
     {
-        Log.v(TAG, "appendTimeData()  " +  lapTime);
-        appendTimeDataImpl(true, indexId, lapTime, DEFAULT_RECORD_TYPE);
+        Log.v(TAG, "appendTimeData()  [" +  lapTime + "] " + recordType);
+        appendTimeDataImpl(true, indexId, lapTime, recordType);
     }
 
     /**
@@ -258,7 +258,7 @@ class TimeEntryDatabase implements ITimeEntryDatabase
         try
         {
             boolean ret = false;
-            appendTimeData(indexId, endTime);
+            appendTimeData(indexId, endTime, DEFAULT_RECORD_TYPE);
             long elapsedTime = endTime - startTime;
             if (elapsedTime < 0)
             {

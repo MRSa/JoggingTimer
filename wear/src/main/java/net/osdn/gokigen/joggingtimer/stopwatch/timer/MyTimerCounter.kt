@@ -6,6 +6,8 @@ import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import net.osdn.gokigen.joggingtimer.AppSingleton
 import net.osdn.gokigen.joggingtimer.stopwatch.IDatabaseReloadCallback
+import net.osdn.gokigen.joggingtimer.storage.ITimeEntryDatabase.DEFAULT_RECORD_TYPE
+import net.osdn.gokigen.joggingtimer.storage.ITimeEntryDatabase.PASSAGE_RECORD_TYPE
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -105,7 +107,7 @@ class MyTimerCounter internal constructor() : ITimerCounter, ITimeoutReceiver, I
         }
     }
 
-    override fun timeStamp(): Long
+    override fun timeStamp(isPass: Boolean): Long
     {
         var timeToSet: Long = 0
         if (counterStatus.value == ICounterStatus.START)
@@ -114,7 +116,8 @@ class MyTimerCounter internal constructor() : ITimerCounter, ITimeoutReceiver, I
             lapTime.add(timeToSet)
             ++(currentLapCount.intValue)
 
-            AppSingleton.controller.appendTimeData(timeToSet)
+            val recordType = if (isPass) { PASSAGE_RECORD_TYPE } else { DEFAULT_RECORD_TYPE }
+            AppSingleton.controller.appendTimeData(timeToSet, recordType)
 
             executeUserFeedback(ICounterStatus.LAPTIME)
 
