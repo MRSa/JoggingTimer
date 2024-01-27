@@ -9,6 +9,7 @@ import androidx.wear.compose.navigation.SwipeDismissableNavHost
 import androidx.wear.compose.navigation.composable
 import net.osdn.gokigen.joggingtimer.presentation.theme.JoggingTimerTheme
 import net.osdn.gokigen.joggingtimer.presentation.ui.detail.DetailRecordScreen
+import net.osdn.gokigen.joggingtimer.presentation.ui.edit.RecordEditScreen
 import net.osdn.gokigen.joggingtimer.presentation.ui.list.ResultListScreen
 import net.osdn.gokigen.joggingtimer.presentation.ui.preference.PreferenceScreen
 import net.osdn.gokigen.joggingtimer.presentation.ui.reference.CreateReferenceScreen
@@ -57,6 +58,17 @@ fun NavigationMain(context: Context, navController: NavHostController, counterMa
                 backStackEntry ->
                 val id = backStackEntry.arguments?.getInt("id") ?: 0
                 DetailRecordScreen(context = context, navController = navController, id = id)
+            }
+            composable(
+                route = "RecordEditScreen/{id}",
+                arguments = listOf(
+                    navArgument("id") { type = NavType.IntType }
+                )
+            ) {
+                // 記録データの編集画面
+                backStackEntry ->
+                val id = backStackEntry.arguments?.getInt("id") ?: 0
+                RecordEditScreen(context = context, navController = navController, indexId = id)
             }
         }
     }

@@ -101,6 +101,10 @@ object IconIdProvider {
         R.drawable.baseline_diversity_3_24,
     )
 
+    fun getIconIdList() : IntArray
+    {
+        return (iconIds)
+    }
     fun getIconResourceId(id: Int): Int
     {
         try

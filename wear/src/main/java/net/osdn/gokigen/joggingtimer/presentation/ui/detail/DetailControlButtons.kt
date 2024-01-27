@@ -1,6 +1,7 @@
 package net.osdn.gokigen.joggingtimer.presentation.ui.detail
 
 import android.content.Context
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -76,7 +77,10 @@ fun DetailControlButtons(context: Context, navController: NavHostController, ind
                 .background(color = Color.Black),
             shape = RoundedCornerShape(5.dp),
             colors = ButtonDefaults.primaryButtonColors(backgroundColor =  Color.Black),
-            onClick = {  },
+            onClick = {
+                Log.v("Detail", "onClick() id: ${dataItem.indexId}")
+                navController.navigate("RecordEditScreen/${dataItem.indexId}")
+            },
             enabled = true,
         ) {
             Icon(
@@ -142,13 +146,17 @@ fun DetailControlButtons(context: Context, navController: NavHostController, ind
             title = {
                 Text(
                     text = stringResource(id = R.string.dialog_message_delete),
-                    color = Color.White
+                    color = Color.White,
+                    textAlign = TextAlign.Center,
+                    fontSize = 16.sp,
+                    modifier = Modifier.fillMaxWidth()
                 )
             },
             message = {
                 Text(
                     text =  " " + dataItem.title,
-                    color = MaterialTheme.colors.secondary
+                    color = MaterialTheme.colors.secondary,
+                    fontSize = 14.sp,
                 )
             },
         ) {
@@ -161,7 +169,7 @@ fun DetailControlButtons(context: Context, navController: NavHostController, ind
                         .background(color = Color.Black),
                     label = {
                         Text(
-                            stringResource(id = R.string.dialog_positive_execute),
+                            text = stringResource(id = R.string.dialog_positive_execute),
                             fontSize = 14.sp,
                             textAlign = TextAlign.Center,
                             modifier = Modifier.fillMaxWidth()

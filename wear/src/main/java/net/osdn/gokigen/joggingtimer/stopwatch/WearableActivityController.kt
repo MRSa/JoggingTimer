@@ -559,7 +559,30 @@ class WearableActivityController : IWearableActivityControl, ITimeEntryDatabaseC
             ee.printStackTrace()
         }
     }
-
+    override fun updateRecord(id: Int, title: String, iconId: Int)
+    {
+        try
+        {
+            val thread = Thread {
+                if (isReadyDatabase)
+                {
+                    try
+                    {
+                        database?.updateIndexData(id.toLong(), title, iconId)
+                    }
+                    catch (e: Exception)
+                    {
+                        e.printStackTrace()
+                    }
+                }
+            }
+            thread.start()
+        }
+        catch (ee: Exception)
+        {
+            ee.printStackTrace()
+        }
+    }
     override fun launchNotify(isShow: Boolean)
     {
         try

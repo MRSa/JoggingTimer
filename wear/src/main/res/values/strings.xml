@@ -18,7 +18,7 @@
     <string name="dialog_negative_cancel">Cancel</string>
     <string name="dialog_title_hint">Set Title</string>
     <string name="dialog_message_data_edit">Data Edit</string>
-    <string name="action_edit_title">Edit Title/Icon</string>
+    <string name="action_edit_title">Edit Icon/Title</string>
     <string name="action_change_icon">Change Icon</string>
     <string name="action_set_reference">Set Reference Data</string>
     <string name="action_edited_data">Data Updated</string>

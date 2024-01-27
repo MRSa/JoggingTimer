@@ -33,6 +33,7 @@ interface IWearableActivityControl
     fun getRecordItem(id: Int): ResultListData
     fun getLapTimeList(id: Int): List<LapTimeRecord>
     fun deleteRecord(id: Int)
+    fun updateRecord(id: Int, title: String, iconId: Int)
     fun launchNotify(isShow: Boolean)
 
 }
