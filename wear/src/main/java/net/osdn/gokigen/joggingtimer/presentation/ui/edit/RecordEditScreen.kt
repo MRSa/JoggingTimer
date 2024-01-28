@@ -3,8 +3,10 @@ package net.osdn.gokigen.joggingtimer.presentation.ui.edit
 import android.content.Context
 import android.text.format.DateFormat
 import android.widget.Toast
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.gestures.animateScrollBy
 import androidx.compose.foundation.gestures.scrollBy
@@ -19,10 +21,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.DropdownMenu
-import androidx.compose.material.DropdownMenuItem
-import androidx.compose.material.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableIntStateOf
@@ -43,9 +43,13 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import androidx.wear.compose.foundation.lazy.ScalingLazyColumn
+import androidx.wear.compose.foundation.lazy.items
+import androidx.wear.compose.foundation.lazy.rememberScalingLazyListState
 import androidx.wear.compose.material.Chip
 import androidx.wear.compose.material.ChipDefaults
 import androidx.wear.compose.material.Icon
+import androidx.wear.compose.material.ListHeader
 import androidx.wear.compose.material.MaterialTheme
 import androidx.wear.compose.material.PositionIndicator
 import androidx.wear.compose.material.Scaffold
@@ -60,6 +64,7 @@ import net.osdn.gokigen.joggingtimer.presentation.theme.JoggingTimerTheme
 import net.osdn.gokigen.joggingtimer.utilities.IconIdProvider
 import java.util.Locale
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun RecordEditScreen(context: Context, navController: NavHostController, indexId: Int)
 {
@@ -74,7 +79,7 @@ fun RecordEditScreen(context: Context, navController: NavHostController, indexId
         val iconSelectionExpanded = remember { mutableStateOf(false) }
         val selectedIndex = remember { mutableIntStateOf(dataItem.iconId) }
         val titleData = remember { mutableStateOf(dataItem.title) }
-        val drawableIconId = IconIdProvider.getIconResourceId(selectedIndex.intValue)
+        val listState = rememberScalingLazyListState()
 
         Box(
             modifier = Modifier
@@ -129,68 +134,9 @@ fun RecordEditScreen(context: Context, navController: NavHostController, indexId
                         fontSize = 14.sp,
                         modifier = Modifier.fillMaxWidth()
                     )
-
-                    Icon(
-                        painter = painterResource(id = drawableIconId),
-                        contentDescription = "Icon",
-                        tint = if (isEditIcon.value) { MaterialTheme.colors.primary } else { Color.White },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .background(Color.DarkGray)
-                            .clickable(onClick = { iconSelectionExpanded.value = true })
-                    )
                     Spacer(modifier = Modifier.padding(1.dp))
-                    DropdownMenu(
-                        expanded = iconSelectionExpanded.value,
-                        onDismissRequest = { iconSelectionExpanded.value = false },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .background(Color.Black)
-                            .padding(start = 10.dp),
-                    ) {
-                        IconIdProvider.getIconIdList().forEachIndexed { index, iconId ->
-                            if ((index == 0) || (index >= 5)) {
-                                DropdownMenuItem(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .background(
-                                            if (selectedIndex.intValue == index) {
-                                                Color.DarkGray
-                                            } else {
-                                                Color.Black
-                                            }
-                                        ),
-                                    onClick = {
-                                        selectedIndex.intValue = index
-                                        iconSelectionExpanded.value = false
-                                    },
-                                ) {
-                                    Icon(
-                                        painter = painterResource(
-                                            id = IconIdProvider.getIconResourceId(
-                                                index
-                                            )
-                                        ),
-                                        contentDescription = "Icon",
-                                        tint = if (selectedIndex.intValue == index) {
-                                            MaterialTheme.colors.primary
-                                        } else {
-                                            Color.White
-                                        },
-                                        modifier = Modifier
-                                            .background(
-                                                if (selectedIndex.intValue == index) {
-                                                    Color.DarkGray
-                                                } else {
-                                                    Color.Black
-                                                }
-                                            )
-                                    )
-                                }
-                            }
-                        }
-                    }
-                    TextField(
+
+                    BasicTextField(
                         value = titleData.value,
                         onValueChange = { titleData.value = it },
                         textStyle = TextStyle(
@@ -203,6 +149,18 @@ fun RecordEditScreen(context: Context, navController: NavHostController, indexId
                         maxLines = 2
                     )
 
+                    Spacer(modifier = Modifier.padding(1.dp))
+
+                    Icon(
+                        painter = painterResource(id = IconIdProvider.getIconResourceId(selectedIndex.intValue)),
+                        contentDescription = "Icon",
+                        tint = if (isEditIcon.value) { MaterialTheme.colors.primary } else { Color.White },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(Color.DarkGray)
+                            .clickable(onClick = { iconSelectionExpanded.value = true })
+                    )
+                    Spacer(modifier = Modifier.padding(1.dp))
                     //Divider(color = Color.DarkGray, thickness = 1.dp)
 
                     Chip(
@@ -228,6 +186,78 @@ fun RecordEditScreen(context: Context, navController: NavHostController, indexId
                         },
                         colors = ChipDefaults.primaryChipColors(),
                     )
+                }
+                if (iconSelectionExpanded.value)
+                {
+                    // アイコンの選択（疑似的なドロップダウンメニュー）
+                    ScalingLazyColumn(
+                        modifier = Modifier
+                            //.fillMaxSize()
+                            .fillMaxWidth()
+                            .height(170.dp) // ここ、ちょっとベタなのはどうかと思うが...
+                            .background(color = Color.Black)
+                            .align(Alignment.BottomCenter),
+                        contentPadding = PaddingValues(
+                            top = 8.dp,
+                            start = 8.dp,
+                            end = 8.dp,
+                            bottom = 8.dp,
+                        ),
+                        state = listState
+                    ) {
+                        this.item {
+                            ListHeader(
+                                modifier = Modifier.fillMaxSize(),
+                            ) {
+                                Column(
+                                    modifier = Modifier.fillMaxSize()
+                                        .focusRequester(focusRequester),
+                                    verticalArrangement = Arrangement.Top,
+                                    horizontalAlignment = Alignment.CenterHorizontally
+                                ) {
+                                    // タイトルを表示
+                                    Text(
+                                        //modifier = Modifier.fillMaxWidth(),
+                                        textAlign = TextAlign.Center,
+                                        color = Color.White,
+                                        fontSize = 14.sp,
+                                        text = stringResource(id = R.string.action_change_icon)
+                                    )
+                                }
+                            }
+                        }
+                        this.items(IconIdProvider.getIconSelectionList()) {  itemId ->
+                            Icon(
+                                painter = painterResource(
+                                    id = IconIdProvider.getIconResourceId(
+                                        itemId
+                                    )
+                                ),
+                                contentDescription = "Icon",
+                                tint = if (selectedIndex.intValue == itemId) {
+                                    MaterialTheme.colors.primary
+                                } else {
+                                    Color.White
+                                },
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .background(
+                                        if (selectedIndex.intValue == itemId) {
+                                            Color.DarkGray
+                                        } else {
+                                            Color.Black
+                                        }
+                                    )
+                                    .combinedClickable(
+                                        enabled = true,
+                                        onClick = {
+                                            iconSelectionExpanded.value = false
+                                            selectedIndex.intValue = itemId
+                                        },
+                                    ),
+                            )
+                        }
+                    }
                 }
             }
             LaunchedEffect(Unit) {

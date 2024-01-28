@@ -13,8 +13,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -23,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.wear.compose.material.Button
 import androidx.wear.compose.material.ButtonDefaults
+import androidx.wear.compose.material.Icon
 import net.osdn.gokigen.joggingtimer.R
 import net.osdn.gokigen.joggingtimer.stopwatch.timer.ITimerCounter
 
@@ -42,7 +41,14 @@ fun BtnSubStop(navController: NavHostController, counterManager: ITimerCounter)
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
         ////////////////////  記録一覧画面へ遷移  ////////////////////
-        IconButton(
+        Button(
+            modifier = Modifier
+                .height(48.dp)
+                .width(48.dp)
+                .padding(2.dp)
+                .background(color = Color.Black),
+            shape = RoundedCornerShape(10.dp),
+            colors = ButtonDefaults.primaryButtonColors(backgroundColor =  Color.Black),
             onClick = { navController.navigate("RecordListScreen") },
             enabled = true,
         ) {
@@ -54,7 +60,14 @@ fun BtnSubStop(navController: NavHostController, counterManager: ITimerCounter)
         }
 
         ////////////////////  カウンターのスタート  ////////////////////
-        IconButton(
+        Button(
+            modifier = Modifier
+                .height(48.dp)
+                .width(48.dp)
+                .padding(2.dp)
+                .background(color = Color.Black),
+            shape = RoundedCornerShape(10.dp),
+            colors = ButtonDefaults.primaryButtonColors(backgroundColor =  Color.Black),
             onClick = { counterManager.start() },
             enabled = true
         ) {
@@ -151,7 +164,14 @@ fun BtnSubFinished(navController: NavHostController, counterManager: ITimerCount
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
         ////////////////////  記録一覧画面へ遷移  ////////////////////
-        IconButton(
+        Button(
+            modifier = Modifier
+                .height(48.dp)
+                .width(48.dp)
+                .padding(2.dp)
+                .background(color = Color.Black),
+            shape = RoundedCornerShape(10.dp),
+            colors = ButtonDefaults.primaryButtonColors(backgroundColor =  Color.Black),
             onClick = { navController.navigate("RecordListScreen") },
             enabled = true,
         ) {
@@ -163,7 +183,14 @@ fun BtnSubFinished(navController: NavHostController, counterManager: ITimerCount
         }
 
         ////////////////////  カウンターのリセット  ////////////////////
-        IconButton(
+        Button(
+            modifier = Modifier
+                .height(48.dp)
+                .width(48.dp)
+                .padding(2.dp)
+                .background(color = Color.Black),
+            shape = RoundedCornerShape(10.dp),
+            colors = ButtonDefaults.primaryButtonColors(backgroundColor =  Color.Black),
             onClick = { counterManager.reset() },
             enabled = true
         ) {
@@ -175,7 +202,14 @@ fun BtnSubFinished(navController: NavHostController, counterManager: ITimerCount
         }
 
         ////////////////////  カウンターのスタート  ////////////////////
-        IconButton(
+        Button(
+            modifier = Modifier
+                .height(48.dp)
+                .width(48.dp)
+                .padding(2.dp)
+                .background(color = Color.Black),
+            shape = RoundedCornerShape(10.dp),
+            colors = ButtonDefaults.primaryButtonColors(backgroundColor =  Color.Black),
             onClick = { counterManager.start() },
             enabled = true
         ) {

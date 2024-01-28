@@ -101,10 +101,18 @@ object IconIdProvider {
         R.drawable.baseline_diversity_3_24,
     )
 
-    fun getIconIdList() : IntArray
+    fun getIconSelectionList() : ArrayList<Int>
     {
-        return (iconIds)
+        val iconIdSelectionList = ArrayList<Int>()
+        iconIds.forEachIndexed { index, it ->
+            if ((index == 0)||(index >= 5))
+            {
+                iconIdSelectionList.add(index)
+            }
+        }
+        return (iconIdSelectionList)
     }
+
     fun getIconResourceId(id: Int): Int
     {
         try

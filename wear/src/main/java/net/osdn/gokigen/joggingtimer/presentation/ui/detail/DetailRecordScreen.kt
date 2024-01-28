@@ -22,6 +22,7 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.input.rotary.onRotaryScrollEvent
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
@@ -140,7 +141,7 @@ fun DetailRecordScreen(context: Context, navController: NavHostController, id: I
                                     .focusRequester(focusRequester),
                                 verticalArrangement = Arrangement.Top,
                                 horizontalAlignment = Alignment.CenterHorizontally
-                            ) {        // データの題名を表示
+                            ) {
                                 // タイトル（記録詳細）を表示
                                 //Text(
                                 //    //modifier = Modifier.fillMaxWidth(),
@@ -149,12 +150,15 @@ fun DetailRecordScreen(context: Context, navController: NavHostController, id: I
                                 //    fontSize = 14.sp,
                                 //    text = stringResource(id = R.string.result_detail)
                                 //)
+                                // データの題名を表示 (ただし、長いと表示があふれる)
                                 Text(
                                     //modifier = Modifier.fillMaxWidth(),
                                     textAlign = TextAlign.Center,
                                     color = MaterialTheme.colors.primary,
-                                    fontSize = 14.sp,
-                                    text = dataItem.title
+                                    fontSize = 12.sp,
+                                    text = dataItem.title,
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis
                                 )
                                 // 制御ボタン群を表示
                                 DetailControlButtons(context, navController, id, dataItem, lapTimeDataList)

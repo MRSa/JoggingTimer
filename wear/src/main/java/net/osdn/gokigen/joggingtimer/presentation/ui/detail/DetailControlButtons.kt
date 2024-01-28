@@ -172,6 +172,7 @@ fun DetailControlButtons(context: Context, navController: NavHostController, ind
                             text = stringResource(id = R.string.dialog_positive_execute),
                             fontSize = 14.sp,
                             textAlign = TextAlign.Center,
+                            color = Color.Black,
                             modifier = Modifier.fillMaxWidth()
                             ) },
                     onClick = {
@@ -194,6 +195,7 @@ fun DetailControlButtons(context: Context, navController: NavHostController, ind
                             stringResource(id = R.string.dialog_negative_cancel),
                             fontSize = 14.sp,
                             textAlign = TextAlign.Center,
+                            color = Color.Black,
                             modifier = Modifier.fillMaxWidth()
                             ) },
                     onClick = { deleteDialog.value = false },
