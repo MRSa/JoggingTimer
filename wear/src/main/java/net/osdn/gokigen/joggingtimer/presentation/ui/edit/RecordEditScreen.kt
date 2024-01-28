@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -21,6 +22,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.DropdownMenu
 import androidx.compose.material.DropdownMenuItem
+import androidx.compose.material.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableIntStateOf
@@ -35,7 +37,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.rotary.onRotaryScrollEvent
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
@@ -43,7 +47,6 @@ import androidx.wear.compose.material.Chip
 import androidx.wear.compose.material.ChipDefaults
 import androidx.wear.compose.material.Icon
 import androidx.wear.compose.material.MaterialTheme
-import androidx.wear.compose.material.Picker
 import androidx.wear.compose.material.PositionIndicator
 import androidx.wear.compose.material.Scaffold
 import androidx.wear.compose.material.Text
@@ -133,9 +136,10 @@ fun RecordEditScreen(context: Context, navController: NavHostController, indexId
                         tint = if (isEditIcon.value) { MaterialTheme.colors.primary } else { Color.White },
                         modifier = Modifier
                             .fillMaxWidth()
-                            .background(Color.Black)
+                            .background(Color.DarkGray)
                             .clickable(onClick = { iconSelectionExpanded.value = true })
                     )
+                    Spacer(modifier = Modifier.padding(1.dp))
                     DropdownMenu(
                         expanded = iconSelectionExpanded.value,
                         onDismissRequest = { iconSelectionExpanded.value = false },
@@ -186,12 +190,17 @@ fun RecordEditScreen(context: Context, navController: NavHostController, indexId
                             }
                         }
                     }
-                    Text(
-                        //modifier = Modifier.fillMaxWidth(),
-                        textAlign = TextAlign.Center,
-                        color = MaterialTheme.colors.primary,
-                        fontSize = 14.sp,
-                        text = dataItem.title
+                    TextField(
+                        value = titleData.value,
+                        onValueChange = { titleData.value = it },
+                        textStyle = TextStyle(
+                            color = MaterialTheme.colors.primary,
+                            textDecoration = TextDecoration.Underline
+                        ),
+                        modifier = Modifier
+                            .background(Color.DarkGray)
+                            .fillMaxWidth(),
+                        maxLines = 2
                     )
 
                     //Divider(color = Color.DarkGray, thickness = 1.dp)
