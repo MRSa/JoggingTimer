@@ -10,13 +10,11 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material.Divider
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.wear.compose.material.Text
@@ -74,6 +72,6 @@ fun LapTimeItem(context: Context, navController: NavHostController, lapCount: In
             fontSize = 14.sp,
             color = if (data.recordType.toLong() == DEFAULT_RECORD_TYPE) { Color.White } else { Color.LightGray }
         )
-        Divider(color = Color.DarkGray, thickness = 1.dp)
+        //Divider(color = Color.DarkGray, thickness = 1.dp)
     }
 }

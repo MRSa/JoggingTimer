@@ -5,7 +5,7 @@ android {
     defaultConfig {
         applicationId "net.osdn.gokigen.joggingtimer"
         minSdkVersion 14
-        targetSdkVersion 33
+        targetSdkVersion 34
         versionCode 200000
         versionName "2.0.0"
     }

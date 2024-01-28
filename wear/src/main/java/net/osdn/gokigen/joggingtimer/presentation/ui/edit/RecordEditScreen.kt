@@ -2,6 +2,7 @@ package net.osdn.gokigen.joggingtimer.presentation.ui.edit
 
 import android.content.Context
 import android.text.format.DateFormat
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.focusable
@@ -10,6 +11,7 @@ import androidx.compose.foundation.gestures.scrollBy
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -19,7 +21,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.DropdownMenu
 import androidx.compose.material.DropdownMenuItem
-import androidx.compose.material.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableIntStateOf
@@ -40,7 +41,9 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.wear.compose.material.Chip
 import androidx.wear.compose.material.ChipDefaults
+import androidx.wear.compose.material.Icon
 import androidx.wear.compose.material.MaterialTheme
+import androidx.wear.compose.material.Picker
 import androidx.wear.compose.material.PositionIndicator
 import androidx.wear.compose.material.Scaffold
 import androidx.wear.compose.material.Text
@@ -73,7 +76,8 @@ fun RecordEditScreen(context: Context, navController: NavHostController, indexId
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(MaterialTheme.colors.background),
+                .background(MaterialTheme.colors.background)
+                .padding(paddingValues = PaddingValues(2.dp)),
             contentAlignment = Alignment.Center
         ) {
             Scaffold(
@@ -105,7 +109,10 @@ fun RecordEditScreen(context: Context, navController: NavHostController, indexId
                         }
                         .fillMaxWidth()
                         .verticalScroll(scrollState)
-                        .padding(horizontal = horizontalPadding, vertical = 28.dp)  // 20.dp -> 26.dp
+                        .padding(
+                            horizontal = horizontalPadding,
+                            vertical = 28.dp
+                        )  // 20.dp -> 26.dp
                         .focusRequester(focusRequester)
                         .focusable(),
                     verticalArrangement = Arrangement.Top,
@@ -124,30 +131,58 @@ fun RecordEditScreen(context: Context, navController: NavHostController, indexId
                         painter = painterResource(id = drawableIconId),
                         contentDescription = "Icon",
                         tint = if (isEditIcon.value) { MaterialTheme.colors.primary } else { Color.White },
-                        modifier = Modifier.fillMaxWidth().background(Color.Black).clickable(onClick = { iconSelectionExpanded.value = true })
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(Color.Black)
+                            .clickable(onClick = { iconSelectionExpanded.value = true })
                     )
                     DropdownMenu(
                         expanded = iconSelectionExpanded.value,
                         onDismissRequest = { iconSelectionExpanded.value = false },
-                        modifier = Modifier.fillMaxWidth().background(Color.Black).padding(start = 10.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(Color.Black)
+                            .padding(start = 10.dp),
                     ) {
                         IconIdProvider.getIconIdList().forEachIndexed { index, iconId ->
-                            DropdownMenuItem(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .background(if (selectedIndex.intValue == index) { Color.DarkGray } else { Color.Black }),
-                                onClick = {
-                                selectedIndex.intValue = index
-                                iconSelectionExpanded.value = false
-                                },
-                            ) {
-                                Icon(
-                                    painter = painterResource(id = IconIdProvider.getIconResourceId(index)),
-                                    contentDescription = "Icon",
-                                    tint = if (selectedIndex.intValue == index) { MaterialTheme.colors.primary } else { Color.White },
+                            if ((index == 0) || (index >= 5)) {
+                                DropdownMenuItem(
                                     modifier = Modifier
-                                        .background(if (selectedIndex.intValue == index) { Color.DarkGray } else { Color.Black })
-                                )
+                                        .fillMaxWidth()
+                                        .background(
+                                            if (selectedIndex.intValue == index) {
+                                                Color.DarkGray
+                                            } else {
+                                                Color.Black
+                                            }
+                                        ),
+                                    onClick = {
+                                        selectedIndex.intValue = index
+                                        iconSelectionExpanded.value = false
+                                    },
+                                ) {
+                                    Icon(
+                                        painter = painterResource(
+                                            id = IconIdProvider.getIconResourceId(
+                                                index
+                                            )
+                                        ),
+                                        contentDescription = "Icon",
+                                        tint = if (selectedIndex.intValue == index) {
+                                            MaterialTheme.colors.primary
+                                        } else {
+                                            Color.White
+                                        },
+                                        modifier = Modifier
+                                            .background(
+                                                if (selectedIndex.intValue == index) {
+                                                    Color.DarkGray
+                                                } else {
+                                                    Color.Black
+                                                }
+                                            )
+                                    )
+                                }
                             }
                         }
                     }
@@ -159,15 +194,19 @@ fun RecordEditScreen(context: Context, navController: NavHostController, indexId
                         text = dataItem.title
                     )
 
+                    //Divider(color = Color.DarkGray, thickness = 1.dp)
+
                     Chip(
                         // OKボタン。ボタンが押されたときに更新する。
                         modifier = Modifier
                             //.fillMaxSize()
                             .height(48.dp)
                             .width(96.dp)
-                            .background(color = Color.Black),
+                            .background(color = Color.Black)
+                            .padding(paddingValues = PaddingValues(4.dp))
+                            .align(alignment = Alignment.CenterHorizontally),
                         label = {
-                            androidx.compose.material.Text(
+                            Text(
                                 text = stringResource(id = R.string.dialog_positive_execute),
                                 fontSize = 14.sp,
                                 textAlign = TextAlign.Center,
@@ -175,6 +214,7 @@ fun RecordEditScreen(context: Context, navController: NavHostController, indexId
                             ) },
                         onClick = {
                             AppSingleton.controller.updateRecord(indexId, titleData.value, iconId = selectedIndex.intValue)
+                            Toast.makeText(context, context.getString(R.string.action_edited_data), Toast.LENGTH_SHORT).show()
                             navController.popBackStack()  // 前の画面に戻る
                         },
                         colors = ChipDefaults.primaryChipColors(),

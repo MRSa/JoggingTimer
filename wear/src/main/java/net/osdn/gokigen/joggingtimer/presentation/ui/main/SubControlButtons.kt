@@ -26,7 +26,6 @@ import androidx.wear.compose.material.ButtonDefaults
 import net.osdn.gokigen.joggingtimer.R
 import net.osdn.gokigen.joggingtimer.stopwatch.timer.ITimerCounter
 
-
 ///////////////////////////////////////////////////
 //  サブのボタンエリアの描画＆制御
 //   (JoggingTimer互換のボタン)
@@ -35,7 +34,6 @@ import net.osdn.gokigen.joggingtimer.stopwatch.timer.ITimerCounter
 @Composable
 fun BtnSubStop(navController: NavHostController, counterManager: ITimerCounter)
 {
-    Log.v("BTN", "btnStop")
 
     // ストップ状態時のボタン
     Row(modifier = Modifier
@@ -73,7 +71,6 @@ fun BtnSubStop(navController: NavHostController, counterManager: ITimerCounter)
 @Composable
 fun BtnSubStart(counterManager: ITimerCounter, context: Context)
 {
-    Log.v("BTN", "btnStart")
 
     // スタート状態時のボタン
     Row(modifier = Modifier
@@ -146,7 +143,6 @@ fun BtnSubStart(counterManager: ITimerCounter, context: Context)
 @Composable
 fun BtnSubFinished(navController: NavHostController, counterManager: ITimerCounter)
 {
-    Log.v("BTN", "btnFinish")
 
     // カウントストップ時のボタン
     Row(modifier = Modifier

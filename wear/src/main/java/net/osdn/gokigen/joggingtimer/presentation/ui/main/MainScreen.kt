@@ -17,6 +17,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -44,6 +45,7 @@ fun MainScreen(context: Context, navController: NavHostController, counterManage
     val coroutineScope = rememberCoroutineScope()
     val scrollState = rememberScrollState() // remember { MyPositionIndicatorState() }
     val horizontalPadding = 5.dp
+    val enableLapStamp  = remember { mutableStateOf(false)}
 
     Box(
         modifier = Modifier
@@ -79,12 +81,17 @@ fun MainScreen(context: Context, navController: NavHostController, counterManage
                     }
                     .fillMaxWidth()
                     .verticalScroll(scrollState)
-                    .padding(horizontal = horizontalPadding, vertical = 28.dp)  // 20.dp -> 26.dp
+                    .padding(horizontal = horizontalPadding, vertical = 28.dp)  // 20.dp -> 26.dp -> 28.dp
                     .focusRequester(focusRequester)
                     .focusable(),
                 verticalArrangement = Arrangement.Top,
                 horizontalAlignment = Alignment.Start,
             ) {
+
+                // ラップタイムボタンが有効になる条件を設定
+                val lapTimeValue = counterManager.getPastTime() - if (counterManager.getLastLapTime() <= 0 ) { 0 } else { counterManager.getLastLapTime() }
+                enableLapStamp.value = lapTimeValue > 3000
+
                 // メインカウンタ と サブカウンタ
                 MainCounter(counterManager)
                 SubCounter(counterManager)
@@ -94,14 +101,14 @@ fun MainScreen(context: Context, navController: NavHostController, counterManage
                     navController = navController,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(40.dp)   // 48.dp
+                        .height(44.dp)   // 48.dp -> 40.dp
                         .padding(6.dp))
 
                 // 現在の状態によって、メインボタンの表示を切り替える
                 when (counterManager.getCurrentCountStatus())
                 {
-                    ICounterStatus.START -> BtnStart(counterManager, context) // 実行中
-                    ICounterStatus.LAPTIME -> BtnStart(counterManager, context) // 実行中(その2)
+                    ICounterStatus.START -> BtnStart(counterManager, context, enableLapStamp.value) // 実行中
+                    ICounterStatus.LAPTIME -> BtnStart(counterManager, context, enableLapStamp.value) // 実行中(その2)
                     ICounterStatus.STOP -> BtnStop(navController, counterManager) // 開始前
                     ICounterStatus.FINISHED -> BtnFinished(navController, counterManager)  // 終了
                 }

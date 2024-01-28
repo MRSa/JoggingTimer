@@ -100,7 +100,7 @@ fun BtnStop(navController: NavHostController, timerCounter: ITimerCounter)
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun BtnStart(timerCounter: ITimerCounter, context: Context)
+fun BtnStart(timerCounter: ITimerCounter, context: Context, isEnable: Boolean)
 {
     // タイム計測実行中時のボタン配置
     Row(modifier = Modifier
@@ -122,7 +122,7 @@ fun BtnStart(timerCounter: ITimerCounter, context: Context)
                         Toast.makeText(context, context.getString(R.string.long_press_to_stop), Toast.LENGTH_SHORT).show()
                     },
                     onLongClick = {
-                        Log.v("STOP", "STOP: onLongClick (2)")
+                        //Log.v("STOP", "STOP: onLongClick (2)")
                         timerCounter.stop()
                     }
                 ),
@@ -157,7 +157,7 @@ fun BtnStart(timerCounter: ITimerCounter, context: Context)
             )
         }
 
-        ////////////////////  タイムスタンプ記録  ////////////////////
+        ////////////////////  タイムスタンプ記録 (チャタリング防止機能あり)  ////////////////////
         Button(
             modifier = Modifier
                 .height(48.dp)
@@ -167,12 +167,12 @@ fun BtnStart(timerCounter: ITimerCounter, context: Context)
             shape = RoundedCornerShape(10.dp),
             colors = ButtonDefaults.primaryButtonColors(backgroundColor =  Color.Black),
             onClick = { timerCounter.timeStamp(false) },
-            enabled = true
+            enabled = isEnable
         ) {
             Icon(
                 painter = painterResource(id = R.drawable.baseline_flag_24),
                 contentDescription = "Lap",
-                tint = Color.LightGray
+                tint = if (isEnable) { Color.LightGray } else { Color.DarkGray }
             )
         }
     }
