@@ -100,7 +100,7 @@ class TimeEntryDatabase implements ITimeEntryDatabase
                 " ON " + TimeEntryIndex.EntryIndex.TABLE_NAME + "." + TimeEntryIndex.EntryIndex._ID + " = " + TimeEntryData.EntryData.TABLE_NAME+ "." + TimeEntryData.EntryData.COLUMN_NAME_INDEX_ID +
                 " WHERE " + TimeEntryIndex.EntryIndex.TABLE_NAME+ "." + TimeEntryIndex.EntryIndex.COLUMN_NAME_ICON_ID + " = " + iconId +
                 " ORDER BY " + TimeEntryData.EntryData.TABLE_NAME+ "." + TimeEntryData.EntryData.COLUMN_NAME_TIME_ENTRY;
-        //Log.v(TAG, "Query : " + queryString);
+        // Log.v(TAG, "Query : " + queryString);
         return (db.rawQuery(queryString, null));
     }
 
@@ -138,6 +138,7 @@ class TimeEntryDatabase implements ITimeEntryDatabase
             ContentValues iconValues = new ContentValues();
             iconValues.put(TimeEntryIndex.EntryIndex.COLUMN_NAME_ICON_ID, icon);
             db.update(TimeEntryIndex.EntryIndex.TABLE_NAME, iconValues, _ID + " = " + indexId, null);
+            //Log.v(TAG, "updateIndexData(" + indexId + ", " + title + ", " + icon + ")");
         }
         catch (Exception e)
         {
@@ -332,7 +333,6 @@ class TimeEntryDatabase implements ITimeEntryDatabase
         callback.modelDataEntryFinished(ITimeEntryDatabaseCallback.OperationType.FINISHED, false, -1, title);
         return (-1);
     }
-
 
     /**
      *

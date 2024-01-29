@@ -50,6 +50,7 @@ class WearableActivityController : IWearableActivityControl, ITimeEntryDatabaseC
 
     init {
         Log.v(TAG, "WearableActivityController()")
+        currentReferenceId = preferences?.getInt(PREF_KEY_REFERENCE_TIME_SELECTION, 0) ?: 0
     }
 
     override fun setup(
@@ -239,6 +240,7 @@ class WearableActivityController : IWearableActivityControl, ITimeEntryDatabaseC
 */
     override fun getReferenceTimerSelection(): Int
     {
+/*
         try
         {
             currentReferenceId = preferences?.getInt(PREF_KEY_REFERENCE_TIME_SELECTION, 0) ?: 0
@@ -248,17 +250,18 @@ class WearableActivityController : IWearableActivityControl, ITimeEntryDatabaseC
         {
             e.printStackTrace()
         }
-        return (0)
+*/
+        return (currentReferenceId)
     }
 
     override fun setReferenceTimerSelection(id: Int)
     {
         try
         {
+            currentReferenceId = id
             val editor = preferences?.edit()
             editor?.putInt(PREF_KEY_REFERENCE_TIME_SELECTION, id)
             editor?.apply()
-            currentReferenceId = id
         }
         catch (e: Exception)
         {
@@ -426,18 +429,20 @@ class WearableActivityController : IWearableActivityControl, ITimeEntryDatabaseC
         // load reference data
         try
         {
-            val id = getReferenceTimerSelection()
-            val refList: ArrayList<Long> = ArrayList()
-            val cursor = database?.getAllReferenceDetailData(id)
-            if (cursor != null)
+            for (id in 0..2)
             {
-                //refList = ArrayList()
-                while (cursor.moveToNext())
+                val refList: ArrayList<Long> = ArrayList()
+                refList.clear()
+                val cursor = database?.getAllReferenceDetailData(id)
+                if (cursor != null)
                 {
-                    refList.add(cursor.getLong(cursor.getColumnIndex(TimeEntryData.EntryData.COLUMN_NAME_TIME_ENTRY)))
+                    while (cursor.moveToNext()) {
+                        refList.add(cursor.getLong(cursor.getColumnIndex(TimeEntryData.EntryData.COLUMN_NAME_TIME_ENTRY)))
+                    }
                 }
+                //Log.v(TAG, "----- loadReferenceData() : $id, ${refList.size} -----")
+                dbCallback?.referenceDataIsReloaded(id, refList)
             }
-            dbCallback?.referenceDataIsReloaded(id, refList)
         }
         catch (e: Exception)
         {
@@ -567,6 +572,18 @@ class WearableActivityController : IWearableActivityControl, ITimeEntryDatabaseC
             ee.printStackTrace()
         }
     }
+    override fun updateIndexRecord(id: Int, title: String, iconId: Int)
+    {
+        try
+        {
+            database?.updateIndexData(id.toLong(), title, iconId)
+        }
+        catch (ee: Exception)
+        {
+            ee.printStackTrace()
+        }
+    }
+
     override fun updateRecord(id: Int, title: String, iconId: Int)
     {
         try
@@ -595,7 +612,6 @@ class WearableActivityController : IWearableActivityControl, ITimeEntryDatabaseC
     override fun setReferenceIndexData(id: Int, iconId: Int)
     {
         // iconId : Reference A = 0, B = 1, C = それ以外
-
         try
         {
             val thread = Thread {
@@ -612,6 +628,29 @@ class WearableActivityController : IWearableActivityControl, ITimeEntryDatabaseC
                 }
             }
             thread.start()
+        }
+        catch (ee: Exception)
+        {
+            ee.printStackTrace()
+        }
+    }
+
+    override fun setReferenceIconId(id: Int, iconId: Int)
+    {
+        // iconId : Reference A = 0, B = 1, C = それ以外
+        try
+        {
+            if (isReadyDatabase)
+            {
+                try
+                {
+                    database?.setReferenceIndexData(iconId, id.toLong())
+                }
+                catch (e: Exception)
+                {
+                    e.printStackTrace()
+                }
+            }
         }
         catch (ee: Exception)
         {

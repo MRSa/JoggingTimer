@@ -26,6 +26,7 @@ fun LapTimeListPastTime(counterManager: ITimerCounter)
     // （通常の）ラップタイム表示
     val lapTimeCount = counterManager.getLapTimeCount()
     val stopLapIndex = 1
+    val referenceLapId = AppSingleton.controller.getReferenceTimerSelection()
     //val stopLapIndex = if (lapTimeCount > (5 + 1)) { lapTimeCount - 5 } else { 1 }  // 表示するラップ数を最大5に制限する場合...
     if (lapTimeCount > 0)
     {
@@ -34,12 +35,15 @@ fun LapTimeListPastTime(counterManager: ITimerCounter)
         {
             val lapTime = counterManager.getLapTime(lapTimeIndex)
             val previousTime = counterManager.getLapTime(lapTimeIndex - 1)
-            val timeString = TimeStringConvert.getTimeString(lapTime - previousTime)
+            val diffTime = lapTime - previousTime
+            val timeString = TimeStringConvert.getTimeString(diffTime)
+            val referenceLapTime = AppSingleton.timerCounter.getReferenceLapTime(referenceLapId, lapTimeIndex)
+            val textDiffTime = if (referenceLapTime == 0L) { "" } else { " (${TimeStringConvert.getDiffTimeString(diffTime - referenceLapTime)})" }
             Text(
                 modifier = Modifier.fillMaxWidth(),
                 textAlign = TextAlign.Center,
                 color = MaterialTheme.colors.primary,
-                text = "[${lapTimeIndex}] $timeString",
+                text = "[${lapTimeIndex}] $timeString $textDiffTime",
                 fontSize = 12.sp,
             )
         }

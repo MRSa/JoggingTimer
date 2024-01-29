@@ -21,8 +21,9 @@ interface ITimerCounter
     fun getStopTime(): Long
     fun getLapTimeList(): List<Long>
     fun getReferenceLapTimeList(): List<Long>?
-
+    fun getReferenceLapTimeList(refId: Int): List<Long>?
     fun getReferenceLapTime(position: Int): Long
+    fun getReferenceLapTime(refId: Int, position: Int): Long
     fun selectReferenceLapTime(id: Int)
     fun setCallback(callback: ICounterStatusNotify)
 }

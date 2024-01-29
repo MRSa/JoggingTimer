@@ -136,7 +136,10 @@ fun SetReferenceScreen(context: Context, navController: NavHostController, index
                             .fillMaxWidth()
                             .background(Color.DarkGray)
                             .clickable(onClick = {
-                                AppSingleton.controller.updateRecord(indexId, dataItem.title, iconId)
+                                coroutineScope.launch {
+                                    AppSingleton.controller.updateIndexRecord(indexId, dataItem.title, iconId)
+                                    AppSingleton.controller.setupReferenceData()
+                                }
                                 navController.popBackStack()  // 前の画面に戻る
                             })
                     )
@@ -149,7 +152,10 @@ fun SetReferenceScreen(context: Context, navController: NavHostController, index
                             .fillMaxWidth()
                             .background(Color.DarkGray)
                             .clickable(onClick = {
-                                AppSingleton.controller.setReferenceIndexData(indexId, ICON_REFERENCE_A)
+                                coroutineScope.launch {
+                                    AppSingleton.controller.setReferenceIconId(indexId, ICON_REFERENCE_A)
+                                    AppSingleton.controller.setupReferenceData()
+                                }
                                 navController.popBackStack()  // 前の画面に戻る
                             })
                     )
@@ -162,7 +168,10 @@ fun SetReferenceScreen(context: Context, navController: NavHostController, index
                             .fillMaxWidth()
                             .background(Color.DarkGray)
                             .clickable(onClick = {
-                                AppSingleton.controller.setReferenceIndexData(indexId, ICON_REFERENCE_B)
+                                coroutineScope.launch {
+                                    AppSingleton.controller.setReferenceIconId(indexId, ICON_REFERENCE_B)
+                                    AppSingleton.controller.setupReferenceData()
+                                }
                                 navController.popBackStack()  // 前の画面に戻る
                             })
                     )
@@ -175,7 +184,10 @@ fun SetReferenceScreen(context: Context, navController: NavHostController, index
                             .fillMaxWidth()
                             .background(Color.DarkGray)
                             .clickable(onClick = {
-                                AppSingleton.controller.setReferenceIndexData(indexId, ICON_REFERENCE_C)
+                                coroutineScope.launch {
+                                    AppSingleton.controller.setReferenceIconId(indexId, ICON_REFERENCE_C)
+                                    AppSingleton.controller.setupReferenceData()
+                                }
                                 navController.popBackStack()  // 前の画面に戻る
                             })
                     )

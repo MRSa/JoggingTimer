@@ -17,6 +17,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -25,6 +26,7 @@ import androidx.navigation.NavHostController
 import androidx.wear.compose.material.Button
 import androidx.wear.compose.material.ButtonDefaults
 import androidx.wear.compose.material.Icon
+import kotlinx.coroutines.launch
 import net.osdn.gokigen.joggingtimer.AppSingleton
 import net.osdn.gokigen.joggingtimer.R
 import net.osdn.gokigen.joggingtimer.stopwatch.timer.ITimerCounter
@@ -116,6 +118,7 @@ fun BtnSubStart(counterManager: ITimerCounter, context: Context)
 {
     val referenceId = remember { mutableIntStateOf(AppSingleton.controller.getReferenceTimerSelection()) }
     val interactionSource = remember { MutableInteractionSource() }
+    val coroutineScope = rememberCoroutineScope()
 
     // スタート状態時のボタン
     Row(modifier = Modifier
@@ -143,9 +146,12 @@ fun BtnSubStart(counterManager: ITimerCounter, context: Context)
                             .show()
                     },
                     onLongClick = {
-                        referenceId.intValue = if (referenceId.intValue >= 2) { 0 } else { (referenceId.intValue + 1) }
-                        AppSingleton.controller.setReferenceTimerSelection(referenceId.intValue)
-                        AppSingleton.controller.vibrate(75)
+                        coroutineScope.launch {
+                            referenceId.intValue = if (referenceId.intValue >= 2) { 0 } else { (referenceId.intValue + 1) }
+                            AppSingleton.controller.setReferenceTimerSelection(referenceId.intValue)
+                            AppSingleton.controller.setupReferenceData()
+                            AppSingleton.controller.vibrate(75)
+                        }
                     }
                 ),
             shape = RoundedCornerShape(10.dp),

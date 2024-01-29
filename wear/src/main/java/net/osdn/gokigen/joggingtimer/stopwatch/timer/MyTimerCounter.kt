@@ -260,13 +260,19 @@ class MyTimerCounter internal constructor() : ITimerCounter, ITimeoutReceiver, I
 
     override fun getReferenceLapTimeList(): List<Long>?
     {
-        if (referenceTimeId == 0) {
-            return referenceTimeA
-        } else if (referenceTimeId == 1) {
-            return referenceTimeB
-        }
-        return referenceTimeC
+        return (getReferenceLapTimeList(referenceTimeId))
     }
+
+    override fun getReferenceLapTimeList(refId: Int): List<Long>?
+    {
+        return (when (refId)
+        {
+            0 -> referenceTimeA
+            1 -> referenceTimeB
+            else -> referenceTimeB
+        })
+    }
+
     override fun getLapTimeList(): List<Long>
     {
         return lapTime
@@ -324,7 +330,7 @@ class MyTimerCounter internal constructor() : ITimerCounter, ITimeoutReceiver, I
                 }
             }
             callback?.counterStatusChanged(false)
-            Log.v(TAG, "reference lap time : $size")
+            Log.v(TAG, "[$id] reference lap time : $size")
         }
         catch (e: Exception)
         {
@@ -332,10 +338,17 @@ class MyTimerCounter internal constructor() : ITimerCounter, ITimeoutReceiver, I
         }
     }
 
-    override fun getReferenceLapTime(position: Int): Long {
+    override fun getReferenceLapTime(position: Int): Long
+    {
+        return (getReferenceLapTime(referenceTimeId, position))
+    }
+
+    override fun getReferenceLapTime(refId: Int, position: Int): Long
+    {
         try
         {
-            val referenceTime: List<Long>? = when (referenceTimeId) {
+            val referenceTime: List<Long>? = when (refId)
+            {
                 0 -> {
                     referenceTimeA
                 }
@@ -347,10 +360,12 @@ class MyTimerCounter internal constructor() : ITimerCounter, ITimeoutReceiver, I
                 }
             }
             val location = position + 1
-            if (referenceTime == null || location < 1 || referenceTime.size < location) {
+            if (referenceTime == null || location < 1 || referenceTime.size < location)
+            {
                 return 0
             }
-            return if (location == 1) {
+            return if (location == 1)
+            {
                 referenceTime[0]
             } else referenceTime[location - 1] - referenceTime[location - 2]
         }
@@ -360,7 +375,6 @@ class MyTimerCounter internal constructor() : ITimerCounter, ITimeoutReceiver, I
         }
         return 0
     }
-
     override fun selectReferenceLapTime(id: Int)
     {
         referenceTimeId = id
