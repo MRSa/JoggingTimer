@@ -13,7 +13,6 @@ import android.os.VibrationEffect.DEFAULT_AMPLITUDE
 import android.os.Vibrator
 import android.util.Log
 import androidx.activity.ComponentActivity
-import androidx.compose.runtime.Composable
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
@@ -45,6 +44,7 @@ class WearableActivityController : IWearableActivityControl, ITimeEntryDatabaseC
     private var pendingLoadReference = false
     private var recordingIndexId: Long = -1
     private var vibrator: Vibrator? = null
+    private var currentReferenceId = 0
     private lateinit var myActivity : ComponentActivity
     //private PowerManager powerManager = null;
 
@@ -115,7 +115,7 @@ class WearableActivityController : IWearableActivityControl, ITimeEntryDatabaseC
                 isReadyDatabase = false
                 try {
                     Log.v(TAG, "closeDatabase() EXECUTE...")
-                    database!!.close()
+                    database?.close()
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }
@@ -241,13 +241,14 @@ class WearableActivityController : IWearableActivityControl, ITimeEntryDatabaseC
     {
         try
         {
-            return (preferences?.getInt(PREF_KEY_REFERENCE_TIME_SELECTION, 0) ?: 0)
+            currentReferenceId = preferences?.getInt(PREF_KEY_REFERENCE_TIME_SELECTION, 0) ?: 0
+            return (currentReferenceId)
         }
         catch (e: Exception)
         {
             e.printStackTrace()
         }
-        return 0
+        return (0)
     }
 
     override fun setReferenceTimerSelection(id: Int)
@@ -257,6 +258,7 @@ class WearableActivityController : IWearableActivityControl, ITimeEntryDatabaseC
             val editor = preferences?.edit()
             editor?.putInt(PREF_KEY_REFERENCE_TIME_SELECTION, id)
             editor?.apply()
+            currentReferenceId = id
         }
         catch (e: Exception)
         {
@@ -477,9 +479,9 @@ class WearableActivityController : IWearableActivityControl, ITimeEntryDatabaseC
     {
         try {
             recordingIndexId = id
-            val editor = preferences!!.edit()
-            editor.putLong(PREF_KEY_TIMER_INDEXID, recordingIndexId)
-            editor.apply()
+            val editor = preferences?.edit()
+            editor?.putLong(PREF_KEY_TIMER_INDEXID, recordingIndexId)
+            editor?.apply()
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -511,10 +513,14 @@ class WearableActivityController : IWearableActivityControl, ITimeEntryDatabaseC
     {
         Log.v(TAG, "appendTimeData()  $elapsedTime [$recordType]")
         val thread = Thread {
-            if (isReadyDatabase) {
-                try {
+            if (isReadyDatabase)
+            {
+                try
+                {
                     database?.appendTimeData(recordingIndexId, elapsedTime, recordType)
-                } catch (e: Exception) {
+                }
+                catch (e: Exception)
+                {
                     e.printStackTrace()
                 }
             }
@@ -522,7 +528,8 @@ class WearableActivityController : IWearableActivityControl, ITimeEntryDatabaseC
         thread.start()
     }
 
-    override fun finishTimeData(startTime: Long, endTime: Long) {
+    override fun finishTimeData(startTime: Long, endTime: Long)
+    {
         Log.v(TAG, "finishTimeData() $startTime $endTime")
         val thread = Thread {
             if (isReadyDatabase) {

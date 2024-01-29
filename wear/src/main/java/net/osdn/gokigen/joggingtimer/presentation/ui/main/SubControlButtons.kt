@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -24,8 +25,10 @@ import androidx.navigation.NavHostController
 import androidx.wear.compose.material.Button
 import androidx.wear.compose.material.ButtonDefaults
 import androidx.wear.compose.material.Icon
+import net.osdn.gokigen.joggingtimer.AppSingleton
 import net.osdn.gokigen.joggingtimer.R
 import net.osdn.gokigen.joggingtimer.stopwatch.timer.ITimerCounter
+import net.osdn.gokigen.joggingtimer.utilities.IconIdProvider
 
 ///////////////////////////////////////////////////
 //  サブのボタンエリアの描画＆制御
@@ -35,6 +38,7 @@ import net.osdn.gokigen.joggingtimer.stopwatch.timer.ITimerCounter
 @Composable
 fun BtnSubStop(navController: NavHostController, counterManager: ITimerCounter)
 {
+    val referenceId = remember { mutableIntStateOf(AppSingleton.controller.getReferenceTimerSelection()) }
 
     // ストップ状態時のボタン
     Row(modifier = Modifier
@@ -42,7 +46,7 @@ fun BtnSubStop(navController: NavHostController, counterManager: ITimerCounter)
         .fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
-        ////////////////////  記録一覧画面へ遷移  ////////////////////
+        ////////////////////  リファレンスアイコン(操作アイコン)  ////////////////////
         Button(
             modifier = Modifier
                 .height(48.dp)
@@ -51,13 +55,37 @@ fun BtnSubStop(navController: NavHostController, counterManager: ITimerCounter)
                 .background(color = Color.Black),
             shape = RoundedCornerShape(10.dp),
             colors = ButtonDefaults.primaryButtonColors(backgroundColor =  Color.Black),
-            onClick = { navController.navigate("RecordListScreen") },
+            onClick = {
+                // UIスレッドで実行が必要、ボタンを押すと設定基準値を切り替える
+                referenceId.intValue = if (referenceId.intValue >= 2) { 0 } else { (referenceId.intValue + 1) }
+                AppSingleton.controller.setReferenceTimerSelection(referenceId.intValue)
+                AppSingleton.controller.vibrate(75)
+            },
             enabled = true,
         ) {
             Icon(
-                painter = painterResource(id = R.drawable.baseline_list_24),
-                contentDescription = "List",
+                painter = painterResource(id = IconIdProvider.getReferenceIconId(referenceId.intValue)),
+                contentDescription = "ReferenceIcon",
                 tint = Color.White
+            )
+        }
+
+        ////////////////////  設定画面へ遷移  ////////////////////
+        Button(
+            modifier = Modifier
+                .height(48.dp)
+                .width(48.dp)
+                .padding(2.dp)
+                .background(color = Color.Black),
+            shape = RoundedCornerShape(10.dp),
+            colors = ButtonDefaults.primaryButtonColors(backgroundColor =  Color.Black),
+            onClick = { navController.navigate("PreferenceScreen") },
+            enabled = false,
+        ) {
+            Icon(
+                painter = painterResource(id = R.drawable.baseline_settings_24),
+                contentDescription = "List",
+                tint = Color.DarkGray // Color.White
             )
         }
 
@@ -86,6 +114,7 @@ fun BtnSubStop(navController: NavHostController, counterManager: ITimerCounter)
 @Composable
 fun BtnSubStart(counterManager: ITimerCounter, context: Context)
 {
+    val referenceId = remember { mutableIntStateOf(AppSingleton.controller.getReferenceTimerSelection()) }
     val interactionSource = remember { MutableInteractionSource() }
 
     // スタート状態時のボタン
@@ -94,6 +123,43 @@ fun BtnSubStart(counterManager: ITimerCounter, context: Context)
         .fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
+        ////////////////////  リファレンスアイコン(長押しで変更)  ////////////////////
+        Button(
+            modifier = Modifier
+                .height(48.dp)
+                .width(48.dp)
+                .padding(2.dp)
+                .background(color = Color.Black)
+                .combinedClickable(
+                    enabled = true,
+                    onClick = {
+                        // UIスレッドで実行が必要、ボタンは長押しで止まることを表示する
+                        Toast
+                            .makeText(
+                                context,
+                                context.getString(R.string.long_press_to_change),
+                                Toast.LENGTH_SHORT
+                            )
+                            .show()
+                    },
+                    onLongClick = {
+                        referenceId.intValue = if (referenceId.intValue >= 2) { 0 } else { (referenceId.intValue + 1) }
+                        AppSingleton.controller.setReferenceTimerSelection(referenceId.intValue)
+                        AppSingleton.controller.vibrate(75)
+                    }
+                ),
+            shape = RoundedCornerShape(10.dp),
+            colors = ButtonDefaults.primaryButtonColors(backgroundColor =  Color.Black),
+            onClick = {  },
+            enabled = false,
+        ) {
+            Icon(
+                painter = painterResource(id = IconIdProvider.getReferenceIconId(referenceId.intValue)),
+                contentDescription = "ReferenceIcon",
+                tint = Color.White
+            )
+        }
+
         ////////////////////  カウンターのストップ  ////////////////////
         Button(
             modifier = Modifier
@@ -105,7 +171,13 @@ fun BtnSubStart(counterManager: ITimerCounter, context: Context)
                     enabled = true,
                     onClick = {
                         // UIスレッドで実行が必要、ボタンは長押しで止まることを表示する
-                        Toast.makeText(context, context.getString(R.string.long_press_to_stop), Toast.LENGTH_SHORT).show()
+                        Toast
+                            .makeText(
+                                context,
+                                context.getString(R.string.long_press_to_stop),
+                                Toast.LENGTH_SHORT
+                            )
+                            .show()
                     },
                     onLongClick = {
                         Log.v("STOP", "STOP: onLongClick (2)")
@@ -137,7 +209,13 @@ fun BtnSubStart(counterManager: ITimerCounter, context: Context)
                     indication = null,
                     onClick = {
                         // UIスレッドで実行が必要、ボタンは長押しで止まることを表示する
-                        Toast.makeText(context, context.getString(R.string.long_press_to_pass), Toast.LENGTH_SHORT).show()
+                        Toast
+                            .makeText(
+                                context,
+                                context.getString(R.string.long_press_to_pass),
+                                Toast.LENGTH_SHORT
+                            )
+                            .show()
                     },
                     onLongClick = {
                         Log.v("STOP", "PASS: onLongClick (2)")
@@ -161,6 +239,7 @@ fun BtnSubStart(counterManager: ITimerCounter, context: Context)
 @Composable
 fun BtnSubFinished(navController: NavHostController, counterManager: ITimerCounter)
 {
+    val referenceId = remember { mutableIntStateOf(AppSingleton.controller.getReferenceTimerSelection()) }
 
     // カウントストップ時のボタン
     Row(modifier = Modifier
@@ -168,7 +247,7 @@ fun BtnSubFinished(navController: NavHostController, counterManager: ITimerCount
         .fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
-        ////////////////////  記録一覧画面へ遷移  ////////////////////
+        ////////////////////  リファレンスアイコン(操作アイコン)  ////////////////////
         Button(
             modifier = Modifier
                 .height(48.dp)
@@ -177,17 +256,22 @@ fun BtnSubFinished(navController: NavHostController, counterManager: ITimerCount
                 .background(color = Color.Black),
             shape = RoundedCornerShape(10.dp),
             colors = ButtonDefaults.primaryButtonColors(backgroundColor =  Color.Black),
-            onClick = { navController.navigate("RecordListScreen") },
+            onClick = {
+                // UIスレッドで実行が必要、ボタンは長押しで止まることを表示する
+                referenceId.intValue = if (referenceId.intValue >= 2) { 0 } else { (referenceId.intValue + 1) }
+                AppSingleton.controller.setReferenceTimerSelection(referenceId.intValue)
+                AppSingleton.controller.vibrate(75)
+            },
             enabled = true,
         ) {
             Icon(
-                painter = painterResource(id = R.drawable.baseline_list_24),
-                contentDescription = "List",
+                painter = painterResource(IconIdProvider.getReferenceIconId(referenceId.intValue)),
+                contentDescription = "ReferenceIcon",
                 tint = Color.White
             )
         }
 
-        ////////////////////  カウンターのリセット  ////////////////////
+        ////////////////////  設定画面へ遷移  ////////////////////
         Button(
             modifier = Modifier
                 .height(48.dp)
@@ -196,13 +280,13 @@ fun BtnSubFinished(navController: NavHostController, counterManager: ITimerCount
                 .background(color = Color.Black),
             shape = RoundedCornerShape(10.dp),
             colors = ButtonDefaults.primaryButtonColors(backgroundColor =  Color.Black),
-            onClick = { counterManager.reset() },
-            enabled = true
+            onClick = { navController.navigate("PreferenceScreen") },
+            enabled = false,
         ) {
             Icon(
-                painter = painterResource(id = R.drawable.baseline_refresh_24),
-                contentDescription = "Reset",
-                tint = Color.White
+                painter = painterResource(id = R.drawable.baseline_settings_24),
+                contentDescription = "Settings",
+                tint = Color.DarkGray // Color.White
             )
         }
 

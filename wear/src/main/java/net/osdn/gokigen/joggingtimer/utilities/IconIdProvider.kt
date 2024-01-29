@@ -6,7 +6,8 @@ import net.osdn.gokigen.joggingtimer.R
  *
  *
  */
-object IconIdProvider {
+object IconIdProvider
+{
     private val iconIds = intArrayOf(
         R.drawable.ic_label_outline_black_24dp,   // default icon
         R.drawable.alpha_b_box, // R.drawable.ic_board_1_black_24dp,    // reference data B
@@ -111,6 +112,16 @@ object IconIdProvider {
             }
         }
         return (iconIdSelectionList)
+    }
+
+    fun getReferenceIconId(id: Int) : Int
+    {
+        return (when (id) {
+            0 -> R.drawable.alpha_a_box
+            1 -> R.drawable.alpha_b_box
+            2 -> R.drawable.alpha_c_box
+            else -> R.drawable.ic_label_outline_black_24dp
+        })
     }
 
     fun getIconResourceId(id: Int): Int

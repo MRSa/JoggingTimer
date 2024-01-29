@@ -47,6 +47,7 @@
     <string name="long_press_to_stop">長押しで終了</string>
     <string name="long_press_to_pass">長押しで通過</string>
     <string name="long_press_to_edit">長押しで編集</string>
+    <string name="long_press_to_change">長押しで変更</string>
     <string name="cannot_edit_record">この記録は編集できません。</string>
     <string name="title_label">名称</string>
 </resources>

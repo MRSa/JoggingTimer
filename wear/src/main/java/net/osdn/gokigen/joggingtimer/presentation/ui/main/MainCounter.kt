@@ -33,8 +33,10 @@ fun MainCounter(counterManager: ITimerCounter)
                 TimeStringConvert.getTimeString(0)
             }
             ICounterStatus.FINISHED -> {
-                // カウント終了(結果表示)
-                TimeStringConvert.getTimeString(finishTimeValue)
+                //// カウント終了(結果表示)
+                //TimeStringConvert.getTimeString(finishTimeValue)
+                // カウント終了 ... Finish時、トータル時間表示の場合でも、ラップ数を表示し、末尾にドットを打つ
+                "[%d] %s.".format(counterManager.getLapTimeCount(), TimeStringConvert.getTimeString(finishTimeValue))
             }
         }
     }
@@ -55,8 +57,8 @@ fun MainCounter(counterManager: ITimerCounter)
                 TimeStringConvert.getTimeString(0)
             }
             ICounterStatus.FINISHED -> {
-                // カウント終了
-                "[${counterManager.getLapTimeCount()}] ${TimeStringConvert.getTimeString(lapTimeValue)}"
+                // カウント終了 ... Finish時、ラップタイム表示の場合でも、トータルの時間を表示し、末尾にドットを打つ
+                "[%d] %s.".format(counterManager.getLapTimeCount(), TimeStringConvert.getTimeString(finishTimeValue))
             }
         }
     }

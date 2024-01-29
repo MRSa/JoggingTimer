@@ -19,7 +19,7 @@ fun SubCounter(counterManager: ITimerCounter)
 {
     val totalTimeValue = counterManager.getPastTime() // - counterManager.getStartTime()
     val lapTimeValue = counterManager.getPastTime() - if (counterManager.getLastLapTime() <= 0 ) { 0 } else { counterManager.getLastLapTime() }
-    val finishTimeValue = counterManager.getStopTime() - counterManager.getStartTime()
+    //val finishTimeValue = counterManager.getStopTime() - counterManager.getStartTime()
     val timeString = if (counterManager.getCounterMode()) {
             // サブカウンタは、ラップタイムを表示する
             when (counterManager.getCurrentCountStatus()) {
@@ -36,8 +36,9 @@ fun SubCounter(counterManager: ITimerCounter)
                     TimeStringConvert.getTimeString(0)
                 }
                 ICounterStatus.FINISHED -> {
-                    // カウント終了
-                    "[${counterManager.getLapTimeCount()}] ${TimeStringConvert.getTimeString(lapTimeValue)}"
+                    // カウント終了 ... Finish時、ラップタイム表示の場合でも、トータルの時間を表示する(末尾にドットを打つ)
+                    // "[%d] %s.".format(counterManager.getLapTimeCount(), TimeStringConvert.getTimeString(finishTimeValue))
+                    ""
                 }
             }
         }
@@ -58,8 +59,9 @@ fun SubCounter(counterManager: ITimerCounter)
                     TimeStringConvert.getTimeString(0)
                 }
                 ICounterStatus.FINISHED -> {
-                    // カウント終了(結果表示)
-                    TimeStringConvert.getTimeString(finishTimeValue)
+                    //// カウント終了(結果表示)
+                    //TimeStringConvert.getTimeString(finishTimeValue)
+                    ""
                 }
             }
         }
