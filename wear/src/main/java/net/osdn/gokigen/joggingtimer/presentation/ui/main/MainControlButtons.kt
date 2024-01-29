@@ -53,7 +53,7 @@ fun BtnStop(navController: NavHostController, timerCounter: ITimerCounter)
             Icon(
                 painter = painterResource(id = R.drawable.baseline_list_24),
                 contentDescription = "List",
-                tint = Color.LightGray
+                tint = Color.White
             )
         }
 
@@ -72,7 +72,7 @@ fun BtnStop(navController: NavHostController, timerCounter: ITimerCounter)
             Icon(
                 painter = painterResource(id = R.drawable.baseline_swap_vert_24),
                 contentDescription = "ChangeScreen",
-                tint = Color.LightGray
+                tint = Color.White
             )
         }
 
@@ -91,7 +91,7 @@ fun BtnStop(navController: NavHostController, timerCounter: ITimerCounter)
             Icon(
                 painter = painterResource(id = R.drawable.baseline_play_arrow_24),
                 contentDescription = "Start",
-                tint = Color.LightGray
+                tint = Color.White
             )
         }
     }
@@ -133,7 +133,7 @@ fun BtnStart(timerCounter: ITimerCounter, context: Context, isEnable: Boolean)
             Icon(
                 painter = painterResource(id = R.drawable.baseline_stop_24),
                 contentDescription = "Stop",
-                tint = Color.LightGray
+                tint = Color.White
             )
         }
 
@@ -152,7 +152,7 @@ fun BtnStart(timerCounter: ITimerCounter, context: Context, isEnable: Boolean)
             Icon(
                 painter = painterResource(id = R.drawable.baseline_swap_vert_24),
                 contentDescription = "ChangeScreen",
-                tint = Color.LightGray
+                tint = Color.White
             )
         }
 
@@ -171,7 +171,7 @@ fun BtnStart(timerCounter: ITimerCounter, context: Context, isEnable: Boolean)
             Icon(
                 painter = painterResource(id = R.drawable.baseline_flag_24),
                 contentDescription = "Lap",
-                tint = if (isEnable) { Color.LightGray } else { Color.DarkGray }
+                tint = if (isEnable) { Color.White } else { Color.DarkGray }
             )
         }
     }
@@ -201,7 +201,7 @@ fun BtnFinished(navController: NavHostController, timerCounter: ITimerCounter)
             Icon(
                 painter = painterResource(id = R.drawable.baseline_list_24),
                 contentDescription = "List",
-                tint = Color.LightGray
+                tint = Color.White
             )
         }
 
@@ -220,7 +220,7 @@ fun BtnFinished(navController: NavHostController, timerCounter: ITimerCounter)
             Icon(
                 painter = painterResource(id = R.drawable.baseline_refresh_24),
                 contentDescription = "Reset",
-                tint = Color.LightGray
+                tint = Color.White
             )
         }
 
@@ -239,7 +239,7 @@ fun BtnFinished(navController: NavHostController, timerCounter: ITimerCounter)
             Icon(
                 painter = painterResource(id = R.drawable.baseline_play_arrow_24),
                 contentDescription = "Start",
-                tint = Color.LightGray
+                tint = Color.White
             )
         }
     }

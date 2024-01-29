@@ -19,6 +19,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
@@ -53,13 +54,15 @@ fun DetailControlButtons(context: Context, navController: NavHostController, ind
         Button(
             modifier = Modifier
                 .height(48.dp)
-                .width(26.dp)
-                .padding(1.dp)
+                .width(20.dp)
+                .padding(0.dp)
                 .background(color = Color.Black),
-            //shape = RoundedCornerShape(5.dp),
+            shape = RoundedCornerShape(5.dp),
             colors = ButtonDefaults.primaryButtonColors(backgroundColor =  Color.Black),
-            onClick = {  },
-            enabled = false,
+            onClick = {
+                navController.navigate("SetReferenceScreen/${dataItem.indexId}")
+            },
+            enabled = true,
         ) {
             Icon(
                 painter = painterResource(id = drawableIconId),
@@ -73,12 +76,11 @@ fun DetailControlButtons(context: Context, navController: NavHostController, ind
             modifier = Modifier
                 .height(48.dp)
                 .width(48.dp)
-                .padding(1.dp)
+                .padding(0.dp)
                 .background(color = Color.Black),
             shape = RoundedCornerShape(5.dp),
             colors = ButtonDefaults.primaryButtonColors(backgroundColor =  Color.Black),
             onClick = {
-                Log.v("Detail", "onClick() id: ${dataItem.indexId}")
                 navController.navigate("RecordEditScreen/${dataItem.indexId}")
             },
             enabled = true,
@@ -95,7 +97,7 @@ fun DetailControlButtons(context: Context, navController: NavHostController, ind
             modifier = Modifier
                 .height(48.dp)
                 .width(48.dp)
-                .padding(1.dp)
+                .padding(0.dp)
                 .background(color = Color.Black),
             shape = RoundedCornerShape(5.dp),
             colors = ButtonDefaults.primaryButtonColors(backgroundColor =  Color.Black),
@@ -117,7 +119,7 @@ fun DetailControlButtons(context: Context, navController: NavHostController, ind
             modifier = Modifier
                 .height(48.dp)
                 .width(48.dp)
-                .padding(1.dp)
+                .padding(0.dp)
                 .background(color = Color.Black),
             shape = RoundedCornerShape(5.dp),
             colors = ButtonDefaults.primaryButtonColors(backgroundColor =  Color.Black),
@@ -157,6 +159,8 @@ fun DetailControlButtons(context: Context, navController: NavHostController, ind
                     text =  " " + dataItem.title,
                     color = MaterialTheme.colors.secondary,
                     fontSize = 14.sp,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis
                 )
             },
         ) {

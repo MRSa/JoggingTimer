@@ -34,6 +34,7 @@ interface IWearableActivityControl
     fun getLapTimeList(id: Int): List<LapTimeRecord>
     fun deleteRecord(id: Int)
     fun updateRecord(id: Int, title: String, iconId: Int)
+    fun setReferenceIndexData(id: Int, iconId: Int)
     fun launchNotify(isShow: Boolean)
 
 }

@@ -6,6 +6,7 @@ import android.widget.Toast
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -14,6 +15,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -55,7 +57,7 @@ fun BtnSubStop(navController: NavHostController, counterManager: ITimerCounter)
             Icon(
                 painter = painterResource(id = R.drawable.baseline_list_24),
                 contentDescription = "List",
-                tint = Color.LightGray
+                tint = Color.White
             )
         }
 
@@ -74,7 +76,7 @@ fun BtnSubStop(navController: NavHostController, counterManager: ITimerCounter)
             Icon(
                 painter = painterResource(id = R.drawable.baseline_play_arrow_24),
                 contentDescription = "Start",
-                tint = Color.LightGray
+                tint = Color.White
             )
         }
     }
@@ -84,6 +86,7 @@ fun BtnSubStop(navController: NavHostController, counterManager: ITimerCounter)
 @Composable
 fun BtnSubStart(counterManager: ITimerCounter, context: Context)
 {
+    val interactionSource = remember { MutableInteractionSource() }
 
     // スタート状態時のボタン
     Row(modifier = Modifier
@@ -117,7 +120,7 @@ fun BtnSubStart(counterManager: ITimerCounter, context: Context)
             Icon(
                 painter = painterResource(id = R.drawable.baseline_stop_24),
                 contentDescription = "Stop",
-                tint = Color.LightGray
+                tint = Color.White
             )
         }
 
@@ -130,6 +133,8 @@ fun BtnSubStart(counterManager: ITimerCounter, context: Context)
                 .background(color = Color.Black)
                 .combinedClickable(
                     enabled = true,
+                    interactionSource = interactionSource,
+                    indication = null,
                     onClick = {
                         // UIスレッドで実行が必要、ボタンは長押しで止まることを表示する
                         Toast.makeText(context, context.getString(R.string.long_press_to_pass), Toast.LENGTH_SHORT).show()
@@ -147,7 +152,7 @@ fun BtnSubStart(counterManager: ITimerCounter, context: Context)
             Icon(
                 painter = painterResource(id = R.drawable.baseline_start_24),
                 contentDescription = "Pass",
-                tint = Color.LightGray
+                tint = Color.White
             )
         }
     }
@@ -178,7 +183,7 @@ fun BtnSubFinished(navController: NavHostController, counterManager: ITimerCount
             Icon(
                 painter = painterResource(id = R.drawable.baseline_list_24),
                 contentDescription = "List",
-                tint = Color.LightGray
+                tint = Color.White
             )
         }
 
@@ -197,7 +202,7 @@ fun BtnSubFinished(navController: NavHostController, counterManager: ITimerCount
             Icon(
                 painter = painterResource(id = R.drawable.baseline_refresh_24),
                 contentDescription = "Reset",
-                tint = Color.LightGray
+                tint = Color.White
             )
         }
 
@@ -216,7 +221,7 @@ fun BtnSubFinished(navController: NavHostController, counterManager: ITimerCount
             Icon(
                 painter = painterResource(id = R.drawable.baseline_play_arrow_24),
                 contentDescription = "Start",
-                tint = Color.LightGray
+                tint = Color.White
             )
         }
     }

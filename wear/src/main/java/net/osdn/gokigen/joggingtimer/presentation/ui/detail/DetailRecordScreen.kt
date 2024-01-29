@@ -125,10 +125,10 @@ fun DetailRecordScreen(context: Context, navController: NavHostController, id: I
                         .focusRequester(focusRequester)
                         .focusable(),
                     contentPadding = PaddingValues(
-                        top = 16.dp,
-                        start = 8.dp,
-                        end = 8.dp,
-                        bottom = 16.dp,
+                        top = 2.dp,
+                        start = 0.dp,
+                        end = 0.dp,
+                        bottom = 8.dp,
                     ),
                     state = listState
                 ) {

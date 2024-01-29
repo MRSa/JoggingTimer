@@ -13,6 +13,7 @@ import android.os.VibrationEffect.DEFAULT_AMPLITUDE
 import android.os.Vibrator
 import android.util.Log
 import androidx.activity.ComponentActivity
+import androidx.compose.runtime.Composable
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
@@ -583,6 +584,34 @@ class WearableActivityController : IWearableActivityControl, ITimeEntryDatabaseC
             ee.printStackTrace()
         }
     }
+
+    override fun setReferenceIndexData(id: Int, iconId: Int)
+    {
+        // iconId : Reference A = 0, B = 1, C = それ以外
+
+        try
+        {
+            val thread = Thread {
+                if (isReadyDatabase)
+                {
+                    try
+                    {
+                        database?.setReferenceIndexData(iconId, id.toLong())
+                    }
+                    catch (e: Exception)
+                    {
+                        e.printStackTrace()
+                    }
+                }
+            }
+            thread.start()
+        }
+        catch (ee: Exception)
+        {
+            ee.printStackTrace()
+        }
+    }
+
     override fun launchNotify(isShow: Boolean)
     {
         try

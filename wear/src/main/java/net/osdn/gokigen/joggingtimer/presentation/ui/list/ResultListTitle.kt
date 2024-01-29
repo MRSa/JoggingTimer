@@ -40,7 +40,7 @@ fun ResultListTitle(navController: NavHostController, message: String)
             text = stringResource(id = R.string.result_list),
             color = Color.White,
             textAlign = TextAlign.Center,
-            fontSize = 16.sp
+            fontSize = 12.sp
         )
         //Divider(color = Color.Gray, thickness = 1.dp)
         Row(modifier = Modifier
