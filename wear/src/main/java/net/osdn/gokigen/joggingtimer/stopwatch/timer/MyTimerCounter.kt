@@ -22,7 +22,6 @@ class MyTimerCounter internal constructor() : ITimerCounter, ITimeoutReceiver, I
     private var stopTime = 0L
     private var currentTimer = mutableLongStateOf(0)
     private var currentLapCount = mutableIntStateOf(0)
-    private var referenceTimeId = 0
     private var lapTime: MutableList<Long>
     private var referenceTimeA: List<Long>? = null
     private var referenceTimeB: List<Long>? = null
@@ -258,18 +257,14 @@ class MyTimerCounter internal constructor() : ITimerCounter, ITimeoutReceiver, I
         return stopTime
     }
 
-    override fun getReferenceLapTimeList(): List<Long>?
-    {
-        return (getReferenceLapTimeList(referenceTimeId))
-    }
-
     override fun getReferenceLapTimeList(refId: Int): List<Long>?
     {
+        Log.v(TAG, "getReferenceLapTimeList() : $refId")
         return (when (refId)
         {
             0 -> referenceTimeA
             1 -> referenceTimeB
-            else -> referenceTimeB
+            else -> referenceTimeC
         })
     }
 
@@ -311,8 +306,8 @@ class MyTimerCounter internal constructor() : ITimerCounter, ITimeoutReceiver, I
         try
         {
             val size: Int
-            selectReferenceLapTime(id)
-            when (referenceTimeId) {
+            //selectReferenceLapTime(id)
+            when (id) {
                 0 -> {
                     referenceTimeA = null
                     referenceTimeA = ArrayList(timelist)
@@ -336,11 +331,6 @@ class MyTimerCounter internal constructor() : ITimerCounter, ITimeoutReceiver, I
         {
             e.printStackTrace()
         }
-    }
-
-    override fun getReferenceLapTime(position: Int): Long
-    {
-        return (getReferenceLapTime(referenceTimeId, position))
     }
 
     override fun getReferenceLapTime(refId: Int, position: Int): Long
@@ -374,10 +364,6 @@ class MyTimerCounter internal constructor() : ITimerCounter, ITimeoutReceiver, I
             e.printStackTrace()
         }
         return 0
-    }
-    override fun selectReferenceLapTime(id: Int)
-    {
-        referenceTimeId = id
     }
 
     override fun timeout()

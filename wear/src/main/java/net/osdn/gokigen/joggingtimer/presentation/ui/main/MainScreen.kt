@@ -98,10 +98,11 @@ fun MainScreen(context: Context, navController: NavHostController, counterManage
 
                 // 進捗グラフの表示
                 GraphArea(
-                    navController = navController,
+                    counterManager = counterManager,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(44.dp)   // 48.dp -> 40.dp
+                        //.height(33.dp)  // 狭い表示...
+                        .height(45.dp)    // 48.dp -> 40.dp -> 44.dp
                         .padding(6.dp))
 
                 // 現在の状態によって、メインボタンの表示を切り替える
@@ -128,7 +129,6 @@ fun MainScreen(context: Context, navController: NavHostController, counterManage
         }
         LaunchedEffect(Unit) {
             focusRequester.requestFocus()
-            // Log.d("LaunchedEffect", " : ${myScrollState.value}")
         }
     }
 }

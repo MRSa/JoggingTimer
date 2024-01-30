@@ -13,6 +13,7 @@ import android.os.VibrationEffect.DEFAULT_AMPLITUDE
 import android.os.Vibrator
 import android.util.Log
 import androidx.activity.ComponentActivity
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
@@ -44,14 +45,14 @@ class WearableActivityController : IWearableActivityControl, ITimeEntryDatabaseC
     private var pendingLoadReference = false
     private var recordingIndexId: Long = -1
     private var vibrator: Vibrator? = null
-    private var currentReferenceId = 0
+    private var currentReferenceId = mutableIntStateOf(0)
     private lateinit var myActivity : ComponentActivity
     //private PowerManager powerManager = null;
 
-    init {
-        Log.v(TAG, "WearableActivityController()")
-        currentReferenceId = preferences?.getInt(PREF_KEY_REFERENCE_TIME_SELECTION, 0) ?: 0
-    }
+    //init {
+    //    //Log.v(TAG, "WearableActivityController()")
+    //    //currentReferenceId.intValue = preferences?.getInt(PREF_KEY_REFERENCE_TIME_SELECTION, 0) ?: 0
+    //}
 
     override fun setup(
         activity: ComponentActivity,
@@ -59,6 +60,14 @@ class WearableActivityController : IWearableActivityControl, ITimeEntryDatabaseC
     )
     {
         preferences = PreferenceManager.getDefaultSharedPreferences(activity)
+        try
+        {
+            currentReferenceId.intValue = preferences?.getInt(PREF_KEY_REFERENCE_TIME_SELECTION, 0) ?: 0
+        }
+        catch (e: Exception)
+        {
+            e.printStackTrace()
+        }
         this.myActivity = activity
         this.dbCallback = dbCallback
         setupHardwares(activity)
@@ -251,14 +260,14 @@ class WearableActivityController : IWearableActivityControl, ITimeEntryDatabaseC
             e.printStackTrace()
         }
 */
-        return (currentReferenceId)
+        return (currentReferenceId.intValue)
     }
 
     override fun setReferenceTimerSelection(id: Int)
     {
         try
         {
-            currentReferenceId = id
+            currentReferenceId.intValue = id
             val editor = preferences?.edit()
             editor?.putInt(PREF_KEY_REFERENCE_TIME_SELECTION, id)
             editor?.apply()
@@ -429,6 +438,7 @@ class WearableActivityController : IWearableActivityControl, ITimeEntryDatabaseC
         // load reference data
         try
         {
+            Log.v(TAG, " - - - - - - loadReferenceData() - - - - - -")
             for (id in 0..2)
             {
                 val refList: ArrayList<Long> = ArrayList()
@@ -440,7 +450,7 @@ class WearableActivityController : IWearableActivityControl, ITimeEntryDatabaseC
                         refList.add(cursor.getLong(cursor.getColumnIndex(TimeEntryData.EntryData.COLUMN_NAME_TIME_ENTRY)))
                     }
                 }
-                //Log.v(TAG, "----- loadReferenceData() : $id, ${refList.size} -----")
+                Log.v(TAG, "----- loadReferenceData() : $id, ${refList.size} -----")
                 dbCallback?.referenceDataIsReloaded(id, refList)
             }
         }
