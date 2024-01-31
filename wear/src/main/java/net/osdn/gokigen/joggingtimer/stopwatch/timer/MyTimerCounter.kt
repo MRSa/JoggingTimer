@@ -259,7 +259,7 @@ class MyTimerCounter internal constructor() : ITimerCounter, ITimeoutReceiver, I
 
     override fun getReferenceLapTimeList(refId: Int): List<Long>?
     {
-        Log.v(TAG, "getReferenceLapTimeList() : $refId")
+        //Log.v(TAG, "getReferenceLapTimeList() : $refId")
         return (when (refId)
         {
             0 -> referenceTimeA

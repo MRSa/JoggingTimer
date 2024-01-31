@@ -220,6 +220,7 @@ class WearableActivityController : IWearableActivityControl, ITimeEntryDatabaseC
             e.printStackTrace()
         }
     }
+
 /*
     override fun addTimeStamp(count: Long, lapTime: Long, diffTime: Long)
     {

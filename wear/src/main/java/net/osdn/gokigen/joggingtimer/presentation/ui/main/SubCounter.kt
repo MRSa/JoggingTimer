@@ -1,5 +1,6 @@
 package net.osdn.gokigen.joggingtimer.presentation.ui.main
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
@@ -10,6 +11,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.wear.compose.material.MaterialTheme
 import androidx.wear.compose.material.Text
+import net.osdn.gokigen.joggingtimer.AppSingleton
 import net.osdn.gokigen.joggingtimer.stopwatch.timer.ICounterStatus
 import net.osdn.gokigen.joggingtimer.stopwatch.timer.ITimerCounter
 import net.osdn.ja.gokigen.wearos.timerapp.counter.TimeStringConvert
@@ -17,11 +19,12 @@ import net.osdn.ja.gokigen.wearos.timerapp.counter.TimeStringConvert
 @Composable
 fun SubCounter(counterManager: ITimerCounter)
 {
-    val totalTimeValue = counterManager.getPastTime() // - counterManager.getStartTime()
+    val totalTimeValue = counterManager.getPastTime()
     val lapTimeValue = counterManager.getPastTime() - if (counterManager.getLastLapTime() <= 0 ) { 0 } else { counterManager.getLastLapTime() }
-    //val finishTimeValue = counterManager.getStopTime() - counterManager.getStartTime()
+
+    // ----- サブカウンタ右側の表示
     val timeString = if (counterManager.getCounterMode()) {
-            // サブカウンタは、ラップタイムを表示する
+            // ----- サブカウンタは、ラップタイムを表示する
             when (counterManager.getCurrentCountStatus()) {
                 ICounterStatus.START -> {
                     // 実行中
@@ -32,44 +35,81 @@ fun SubCounter(counterManager: ITimerCounter)
                     "[${counterManager.getLapTimeCount()}] ${TimeStringConvert.getTimeString(lapTimeValue)}"
                 }
                 ICounterStatus.STOP -> {
-                    // 開始前
-                    TimeStringConvert.getTimeString(0)
+                    // 開始前は、カウンターを表示しない
+                    ""
                 }
                 ICounterStatus.FINISHED -> {
-                    // カウント終了 ... Finish時、ラップタイム表示の場合でも、トータルの時間を表示する(末尾にドットを打つ)
-                    // "[%d] %s.".format(counterManager.getLapTimeCount(), TimeStringConvert.getTimeString(finishTimeValue))
+                    // カウント終了時は、カウンターを表示しない
                     ""
                 }
             }
         }
         else
         {
-            // サブカウンタはトータル時間を表示する
+            // ----- サブカウンタはトータル時間を表示する
             when (counterManager.getCurrentCountStatus()) {
                 ICounterStatus.START -> {
                     // 実行中
                     TimeStringConvert.getTimeString(totalTimeValue)
                 }
                 ICounterStatus.LAPTIME -> {
-                    // 実行中
+                    // 実行中(その２)
                     TimeStringConvert.getTimeString(totalTimeValue)
                 }
                 ICounterStatus.STOP -> {
-                    // 開始前
-                    TimeStringConvert.getTimeString(0)
+                    // 開始前は、カウンターを表示しない
+                    ""
                 }
                 ICounterStatus.FINISHED -> {
-                    //// カウント終了(結果表示)
-                    //TimeStringConvert.getTimeString(finishTimeValue)
+                    // カウント終了(結果表示)時は、カウンターを表示しない
                     ""
                 }
             }
         }
-    val diffTimeString = timeString
 
-    Row(
-        horizontalArrangement = Arrangement.SpaceBetween
-    )
+    ////////////////////////////////////////////////////////////////////////////////////////
+
+    val lapCount = counterManager.getLapTimeCount()  // 現在の進捗
+    counterManager.getPastTime()                     // 現在の進捗時間
+    counterManager.getLastLapTime()                  // 最新のラップタイム
+    val refId = AppSingleton.controller.getReferenceTimerSelection()    // 基準値ID
+    val refLapTimeList = counterManager.getReferenceLapTimeList(refId)  // 基準ラップタイムリスト
+    val refLapTimeCount = refLapTimeList?.size ?: 0                     // 基準ラップタイム数
+
+    val baseRefLapTime = if ((refLapTimeList != null)&&(refLapTimeCount > 0)) { refLapTimeList[0] } else { 0 }
+    val refLapTime = if ((refLapTimeList != null)&&(refLapTimeCount > 0)&&(lapCount > 1)&&(lapCount < refLapTimeCount)) { refLapTimeList[lapCount - 1] - baseRefLapTime } else { 0L }
+
+    val lastLapTime = counterManager.getLastLapTime()
+    val totalRefTime = if ((refLapTimeList != null)&&(refLapTimeCount > 1)) { (refLapTimeList[refLapTimeCount - 1] - baseRefLapTime) } else { 0L }
+
+    // 最終ラップタイム時のトータル時間との差分時間を計算
+    val totalDiffTime = if (lapCount < refLapTimeCount) { if (lapCount > 1) { lastLapTime - refLapTime} else { 0L } } else { if (lapCount > 1) { lastLapTime - totalRefTime } else { 0L } } // 該当のラップタイム内の時間
+
+    Log.v("SubCount", " ----- lapCount: $lapCount refLapCount: $refLapTimeCount refLapTime: $refLapTime lastLapTime: ${counterManager.getLastLapTime()} totalRefTime: $totalRefTime diffTime: $totalDiffTime")
+
+    // サブカウンタ左側の表示 (全体進捗を表示)
+    val diffTimeString =
+        // サブカウンタはトータル時間を表示する
+        when (counterManager.getCurrentCountStatus()) {
+            ICounterStatus.START -> {
+                // 実行中
+                TimeStringConvert.getDiffTimeString(totalDiffTime)
+            }
+            ICounterStatus.LAPTIME -> {
+                // 実行中(その２)
+                TimeStringConvert.getDiffTimeString(totalDiffTime)
+            }
+            ICounterStatus.STOP -> {
+                // 開始前
+                ""
+            }
+            ICounterStatus.FINISHED -> {
+                //// カウント終了(結果表示)
+                TimeStringConvert.getDiffTimeString(totalDiffTime)
+            }
+        }
+
+    Row(horizontalArrangement = Arrangement.SpaceBetween)
     {
         // 左側のサブカウンタ (diffTimeStringを表示)
         Text(

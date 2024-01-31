@@ -26,19 +26,18 @@ import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.sp
-import net.osdn.gokigen.joggingtimer.stopwatch.timer.ICounterStatus
 
 @Composable
 fun GraphArea(counterManager: ITimerCounter, modifier: Modifier = Modifier)
 {
-    // 計測中の経過時間を設定
+    // ----- 計測中の経過時間を設定
     val currentTime = remember { mutableLongStateOf(0) }
     currentTime.longValue = counterManager.getPastTime()
 
     val lapCount = remember { mutableIntStateOf(0) }
     lapCount.intValue = counterManager.getLapTimeCount() - 1
 
-    // 基準ラップタイムの取得
+    // ----- 基準ラップタイムの取得
     val refId = remember { mutableIntStateOf(0) }
     refId.intValue = AppSingleton.controller.getReferenceTimerSelection()
     val refLapTimeList = counterManager.getReferenceLapTimeList(refId.intValue)
@@ -47,14 +46,14 @@ fun GraphArea(counterManager: ITimerCounter, modifier: Modifier = Modifier)
     val textMeasurer = rememberTextMeasurer()
 
     BoxWithConstraints(modifier = modifier) {
-        // x,y軸の描画エリアを設定する
+        // ----- x,y軸の描画エリアを設定する
         val width = with(LocalDensity.current) { maxWidth.toPx() }
         val height = with(LocalDensity.current) { maxHeight.toPx() }
         val areaRect = Rect(left = 0f, top = 0f, right = width, bottom = height)
 
         val path = Path()
 
-        // ラップタイムの進捗を記録する
+        // ----- ラップタイムの進捗を記録する
         if ((refLapTimeList != null)&&(refLapTimeCount > 1))
         {
             val lapTimeList = counterManager.getLapTimeList()
@@ -90,13 +89,13 @@ fun GraphArea(counterManager: ITimerCounter, modifier: Modifier = Modifier)
             }
         }
 
-        // 実際の描画
+        // ----- 実際の描画
         Canvas(
             Modifier.fillMaxSize()
         ) { // this: DrawScope
             if (refLapTimeCount > 1)
             {
-                // x,y軸を描画する
+                // ----- x,y軸を描画する
                 drawAxis(
                     area = areaRect,
                     currentTime = currentTime.longValue,
@@ -108,7 +107,7 @@ fun GraphArea(counterManager: ITimerCounter, modifier: Modifier = Modifier)
             }
             else
             {
-                // 基準値が設定されていない場合は、平均ラップタイムを表示する
+                // ---- 基準値が設定されていない場合は、平均ラップタイムを表示する
                 val lastLapTime = counterManager.getLastLapTime()
                 val averageTime = if (lapCount.intValue <= 0) { 0 } else { (lastLapTime.toFloat() / lapCount.intValue.toFloat()).toLong() }
                 val averageString = "  Average: ${TimeStringConvert.getTimeString(averageTime)}"
@@ -125,7 +124,7 @@ fun GraphArea(counterManager: ITimerCounter, modifier: Modifier = Modifier)
     }
 }
 
-// x,y軸を描画する
+// ---- x,y軸を描画する
 private fun DrawScope.drawAxis(area: Rect, currentTime: Long, refLapTimeCount: Int, refLapTimeList: List<Long>?, lapCount: Int)
 {
     val totalLapTime = if ((refLapTimeList != null)&&(refLapTimeCount >= 2)) { refLapTimeList[refLapTimeList.size - 1] - refLapTimeList[0] } else { 0 }
@@ -137,42 +136,44 @@ private fun DrawScope.drawAxis(area: Rect, currentTime: Long, refLapTimeCount: I
     val percentage = if (totalLapTime != 0L) { currentTime.toFloat() / totalLapTime.toFloat() } else { 0.0f }
     val drawRatio = if (percentage > 1.0f) { 1.0f } else { percentage }
 
-    // 進捗率を示す色... 基準タイム超過時は Yellow、それまでは Blue
-    val progressColor = if (percentage > 1.0f) { Color.Yellow } else { Color.Blue }
+    // ----- 進捗率を示す色... 基準タイムを超過した時は Yellow(0xffffde03)、それまでは Blue(0xff0336ff)
+    val progressColor = if (percentage > 1.0f) { Color(0xffffde03) } else { Color(0xff0336ff) }
 
     //Log.v("Graph", "refLapTimeList: refId:${refId} lapCount ${refLapTimeList?.size}")
     //Log.v("Graph", "> currentTime: $currentTime  totalLapTime: $totalLapTime ${percentage * 100.0f}% lapCount: $lapCount")
 
-    // 基準値との進捗を示す (基準値が入っていない場合は表示しない）
+    // ----- 基準値との進捗を示す (基準値が入っていない場合は表示しない）
     drawRect(
         color = progressColor,
         size = Size(width = (area.right - area.left) * drawRatio, height = (area.bottom - area.top))
     )
 
-    // 外枠を描画
+    // ---- 外枠を描画 (開始ライン と 終了ライン)
     drawLine(
-        color = Color.LightGray,
+        color = Color(0xffaaaaaa),
         start = Offset(area.left, area.top),
         end = Offset(area.left, area.bottom)
     )
     drawLine(
-        color = Color.LightGray,
+        color = Color(0xffaaaaaa),
+        start = Offset(area.right, area.top),
+        end = Offset(area.right, area.bottom)
+    )
+/*
+    drawLine(
+        color = Color(0xffaaaaaa),
         start = Offset(area.left, area.bottom),
         end = Offset(area.right, area.bottom)
     )
     drawLine(
-        color = Color.LightGray,
+        color = Color(0xffaaaaaa),
         start = Offset(area.left, area.top),
         end = Offset(area.right, area.top)
     )
-    drawLine(
-        color = Color.LightGray,
-        start = Offset(area.right, area.top),
-        end = Offset(area.right, area.bottom)
-    )
+*/
 
 /*
-    // 中心のライン
+    // まんなか中心のライン
     drawLine(
         color = Color.LightGray,
         start = Offset(area.left, (area.bottom - area.top) /2.0f),
@@ -180,11 +181,11 @@ private fun DrawScope.drawAxis(area: Rect, currentTime: Long, refLapTimeCount: I
     )
 */
 
-    // 基準LAPの場所を縦線で描画
+    // ----- 基準LAPの場所を縦線で描画
     refLapPosition.forEachIndexed { index, fl ->
             drawLine(
-                color = if (index == lapCount) { Color.White } else { Color.LightGray },
-                strokeWidth = if (index == lapCount) { 4.0f } else { 1.0f },
+                color = if (index == lapCount) { Color.White } else { Color(0xffaaaaaa) },
+                strokeWidth = if (index == lapCount) { 2.0f } else { 1.0f },
                 start = Offset(area.right * fl, area.top),
                 end = Offset(area.right * fl, area.bottom)
             )
