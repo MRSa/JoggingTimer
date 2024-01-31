@@ -40,4 +40,5 @@ interface IWearableActivityControl
     fun setReferenceIconId(id: Int, iconId: Int)
     fun launchNotify(isShow: Boolean)
     fun updateTimeEntryData(detailId: Long, totalTime: Long) : Boolean
+    fun createTimeEntryModelData(lap: Int, totalLapTime: Long, memo: String): Long
 }

@@ -49,8 +49,5 @@
     <string name="long_press_to_edit">長押しで編集</string>
     <string name="long_press_to_change">長押しで変更</string>
     <string name="cannot_edit_record">この記録は編集できません。</string>
-    <string name="title_label">名称</string>
-    <string name="label_hour">時</string>
-    <string name="label_minute">分</string>
-    <string name="label_second">秒</string>
+    <string name="create_model">作成</string>
 </resources>

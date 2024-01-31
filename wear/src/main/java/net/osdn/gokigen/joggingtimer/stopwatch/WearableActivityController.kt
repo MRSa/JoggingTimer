@@ -761,6 +761,19 @@ class WearableActivityController : IWearableActivityControl, ITimeEntryDatabaseC
         }
         return false
     }
+    override fun createTimeEntryModelData(lap: Int, totalLapTime: Long, memo: String): Long
+    {
+        var ret = 0L
+        try
+        {
+            ret = database?.createTimeEntryModelData(lap, totalLapTime, memo)!!
+        }
+        catch (e: Exception)
+        {
+            e.printStackTrace()
+        }
+        return (ret)
+    }
 
     companion object
     {
