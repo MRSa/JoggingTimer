@@ -26,6 +26,7 @@ import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.sp
+import net.osdn.gokigen.joggingtimer.stopwatch.timer.ICounterStatus
 
 @Composable
 fun GraphArea(counterManager: ITimerCounter, modifier: Modifier = Modifier)
@@ -108,7 +109,8 @@ fun GraphArea(counterManager: ITimerCounter, modifier: Modifier = Modifier)
             else
             {
                 // 基準値が設定されていない場合は、平均ラップタイムを表示する
-                val averageTime = if (lapCount.intValue <= 0) { 0 } else { (currentTime.longValue.toFloat() / lapCount.intValue.toFloat()).toLong() }
+                val lastLapTime = counterManager.getLastLapTime()
+                val averageTime = if (lapCount.intValue <= 0) { 0 } else { (lastLapTime.toFloat() / lapCount.intValue.toFloat()).toLong() }
                 val averageString = "  Average: ${TimeStringConvert.getTimeString(averageTime)}"
                 val measuredText =
                     textMeasurer.measure(
