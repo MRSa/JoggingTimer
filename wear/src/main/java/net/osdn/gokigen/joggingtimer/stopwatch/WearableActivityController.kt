@@ -422,7 +422,10 @@ class WearableActivityController : IWearableActivityControl, ITimeEntryDatabaseC
                     val recordTypeId = cursor.getColumnIndex(TimeEntryData.EntryData.COLUMN_NAME_RECORD_TYPE)
                     val recordType = cursor.getInt(recordTypeId)
 
-                    lapTimeList.add(LapTimeRecord(recordType, lapTime))
+                    val recordIndexId = cursor.getColumnIndex(TimeEntryData.EntryData._ID)
+                    val recordIndex = cursor.getLong(recordIndexId)
+
+                    lapTimeList.add(LapTimeRecord(recordType, lapTime, recordIndex))
                 }
             }
         }
@@ -740,6 +743,23 @@ class WearableActivityController : IWearableActivityControl, ITimeEntryDatabaseC
         {
             e.printStackTrace()
         }
+    }
+
+    override fun updateTimeEntryData(detailId: Long, totalTime: Long) : Boolean
+    {
+        try
+        {
+            val ret = database?.updateTimeEntryData(detailId, totalTime) ?: 0
+            if (ret > 0)
+            {
+                return true
+            }
+        }
+        catch (e: Exception)
+        {
+            e.printStackTrace()
+        }
+        return false
     }
 
     companion object

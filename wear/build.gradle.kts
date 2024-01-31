@@ -70,6 +70,9 @@ dependencies {
     implementation("androidx.wear.compose:compose-navigation:$wearComposeVersion")
     implementation("androidx.wear.compose:compose-ui-tooling:$wearComposeVersion")
 
+    // Horologist
+    implementation("com.google.android.horologist:horologist-composables:0.4.17")
+
     // for ongoing activity API
     implementation("androidx.wear:wear-ongoing:1.0.0")
     implementation("androidx.core:core-ktx:1.12.0")

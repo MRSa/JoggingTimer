@@ -22,12 +22,13 @@ import androidx.navigation.NavHostController
 import androidx.wear.compose.material.Text
 import net.osdn.gokigen.joggingtimer.R
 import net.osdn.gokigen.joggingtimer.storage.ITimeEntryDatabase.DEFAULT_RECORD_TYPE
+import net.osdn.gokigen.joggingtimer.storage.ITimeEntryDatabase.EDITABLE_RECORD_TYPE
 import net.osdn.gokigen.joggingtimer.storage.ITimeEntryDatabase.PASSAGE_RECORD_TYPE
 import net.osdn.ja.gokigen.wearos.timerapp.counter.TimeStringConvert
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun LapTimeItem(context: Context, navController: NavHostController, lapCount: Int, data: LapTimeDataItem)
+fun LapTimeItem(context: Context, navController: NavHostController, indexId: Long, lapCount: Int, data: LapTimeDataItem)
 {
     Column(
         modifier = Modifier
@@ -75,17 +76,18 @@ fun LapTimeItem(context: Context, navController: NavHostController, lapCount: In
                         }
                         else
                         {
-                            // 長押しで編集
-                            // UIスレッドで実行が必要、ボタンは長押しで止まることを表示する
-                            //Toast.makeText(context, context.getString(toastTextId), Toast.LENGTH_SHORT).show()
-                            Log.v("EDIT", "EDIT: onLongClick")
+                            // 長押しで編集 (編集画面を開く)
+                            Log.v("EDIT", "onLongClick: navigate to 'LapTimeEditScreen/${indexId}/${data.recordIndexId}' [$lapCount]" )
+                            navController.navigate("LapTimeEditScreen/${indexId}/${lapCount}/${data.recordIndexId}")
                         }
                     }
                 ),
             textAlign = TextAlign.Start,
             fontSize = 14.sp,
-            color = if (data.recordType.toLong() == DEFAULT_RECORD_TYPE) { Color.White } else { Color.LightGray }
+            // 色: 通常は白、通過時はグレー、インポートしたデータはモスグリーン
+            color = if (data.recordType.toLong() == DEFAULT_RECORD_TYPE) { Color.White } else if (data.recordType.toLong() == EDITABLE_RECORD_TYPE) { Color(0xffb2ebf2) } else { Color(0xffaaaaaa) }
         )
         //Divider(color = Color.DarkGray, thickness = 1.dp)
     }
+
 }

@@ -3,10 +3,9 @@ package net.osdn.gokigen.joggingtimer.stopwatch
 import androidx.activity.ComponentActivity
 import net.osdn.gokigen.joggingtimer.ResultListData
 
-data class LapTimeRecord(val recordType: Int, val recordTime: Long)
+data class LapTimeRecord(val recordType: Int, val recordTime: Long, val recordIndexId: Long)
+
 /**
- *
- *
  *
  */
 interface IWearableActivityControl
@@ -23,9 +22,11 @@ interface IWearableActivityControl
     fun getDisplayMode(): Boolean
     fun setDisplayMode(displayLapTime: Boolean)
     fun timerStarted(isStarted: Boolean)
+
     //fun addTimeStamp(count: Long, lapTime: Long, diffTime: Long)
     //fun clearTimeStamp()
     //fun getLapTimeCount(): Int
+
     fun getReferenceTimerSelection(): Int
     fun setReferenceTimerSelection(id: Int)
     fun setupReferenceData()
@@ -38,5 +39,5 @@ interface IWearableActivityControl
     fun setReferenceIndexData(id: Int, iconId: Int)
     fun setReferenceIconId(id: Int, iconId: Int)
     fun launchNotify(isShow: Boolean)
-
+    fun updateTimeEntryData(detailId: Long, totalTime: Long) : Boolean
 }

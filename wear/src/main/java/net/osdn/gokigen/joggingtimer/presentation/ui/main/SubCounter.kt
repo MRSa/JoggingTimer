@@ -1,6 +1,5 @@
 package net.osdn.gokigen.joggingtimer.presentation.ui.main
 
-import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
@@ -85,7 +84,7 @@ fun SubCounter(counterManager: ITimerCounter)
     // 最終ラップタイム時のトータル時間との差分時間を計算
     val totalDiffTime = if (lapCount < refLapTimeCount) { if (lapCount > 1) { lastLapTime - refLapTime} else { 0L } } else { if (lapCount > 1) { lastLapTime - totalRefTime } else { 0L } } // 該当のラップタイム内の時間
 
-    Log.v("SubCount", " ----- lapCount: $lapCount refLapCount: $refLapTimeCount refLapTime: $refLapTime lastLapTime: ${counterManager.getLastLapTime()} totalRefTime: $totalRefTime diffTime: $totalDiffTime")
+    //Log.v("SubCount", " ----- lapCount: $lapCount refLapCount: $refLapTimeCount refLapTime: $refLapTime lastLapTime: ${counterManager.getLastLapTime()} totalRefTime: $totalRefTime diffTime: $totalDiffTime")
 
     // サブカウンタ左側の表示 (全体進捗を表示)
     val diffTimeString =

@@ -57,7 +57,16 @@ fun DetailRecordScreen(context: Context, navController: NavHostController, id: I
     for (recordTime in lapTimeList)
     {
         val lapTime = recordTime.recordTime - previousTime
-        lapTimeDataList.add(LapTimeDataItem(recordTime.recordType, recordTime.recordTime, lapTime, lapTime - previousLapTime, 0L))
+        lapTimeDataList.add(
+            LapTimeDataItem(
+                recordType = recordTime.recordType,
+                recordIndexId = recordTime.recordIndexId,
+                absoluteTime = recordTime.recordTime,
+                lapTime = lapTime,
+                diffTime = lapTime - previousLapTime,
+                shiftTime = 0L
+            )
+        )
         previousLapTime = lapTime
         previousTime = recordTime.recordTime
     }
@@ -165,10 +174,10 @@ fun DetailRecordScreen(context: Context, navController: NavHostController, id: I
                             }
                         }
                     }
-                    this.itemsIndexed(items = lapTimeDataList) { indexNo, lapTimeData ->
+                    this.itemsIndexed(items = lapTimeDataList) { indexNo, lapTimeDataItem ->
                         if (indexNo > 0)
                         {
-                            LapTimeItem(context, navController, indexNo, lapTimeData)
+                            LapTimeItem(context, navController, dataItem.indexId, indexNo, lapTimeDataItem)
                         }
                     }
                 }

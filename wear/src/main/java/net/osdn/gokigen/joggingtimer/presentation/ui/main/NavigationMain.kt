@@ -9,6 +9,7 @@ import androidx.wear.compose.navigation.SwipeDismissableNavHost
 import androidx.wear.compose.navigation.composable
 import net.osdn.gokigen.joggingtimer.presentation.theme.JoggingTimerTheme
 import net.osdn.gokigen.joggingtimer.presentation.ui.detail.DetailRecordScreen
+import net.osdn.gokigen.joggingtimer.presentation.ui.edit.LapTimeEditScreen
 import net.osdn.gokigen.joggingtimer.presentation.ui.edit.RecordEditScreen
 import net.osdn.gokigen.joggingtimer.presentation.ui.edit.SetReferenceScreen
 import net.osdn.gokigen.joggingtimer.presentation.ui.list.ResultListScreen
@@ -82,6 +83,22 @@ fun NavigationMain(context: Context, navController: NavHostController, counterMa
                 val id = backStackEntry.arguments?.getInt("id") ?: 0
                 SetReferenceScreen(context = context, navController = navController, indexId = id)
             }
+            composable(
+                route = "LapTimeEditScreen/{id}/{lap}/{recordIndex}",
+                arguments = listOf(
+                    navArgument("id") { type = NavType.IntType },
+                    navArgument("lap") { type = NavType.IntType },
+                    navArgument("recordIndex") { type = NavType.LongType }
+                )
+            ) {
+                // ラップタイムデータの編集画面
+                backStackEntry ->
+                val id = backStackEntry.arguments?.getInt("id") ?: 0
+                val lap = backStackEntry.arguments?.getInt("lap") ?: 0
+                val recordIndex = backStackEntry.arguments?.getLong("recordIndex") ?: 0L
+                LapTimeEditScreen(navController = navController, indexId = id, lapIndex = lap, recordIndexId = recordIndex)
+            }
         }
     }
 }
+

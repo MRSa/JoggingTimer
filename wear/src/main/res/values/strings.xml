@@ -50,4 +50,7 @@
     <string name="long_press_to_change">Long press to change.</string>
     <string name="cannot_edit_record">Cannot edit record.</string>
     <string name="title_label">Title</string>
+    <string name="label_hour">Hour</string>
+    <string name="label_minute">Min.</string>
+    <string name="label_second">Sec.</string>
 </resources>
