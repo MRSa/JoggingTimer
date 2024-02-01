@@ -50,4 +50,6 @@
     <string name="long_press_to_change">長押しで変更</string>
     <string name="cannot_edit_record">この記録は編集できません。</string>
     <string name="create_model">作成</string>
+    <string name="create_total_time_label">総時間</string>
+    <string name="create_total_lap_label">ラップ数</string>
 </resources>

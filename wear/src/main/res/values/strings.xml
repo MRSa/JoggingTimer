@@ -50,4 +50,6 @@
     <string name="long_press_to_change">Long press to change.</string>
     <string name="cannot_edit_record">Cannot edit record.</string>
     <string name="create_model">Create</string>
+    <string name="create_total_time_label">Time</string>
+    <string name="create_total_lap_label">Lap</string>
 </resources>
