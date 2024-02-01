@@ -59,6 +59,7 @@ class WearableActivityController : IWearableActivityControl, ITimeEntryDatabaseC
         dbCallback: IDatabaseReloadCallback
     )
     {
+        isReadyDatabase = false
         preferences = PreferenceManager.getDefaultSharedPreferences(activity)
         try
         {
@@ -221,33 +222,6 @@ class WearableActivityController : IWearableActivityControl, ITimeEntryDatabaseC
         }
     }
 
-/*
-    override fun addTimeStamp(count: Long, lapTime: Long, diffTime: Long)
-    {
-        if (lapTimeHolder != null)
-        {
-            lapTimeHolder?.addLapTime(LapTimeItems(count, lapTime, diffTime))
-        }
-    }
-
-    override fun clearTimeStamp()
-    {
-        if (lapTimeHolder != null)
-        {
-            lapTimeHolder?.clearLapTime()
-        }
-    }
-
-    override fun getLapTimeCount(): Int
-    {
-        var count = 0
-        if (lapTimeHolder != null)
-        {
-            count = lapTimeHolder?.getLapTimeCount() ?: 0
-        }
-        return count
-    }
-*/
     override fun getReferenceTimerSelection(): Int
     {
 /*
@@ -279,15 +253,20 @@ class WearableActivityController : IWearableActivityControl, ITimeEntryDatabaseC
         }
     }
 
-    override fun setupReferenceData() {
-        try {
+    override fun setupReferenceData()
+    {
+        try
+        {
+            Log.v(TAG, "setupReferenceData() : isReadyDatabase:$isReadyDatabase")
             pendingLoadReference = if (isReadyDatabase) {
                 loadReferenceData()
                 false
             } else {
                 true
             }
-        } catch (e: Exception) {
+        }
+        catch (e: Exception)
+        {
             e.printStackTrace()
         }
     }

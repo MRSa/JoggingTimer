@@ -22,11 +22,6 @@ interface IWearableActivityControl
     fun getDisplayMode(): Boolean
     fun setDisplayMode(displayLapTime: Boolean)
     fun timerStarted(isStarted: Boolean)
-
-    //fun addTimeStamp(count: Long, lapTime: Long, diffTime: Long)
-    //fun clearTimeStamp()
-    //fun getLapTimeCount(): Int
-
     fun getReferenceTimerSelection(): Int
     fun setReferenceTimerSelection(id: Int)
     fun setupReferenceData()

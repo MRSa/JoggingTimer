@@ -181,13 +181,26 @@ class MainActivity : ComponentActivity(), ICounterStatusNotify
                 e.printStackTrace()
             }
         }
+        onResumeAction(isStartTimer)
+    }
 
-        AppSingleton.controller.setupReferenceData()
-        if (isStartTimer)
+    private fun onResumeAction(isStartTimer: Boolean)
+    {
+        try
         {
-            pendingStart = true
+            AppSingleton.controller.setupReferenceData()
+            if (isStartTimer)
+            {
+                pendingStart = true
+            }
+        }
+        catch (e: Exception)
+        {
+            e.printStackTrace()
         }
     }
+
+
 
     /**
      *
