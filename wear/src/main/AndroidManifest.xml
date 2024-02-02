@@ -30,7 +30,7 @@
             android:label="@string/main"
             android:theme="@style/Theme.A01Splash"
             android:exported="true"
-            android:launchMode="singleTop"
+            android:launchMode="standard"
             android:taskAffinity="">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

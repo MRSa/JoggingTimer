@@ -81,7 +81,7 @@ fun NavigationMain(context: Context, navController: NavHostController, counterMa
                 // データの基準値設定画面
                 backStackEntry ->
                 val id = backStackEntry.arguments?.getInt("id") ?: 0
-                SetReferenceScreen(context = context, navController = navController, indexId = id)
+                SetReferenceScreen(navController = navController, indexId = id)
             }
             composable(
                 route = "LapTimeEditScreen/{id}/{lap}/{recordIndex}",

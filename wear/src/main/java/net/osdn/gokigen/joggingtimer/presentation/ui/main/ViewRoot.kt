@@ -10,8 +10,13 @@ import androidx.wear.compose.navigation.rememberSwipeDismissableNavController
 import net.osdn.gokigen.joggingtimer.AppSingleton
 import net.osdn.gokigen.joggingtimer.presentation.theme.JoggingTimerTheme
 
-class ViewRoot @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) : AbstractComposeView(context, attrs, defStyleAttr)
+class ViewRoot @JvmOverloads constructor(appContext: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) : AbstractComposeView(appContext, attrs, defStyleAttr)
 {
+    private val appContext: Context
+    init {
+        this.appContext = appContext
+    }
+
     @Composable
     override fun Content()
     {
@@ -19,7 +24,7 @@ class ViewRoot @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
         val counterModel = remember { AppSingleton.timerCounter }
 
         JoggingTimerTheme {
-            NavigationMain(context, navController, counterModel)
+            NavigationMain(appContext, navController, counterModel)
         }
         Log.v(TAG, " ... ViewRoot ...")
     }
