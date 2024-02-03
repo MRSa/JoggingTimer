@@ -164,7 +164,7 @@ fun CreateReferenceScreen(context: Context, navController: NavHostController)
                 ) {
                     Text(
                         text = "${stringResource(id = R.string.create_total_lap_label)}: ${totalLapCount.intValue}",
-                        textDecoration = TextDecoration.Underline,
+                        textDecoration = TextDecoration.None, //TextDecoration.Underline,
                         overflow = TextOverflow.Ellipsis
                     )
                 }

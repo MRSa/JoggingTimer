@@ -16,6 +16,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
@@ -84,8 +86,10 @@ fun LapTimeItem(context: Context, navController: NavHostController, indexId: Lon
                 ),
             textAlign = TextAlign.Start,
             fontSize = 14.sp,
-            // 色: 通常は白、通過時はグレー、インポートしたデータはモスグリーン
-            color = if (data.recordType.toLong() == DEFAULT_RECORD_TYPE) { Color.White } else if (data.recordType.toLong() == EDITABLE_RECORD_TYPE) { Color(0xffb2ebf2) } else { Color(0xffaaaaaa) }
+            // 色: 通常は白、通過時はグレー(+ 取り消し線)、インポートしたデータはモスグリーン(+ アンダーライン)
+            color = if (data.recordType.toLong() == DEFAULT_RECORD_TYPE) { Color.White } else if (data.recordType.toLong() == EDITABLE_RECORD_TYPE) { Color(0xffb2ebf2) } else { Color(0xffaaaaaa) },
+            textDecoration = if (data.recordType.toLong() == DEFAULT_RECORD_TYPE) { TextDecoration.None } else if (data.recordType.toLong() == EDITABLE_RECORD_TYPE) { TextDecoration.Underline } else { TextDecoration.LineThrough },
+            overflow = TextOverflow.Ellipsis
         )
         //Divider(color = Color.DarkGray, thickness = 1.dp)
     }
