@@ -44,23 +44,23 @@ fun DetailControlButtons(context: Context, navController: NavHostController, ind
 
     // 詳細画面の操作ボタン
     Row(modifier = Modifier
-        .padding(horizontal = 0.dp)
+        .padding(vertical = 0.dp, horizontal = 0.dp)
         .fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween,
+        horizontalArrangement = Arrangement.Start,
     ) {
         ////////////////////  データのアイコン  ////////////////////
         val drawableIconId = IconIdProvider.getIconResourceId(iconId)
         Button(
             modifier = Modifier
                 .height(48.dp)
-                .width(20.dp)
+                .width(30.dp)
                 .padding(0.dp)
                 .background(color = Color.Black),
-            shape = RoundedCornerShape(5.dp),
             colors = ButtonDefaults.primaryButtonColors(backgroundColor =  Color.Black),
             onClick = {
                 navController.navigate("SetReferenceScreen/${dataItem.indexId}")
             },
+            shape = RoundedCornerShape(0.dp),
             enabled = true,
         ) {
             Icon(
@@ -77,11 +77,11 @@ fun DetailControlButtons(context: Context, navController: NavHostController, ind
                 .width(48.dp)
                 .padding(0.dp)
                 .background(color = Color.Black),
-            shape = RoundedCornerShape(5.dp),
             colors = ButtonDefaults.primaryButtonColors(backgroundColor =  Color.Black),
             onClick = {
                 navController.navigate("RecordEditScreen/${dataItem.indexId}")
             },
+            shape = RoundedCornerShape(0.dp),
             enabled = true,
         ) {
             Icon(
@@ -98,12 +98,12 @@ fun DetailControlButtons(context: Context, navController: NavHostController, ind
                 .width(48.dp)
                 .padding(0.dp)
                 .background(color = Color.Black),
-            shape = RoundedCornerShape(5.dp),
             colors = ButtonDefaults.primaryButtonColors(backgroundColor =  Color.Black),
             onClick = {
                 ShareContent.shareLapTimeData(context, dataItem, lapData)
                 Toast.makeText(context, context.getString(R.string.intent_issued), Toast.LENGTH_SHORT).show()  // UIスレッドで実行が必要
             },
+            shape = RoundedCornerShape(0.dp),
             enabled = true
         ) {
             Icon(
@@ -120,9 +120,9 @@ fun DetailControlButtons(context: Context, navController: NavHostController, ind
                 .width(48.dp)
                 .padding(0.dp)
                 .background(color = Color.Black),
-            shape = RoundedCornerShape(5.dp),
             colors = ButtonDefaults.primaryButtonColors(backgroundColor =  Color.Black),
             onClick = { deleteDialog.value = true }, // Delete Confirmation
+            shape = RoundedCornerShape(0.dp),
             enabled = true
         ) {
             Icon(

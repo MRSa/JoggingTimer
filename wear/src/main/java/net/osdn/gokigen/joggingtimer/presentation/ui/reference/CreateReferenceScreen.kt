@@ -217,6 +217,7 @@ fun CreateReferenceScreen(context: Context, navController: NavHostController)
             }
 
             // ------ モデル作成ボタン
+            val canCreate = (totalTime.longValue > 1000)&&(totalLapCount.intValue > 1)
             Chip(
                 modifier = Modifier
                     .height(48.dp)
@@ -231,7 +232,7 @@ fun CreateReferenceScreen(context: Context, navController: NavHostController)
                     Toast.makeText(context, context.getString(R.string.created_model_data), Toast.LENGTH_SHORT).show()
                     navController.popBackStack()  // 前の画面に戻る
                 },
-                enabled = true,
+                enabled = canCreate,
                 label = {
                     Text(
                         text = stringResource(id = R.string.create_model),

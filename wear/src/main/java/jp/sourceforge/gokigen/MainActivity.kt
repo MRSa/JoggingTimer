@@ -1,4 +1,4 @@
-package net.osdn.gokigen.joggingtimer
+package jp.sourceforge.gokigen
 
 import android.Manifest
 import android.app.NotificationChannel
@@ -17,6 +17,8 @@ import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import net.osdn.gokigen.joggingtimer.AppSingleton
+import net.osdn.gokigen.joggingtimer.R
 import net.osdn.gokigen.joggingtimer.importer.IntentSendImporter
 import net.osdn.gokigen.joggingtimer.presentation.ui.main.ViewRoot
 import net.osdn.gokigen.joggingtimer.stopwatch.timer.ICounterStatusNotify

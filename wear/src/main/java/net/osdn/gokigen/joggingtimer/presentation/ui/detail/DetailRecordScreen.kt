@@ -143,7 +143,8 @@ fun DetailRecordScreen(context: Context, navController: NavHostController, id: I
                 ) {
                     this.item {
                         ListHeader(
-                            modifier = Modifier.fillMaxSize(),
+                            modifier = Modifier.fillMaxSize()
+                                .padding(start = 0.dp),
                         ) {
                             Column(
                                 modifier = Modifier.fillMaxSize()

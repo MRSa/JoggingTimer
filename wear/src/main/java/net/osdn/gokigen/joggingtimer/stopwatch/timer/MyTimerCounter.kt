@@ -22,7 +22,7 @@ class MyTimerCounter internal constructor() : ITimerCounter, ITimeoutReceiver, I
     private var stopTime = 0L
     private var currentTimer = mutableLongStateOf(0)
     private var currentLapCount = mutableIntStateOf(0)
-    private var lapTime: MutableList<Long>
+    private var lapTime: MutableList<LapTimeInfo>
     private var referenceTimeA: List<Long>? = null
     private var referenceTimeB: List<Long>? = null
     private var referenceTimeC: List<Long>? = null
@@ -57,6 +57,7 @@ class MyTimerCounter internal constructor() : ITimerCounter, ITimeoutReceiver, I
     {
         counterMode.value = !(counterMode.value)
         Log.v(TAG, "toggleCounterMode : ${counterMode.value}")
+        executeUserFeedback(ICounterStatus.LAPTIME) // フィードバックは
     }
 
     override fun getCounterMode() : Boolean
@@ -80,7 +81,7 @@ class MyTimerCounter internal constructor() : ITimerCounter, ITimeoutReceiver, I
             startTime = System.currentTimeMillis()
             stopTime = 0L
             lapTime.clear()
-            lapTime.add(startTime)
+            lapTime.add(LapTimeInfo(startTime, false))
             currentTimer.longValue = startTime
             currentLapCount.intValue = 1
             executeUserFeedback(ICounterStatus.START)
@@ -112,7 +113,7 @@ class MyTimerCounter internal constructor() : ITimerCounter, ITimeoutReceiver, I
         if (counterStatus.value == ICounterStatus.START)
         {
             timeToSet = System.currentTimeMillis()
-            lapTime.add(timeToSet)
+            lapTime.add(LapTimeInfo(timeToSet, isPass))
             ++(currentLapCount.intValue)
 
             val recordType = if (isPass) { PASSAGE_RECORD_TYPE } else { DEFAULT_RECORD_TYPE }
@@ -129,7 +130,7 @@ class MyTimerCounter internal constructor() : ITimerCounter, ITimeoutReceiver, I
         if (counterStatus.value == ICounterStatus.START)
         {
             stopTime = System.currentTimeMillis()
-            lapTime.add(stopTime)
+            lapTime.add(LapTimeInfo(stopTime, false))
             ++(currentLapCount.intValue)
             executeUserFeedback(ICounterStatus.FINISHED)
             counterStatus.value = ICounterStatus.FINISHED
@@ -205,7 +206,7 @@ class MyTimerCounter internal constructor() : ITimerCounter, ITimeoutReceiver, I
     {
         try
         {
-            return if (lapCount < 0) 0 else lapTime[lapCount] - startTime
+            return if (lapCount < 0) 0 else lapTime[lapCount].lapTime - startTime
         }
         catch (e: Exception)
         {
@@ -214,13 +215,29 @@ class MyTimerCounter internal constructor() : ITimerCounter, ITimeoutReceiver, I
         return getLastLapTime()
     }
 
+    override fun isPassLapTime(lapCount: Int): Boolean
+    {
+        try
+        {
+            if ((lapCount <= 0)||(lapCount > lapTime.size))
+            {
+                return (false)
+            }
+            return (lapTime[lapCount - 1].isPass)
+        }
+        catch (e: Exception)
+        {
+            e.printStackTrace()
+        }
+        return (false)
+    }
     override fun getLastLapTime(): Long
     {
         try
         {
             if (lapTime.size > 0)
             {
-                return (lapTime[lapTime.size - 1] - startTime)
+                return (lapTime[lapTime.size - 1].lapTime - startTime)
             }
         }
         catch (e: Exception)
@@ -237,7 +254,7 @@ class MyTimerCounter internal constructor() : ITimerCounter, ITimeoutReceiver, I
         {
             if (lapTime.size > 0)
             {
-                return currentTime - lapTime[lapTime.size - 1]
+                return currentTime - lapTime[lapTime.size - 1].lapTime
             }
         }
         catch (e: Exception)
@@ -268,7 +285,7 @@ class MyTimerCounter internal constructor() : ITimerCounter, ITimeoutReceiver, I
         })
     }
 
-    override fun getLapTimeList(): List<Long>
+    override fun getLapTimeList(): List<LapTimeInfo>
     {
         return lapTime
     }
@@ -278,16 +295,16 @@ class MyTimerCounter internal constructor() : ITimerCounter, ITimeoutReceiver, I
         this.callback = callback
     }
 
-    override fun dataIsReloaded(timelist: ArrayList<Long>)
+    override fun dataIsReloaded(timelist: ArrayList<LapTimeInfo>)
     {
         Log.v(TAG, "dataIsReloaded() : lap ${timelist.size}")
         try
         {
             val startTime = timelist[0]
-            val pastTime = System.currentTimeMillis() - startTime
+            val pastTime = System.currentTimeMillis() - startTime.lapTime
             myTimer.startTimer()
             Log.v(TAG, "pastTime : $pastTime")
-            this.startTime = startTime
+            this.startTime = startTime.lapTime
             lapTime = ArrayList(timelist)
             stopTime = 0L
             currentLapCount.intValue = lapTime.size

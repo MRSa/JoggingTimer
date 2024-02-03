@@ -63,7 +63,7 @@ fun GraphArea(counterManager: ITimerCounter, modifier: Modifier = Modifier)
                 path.moveTo(0.0f, (height / 2.0f))
 
                 lapTimeList.forEachIndexed { index, it ->
-                    val percentage = (it - lapTimeList[0]).toFloat() / totalRefLapTime.toFloat()
+                    val percentage = (it.lapTime - lapTimeList[0].lapTime).toFloat() / totalRefLapTime.toFloat()
                     val positionX = (width * percentage)
                     val positionY = height / 2.0f
                     if (percentage <= 1.0f) {

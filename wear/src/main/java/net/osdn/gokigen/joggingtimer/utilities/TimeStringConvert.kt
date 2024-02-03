@@ -43,7 +43,7 @@ object TimeStringConvert {
         retString = if (minutes < 1) {
             retString + String.format(Locale.US, "%d\"%d", sec, ms)
         } else {
-            retString + String.format(Locale.US, "%d'%d\"%d", minutes, sec, ms)
+            retString + String.format(Locale.US, "%d'%02d\"%d", minutes, sec, ms)
         }
         return (retString)
     }

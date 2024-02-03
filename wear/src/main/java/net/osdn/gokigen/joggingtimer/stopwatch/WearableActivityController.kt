@@ -20,11 +20,13 @@ import androidx.core.app.NotificationManagerCompat
 import androidx.preference.PreferenceManager
 import androidx.wear.ongoing.OngoingActivity
 import androidx.wear.ongoing.Status
-import net.osdn.gokigen.joggingtimer.MainActivity
-import net.osdn.gokigen.joggingtimer.MainActivity.Companion.CHANNEL_ID
+import jp.sourceforge.gokigen.MainActivity
+import jp.sourceforge.gokigen.MainActivity.Companion.CHANNEL_ID
 import net.osdn.gokigen.joggingtimer.R
 import net.osdn.gokigen.joggingtimer.ResultListData
+import net.osdn.gokigen.joggingtimer.stopwatch.timer.LapTimeInfo
 import net.osdn.gokigen.joggingtimer.storage.ITimeEntryDatabase
+import net.osdn.gokigen.joggingtimer.storage.ITimeEntryDatabase.PASSAGE_RECORD_TYPE
 import net.osdn.gokigen.joggingtimer.storage.ITimeEntryDatabaseCallback
 import net.osdn.gokigen.joggingtimer.storage.TimeEntryDatabaseFactory
 import net.osdn.gokigen.joggingtimer.storage.contract.TimeEntryData
@@ -291,13 +293,17 @@ class WearableActivityController : IWearableActivityControl, ITimeEntryDatabaseC
             // load current lap time list
             if (isStarted && recordingIndexId >= 0 && isReadyDatabase)
             {
-                val list = ArrayList<Long>()
+                val list = ArrayList<LapTimeInfo>()
                 val cursor = database?.getAllDetailData(recordingIndexId)
                 if (cursor != null)
                 {
                     while (cursor.moveToNext())
                     {
-                        list.add(cursor.getLong(cursor.getColumnIndex(TimeEntryData.EntryData.COLUMN_NAME_TIME_ENTRY)))
+
+                        val lapTime = cursor.getLong(cursor.getColumnIndex(TimeEntryData.EntryData.COLUMN_NAME_TIME_ENTRY))
+                        val recordType = cursor.getLong(cursor.getColumnIndex(TimeEntryData.EntryData.COLUMN_NAME_RECORD_TYPE))
+                        val isPass = (recordType == PASSAGE_RECORD_TYPE)
+                        list.add(LapTimeInfo(lapTime, isPass))
                     }
                 }
                 dbCallback?.dataIsReloaded(list)

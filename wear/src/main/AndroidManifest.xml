@@ -24,9 +24,8 @@
         <meta-data
             android:name="com.google.android.wearable.standalone"
             android:value="true" />
-
         <activity
-            android:name=".MainActivity"
+            android:name="jp.sourceforge.gokigen.MainActivity"
             android:label="@string/main"
             android:theme="@style/Theme.A01Splash"
             android:exported="true"
@@ -59,6 +58,11 @@
                 <action android:name="android.intent.action.SEND" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <data android:mimeType="text/*" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="text/plain" />
             </intent-filter>
         </activity>
     </application>

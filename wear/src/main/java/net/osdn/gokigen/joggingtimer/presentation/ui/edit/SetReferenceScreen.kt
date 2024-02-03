@@ -1,6 +1,5 @@
 package net.osdn.gokigen.joggingtimer.presentation.ui.edit
 
-import android.content.Context
 import android.text.format.DateFormat
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -50,7 +49,7 @@ import net.osdn.gokigen.joggingtimer.utilities.IconIdProvider
 import java.util.Locale
 
 @Composable
-fun SetReferenceScreen(context: Context, navController: NavHostController, indexId: Int)
+fun SetReferenceScreen(navController: NavHostController, indexId: Int)
 {
     val ICONID_NORMAL = 0
     val ICONID_REFERENCE_LOW = 1
