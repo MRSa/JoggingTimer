@@ -51,18 +51,20 @@ import java.util.Locale
 @Composable
 fun SetReferenceScreen(navController: NavHostController, indexId: Int)
 {
-    val ICONID_NORMAL = 0
-    val ICONID_REFERENCE_LOW = 1
-    val ICONID_REFERENCE_HIGH = 3
-    val ICONID_REFERENCE_A = 2
-    val ICONID_REFERENCE_B = 1
-    val ICONID_REFERENCE_C = 3
-    val ICON_REFERENCE_A = 0
-    val ICON_REFERENCE_B = 1
-    val ICON_REFERENCE_C = 2
+    val iconIdNormal = 0
+    val iconIdEditable = 4
+    val iconIdReferenceLow = 1
+    val iconIdReferenceHigh = 3
+    val iconIdReferenceA = 2
+    val iconIdReferenceB = 1
+    val iconIdReferenceC = 3
+    val iconReferenceA = 0
+    val iconReferenceB = 1
+    val iconReferenceC = 2
 
     val dataItem = remember { AppSingleton.controller.getRecordItem(indexId) }
-    val iconId = if ((dataItem.iconId >= ICONID_REFERENCE_LOW)&&(dataItem.iconId <= ICONID_REFERENCE_HIGH)) { ICONID_NORMAL } else { dataItem.iconId }
+    val normalIconId = if (AppSingleton.controller.isEditableRecord(indexId)) { iconIdEditable } else { iconIdNormal }
+    val iconId = if ((dataItem.iconId == iconIdNormal)&&(normalIconId == iconIdEditable)) { iconIdEditable } else if ((dataItem.iconId >= iconIdReferenceLow)&&(dataItem.iconId <= iconIdReferenceHigh)) { normalIconId } else { dataItem.iconId }
 
     JoggingTimerTheme {
         val focusRequester = remember { FocusRequester() }
@@ -144,7 +146,7 @@ fun SetReferenceScreen(navController: NavHostController, indexId: Int)
                     )
                     Spacer(modifier = Modifier.padding(1.dp))
                     Icon(
-                        painter = painterResource(id = IconIdProvider.getIconResourceId(ICONID_REFERENCE_A)),
+                        painter = painterResource(id = IconIdProvider.getIconResourceId(iconIdReferenceA)),
                         contentDescription = "Reference-A",
                         tint = if (isEditIcon.value) { MaterialTheme.colors.primary } else { Color.White },
                         modifier = Modifier
@@ -152,7 +154,7 @@ fun SetReferenceScreen(navController: NavHostController, indexId: Int)
                             .background(Color.DarkGray)
                             .clickable(onClick = {
                                 coroutineScope.launch {
-                                    AppSingleton.controller.setReferenceIconId(indexId, ICON_REFERENCE_A)
+                                    AppSingleton.controller.setReferenceIconId(indexId, iconReferenceA)
                                     AppSingleton.controller.setupReferenceData()
                                 }
                                 navController.popBackStack()  // 前の画面に戻る
@@ -160,7 +162,7 @@ fun SetReferenceScreen(navController: NavHostController, indexId: Int)
                     )
                     Spacer(modifier = Modifier.padding(1.dp))
                     Icon(
-                        painter = painterResource(id = IconIdProvider.getIconResourceId(ICONID_REFERENCE_B)),
+                        painter = painterResource(id = IconIdProvider.getIconResourceId(iconIdReferenceB)),
                         contentDescription = "Reference-B",
                         tint = if (isEditIcon.value) { MaterialTheme.colors.primary } else { Color.White },
                         modifier = Modifier
@@ -168,7 +170,7 @@ fun SetReferenceScreen(navController: NavHostController, indexId: Int)
                             .background(Color.DarkGray)
                             .clickable(onClick = {
                                 coroutineScope.launch {
-                                    AppSingleton.controller.setReferenceIconId(indexId, ICON_REFERENCE_B)
+                                    AppSingleton.controller.setReferenceIconId(indexId, iconReferenceB)
                                     AppSingleton.controller.setupReferenceData()
                                 }
                                 navController.popBackStack()  // 前の画面に戻る
@@ -176,7 +178,7 @@ fun SetReferenceScreen(navController: NavHostController, indexId: Int)
                     )
                     Spacer(modifier = Modifier.padding(1.dp))
                     Icon(
-                        painter = painterResource(id = IconIdProvider.getIconResourceId(ICONID_REFERENCE_C)),
+                        painter = painterResource(id = IconIdProvider.getIconResourceId(iconIdReferenceC)),
                         contentDescription = "Reference-C",
                         tint = if (isEditIcon.value) { MaterialTheme.colors.primary } else { Color.White },
                         modifier = Modifier
@@ -184,7 +186,7 @@ fun SetReferenceScreen(navController: NavHostController, indexId: Int)
                             .background(Color.DarkGray)
                             .clickable(onClick = {
                                 coroutineScope.launch {
-                                    AppSingleton.controller.setReferenceIconId(indexId, ICON_REFERENCE_C)
+                                    AppSingleton.controller.setReferenceIconId(indexId, iconReferenceC)
                                     AppSingleton.controller.setupReferenceData()
                                 }
                                 navController.popBackStack()  // 前の画面に戻る

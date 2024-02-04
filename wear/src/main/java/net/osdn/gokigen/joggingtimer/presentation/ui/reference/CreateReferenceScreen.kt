@@ -260,6 +260,7 @@ fun CreateReferenceScreen(context: Context, navController: NavHostController)
                 totalTime.longValue = (it.hour * 60L * 60L + it.minute * 60L + it.second) * 1000L  // ミリ秒に変更
                 editTotalTime.value = false
                 Log.v("TimePick", "Time Data Input : ${totalTime.longValue}")
+                focusRequester.requestFocus()
             },
             modifier = Modifier
                 .fillMaxSize()

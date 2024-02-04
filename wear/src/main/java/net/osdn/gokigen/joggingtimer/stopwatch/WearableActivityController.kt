@@ -26,6 +26,7 @@ import net.osdn.gokigen.joggingtimer.R
 import net.osdn.gokigen.joggingtimer.ResultListData
 import net.osdn.gokigen.joggingtimer.stopwatch.timer.LapTimeInfo
 import net.osdn.gokigen.joggingtimer.storage.ITimeEntryDatabase
+import net.osdn.gokigen.joggingtimer.storage.ITimeEntryDatabase.EDITABLE_RECORD_TYPE
 import net.osdn.gokigen.joggingtimer.storage.ITimeEntryDatabase.PASSAGE_RECORD_TYPE
 import net.osdn.gokigen.joggingtimer.storage.ITimeEntryDatabaseCallback
 import net.osdn.gokigen.joggingtimer.storage.TimeEntryDatabaseFactory
@@ -350,6 +351,42 @@ class WearableActivityController : IWearableActivityControl, ITimeEntryDatabaseC
             e.printStackTrace()
         }
         return (recordList)
+    }
+
+    override fun isEditableRecord(id: Int): Boolean
+    {
+        try
+        {
+            val cursor = database?.getAllDetailData(id.toLong())
+            if (cursor != null)
+            {
+                var count = 0
+                while (cursor.moveToNext())
+                {
+                    // 取得した先頭の次のラップタイムレコードの recordType から 編集可否を判断する
+                    if (count > 0)
+                    {
+                        val recordTypeId =
+                            cursor.getColumnIndex(TimeEntryData.EntryData.COLUMN_NAME_RECORD_TYPE)
+                        val recordType = cursor.getLong(recordTypeId)
+                        if (recordType == EDITABLE_RECORD_TYPE)
+                        {
+                            // 編集可能
+                            return (true)
+                        }
+                        // 編集不可
+                        return (false)
+                    }
+                    count++
+                }
+            }
+        }
+        catch (e: Exception)
+        {
+            e.printStackTrace()
+        }
+        // 取得失敗、編集不可
+        return (false)
     }
 
     override fun getRecordItem(id: Int): ResultListData

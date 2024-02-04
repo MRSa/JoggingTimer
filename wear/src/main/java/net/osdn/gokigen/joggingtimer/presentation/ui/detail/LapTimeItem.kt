@@ -32,6 +32,7 @@ import net.osdn.ja.gokigen.wearos.timerapp.counter.TimeStringConvert
 @Composable
 fun LapTimeItem(context: Context, navController: NavHostController, indexId: Long, lapCount: Int, data: LapTimeDataItem)
 {
+    val diffTimeString = if (lapCount > 1) { TimeStringConvert.getDiffTimeString(data.diffTime) } else { " - - - " }
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -41,8 +42,7 @@ fun LapTimeItem(context: Context, navController: NavHostController, indexId: Lon
         horizontalAlignment = Alignment.Start
     ) {
         Text(
-            //text = "[$lapCount] ${TimeStringConvert.getTimeString(data.lapTime)} (${TimeStringConvert.getDiffTimeString(data.diffTime)})",
-            text = "[%02d] %s (%s)".format(lapCount, TimeStringConvert.getTimeString(data.lapTime), TimeStringConvert.getDiffTimeString(data.diffTime)),
+            text = "[%02d] %s (%s)".format(lapCount, TimeStringConvert.getTimeString(data.lapTime), diffTimeString),
             modifier = Modifier
                 .fillMaxWidth()
                 .background(color = Color.Black)

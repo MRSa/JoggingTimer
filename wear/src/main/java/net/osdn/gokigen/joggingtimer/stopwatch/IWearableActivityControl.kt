@@ -26,6 +26,7 @@ interface IWearableActivityControl
     fun setReferenceTimerSelection(id: Int)
     fun setupReferenceData()
     fun getCounterRecordList(): List<ResultListData>
+    fun isEditableRecord(id: Int): Boolean
     fun getRecordItem(id: Int): ResultListData
     fun getLapTimeList(id: Int): List<LapTimeRecord>
     fun deleteRecord(id: Int)
