@@ -100,7 +100,7 @@ class TimeEntryDatabase implements ITimeEntryDatabase
                 " ON " + TimeEntryIndex.EntryIndex.TABLE_NAME + "." + TimeEntryIndex.EntryIndex._ID + " = " + TimeEntryData.EntryData.TABLE_NAME+ "." + TimeEntryData.EntryData.COLUMN_NAME_INDEX_ID +
                 " WHERE " + TimeEntryIndex.EntryIndex.TABLE_NAME+ "." + TimeEntryIndex.EntryIndex.COLUMN_NAME_ICON_ID + " = " + iconId +
                 " ORDER BY " + TimeEntryData.EntryData.TABLE_NAME+ "." + TimeEntryData.EntryData.COLUMN_NAME_TIME_ENTRY;
-        //Log.v(TAG, "Query : " + queryString);
+        // Log.v(TAG, "Query : " + queryString);
         return (db.rawQuery(queryString, null));
     }
 
@@ -138,6 +138,7 @@ class TimeEntryDatabase implements ITimeEntryDatabase
             ContentValues iconValues = new ContentValues();
             iconValues.put(TimeEntryIndex.EntryIndex.COLUMN_NAME_ICON_ID, icon);
             db.update(TimeEntryIndex.EntryIndex.TABLE_NAME, iconValues, _ID + " = " + indexId, null);
+            //Log.v(TAG, "updateIndexData(" + indexId + ", " + title + ", " + icon + ")");
         }
         catch (Exception e)
         {
@@ -207,10 +208,10 @@ class TimeEntryDatabase implements ITimeEntryDatabase
     }
 
     @Override
-    public void appendTimeData(long indexId, long lapTime)
+    public void appendTimeData(long indexId, long lapTime, long recordType)
     {
-        Log.v(TAG, "appendTimeData()  " +  lapTime);
-        appendTimeDataImpl(true, indexId, lapTime, DEFAULT_RECORD_TYPE);
+        Log.v(TAG, "appendTimeData()  [" +  lapTime + "] " + recordType);
+        appendTimeDataImpl(true, indexId, lapTime, recordType);
     }
 
     /**
@@ -258,7 +259,7 @@ class TimeEntryDatabase implements ITimeEntryDatabase
         try
         {
             boolean ret = false;
-            appendTimeData(indexId, endTime);
+            appendTimeData(indexId, endTime, DEFAULT_RECORD_TYPE);
             long elapsedTime = endTime - startTime;
             if (elapsedTime < 0)
             {
@@ -332,7 +333,6 @@ class TimeEntryDatabase implements ITimeEntryDatabase
         callback.modelDataEntryFinished(ITimeEntryDatabaseCallback.OperationType.FINISHED, false, -1, title);
         return (-1);
     }
-
 
     /**
      *
