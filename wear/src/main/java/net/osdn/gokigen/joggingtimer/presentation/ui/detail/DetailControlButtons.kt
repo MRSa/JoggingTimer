@@ -46,7 +46,7 @@ fun DetailControlButtons(context: Context, navController: NavHostController, ind
     Row(modifier = Modifier
         .padding(vertical = 0.dp, horizontal = 0.dp)
         .fillMaxWidth(),
-        horizontalArrangement = Arrangement.Start,
+        horizontalArrangement = Arrangement.SpaceBetween,
     ) {
         ////////////////////  データのアイコン  ////////////////////
         val drawableIconId = IconIdProvider.getIconResourceId(iconId)

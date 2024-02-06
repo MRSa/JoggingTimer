@@ -26,7 +26,7 @@ class IntentSendImporter(context: Context, private val intent: Intent) : ITimeEn
                 Log.v(TAG, " ===== handleIntent: data is null... do not process")
                 return
             }
-            Log.v(TAG, " ===== handleIntent: ${receivedIntent.action} : $title")
+            Log.v(TAG, " ===== handleIntent: ${receivedIntent.action} : $title (length: ${data.length})")
 
             var totalTime: Long = 0
             val lapTimeList = ArrayList<Long>()
