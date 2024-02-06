@@ -60,6 +60,10 @@ class MainActivity : ComponentActivity(), ICounterStatusNotify
                         Log.v(TAG, "----- APPLICATION LAUNCH ABORTED -----")
                         finish()
                     }
+                    else
+                    {
+                        setupEnvironments()
+                    }
                 }
                 requestPermission.launch(REQUIRED_PERMISSIONS)
             }

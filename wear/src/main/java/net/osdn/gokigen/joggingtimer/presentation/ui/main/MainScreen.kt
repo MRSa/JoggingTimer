@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -36,6 +35,7 @@ import androidx.wear.compose.material.scrollAway
 import kotlinx.coroutines.launch
 import net.osdn.gokigen.joggingtimer.stopwatch.timer.ICounterStatus
 import net.osdn.gokigen.joggingtimer.stopwatch.timer.ITimerCounter
+import net.osdn.gokigen.joggingtimer.utilities.MyPositionIndicatorState
 import java.util.Locale
 
 @Composable
@@ -43,7 +43,7 @@ fun MainScreen(context: Context, navController: NavHostController, counterManage
 {
     val focusRequester = remember { FocusRequester() }
     val coroutineScope = rememberCoroutineScope()
-    val scrollState = rememberScrollState() // remember { MyPositionIndicatorState() }
+    val scrollState = remember { MyPositionIndicatorState() } // rememberScrollState()
     val horizontalPadding = 5.dp
     val enableLapStamp  = remember { mutableStateOf(false)}
 
@@ -62,11 +62,11 @@ fun MainScreen(context: Context, navController: NavHostController, counterManage
                             "HH:mm"
                         ),
                     ),
-                    modifier = Modifier.scrollAway(scrollState = scrollState)
+                    modifier = Modifier.scrollAway(scrollState = scrollState.scrollState)
                 )
             },
             positionIndicator = {
-                PositionIndicator(scrollState = scrollState)
+                PositionIndicator(scrollState = scrollState.scrollState)
             },
         ) {
             Column(
@@ -74,13 +74,13 @@ fun MainScreen(context: Context, navController: NavHostController, counterManage
                     .onRotaryScrollEvent {
                         coroutineScope.launch {
                             //Log.v("TEST", "Pixels: ${it.verticalScrollPixels}")
-                            scrollState.scrollBy(it.verticalScrollPixels)
-                            scrollState.animateScrollBy(0f)
+                            scrollState.scrollState.scrollBy(it.verticalScrollPixels)
+                            scrollState.scrollState.animateScrollBy(0f)
                         }
                         true
                     }
                     .fillMaxWidth()
-                    .verticalScroll(scrollState)
+                    .verticalScroll(scrollState.scrollState)
                     .padding(horizontal = horizontalPadding, vertical = 28.dp)  // 20.dp -> 26.dp -> 28.dp
                     .focusRequester(focusRequester)
                     .focusable(),

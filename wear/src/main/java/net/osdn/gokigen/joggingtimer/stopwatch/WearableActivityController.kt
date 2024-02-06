@@ -13,6 +13,7 @@ import android.os.VibrationEffect.DEFAULT_AMPLITUDE
 import android.os.Vibrator
 import android.util.Log
 import androidx.activity.ComponentActivity
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
@@ -696,6 +697,7 @@ class WearableActivityController : IWearableActivityControl, ITimeEntryDatabaseC
 
     override fun launchNotify(isShow: Boolean)
     {
+        // ---------- Ongoing activity
         try
         {
             if (::myActivity.isInitialized)
@@ -746,7 +748,25 @@ class WearableActivityController : IWearableActivityControl, ITimeEntryDatabaseC
                     ) != PackageManager.PERMISSION_GRANTED
                 ) {
                     Log.v(TAG, " Permission denied to notify.")
-                    //ActivityCompat.requestPermissions(context, REQUIRED_PERMISSIONS, REQUEST_CODE_PERMISSIONS)
+                    val launcher = myActivity.registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) {
+                        granted -> if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
+                        {
+                            if (granted[Manifest.permission.POST_NOTIFICATIONS] == true)
+                            {
+                                if (isShow)
+                                {
+                                    // Notificationの発報
+                                    notificationManager.notify(R.string.app_name, builder.build())
+                                }
+                                else
+                                {
+                                    // Notificationの解除
+                                    notificationManager.cancel(R.string.app_name)
+                                }
+                            }
+                        }
+                    }
+                    launcher.launch(REQUIRED_PERMISSIONS)
                     return
                 }
                 if (isShow)
@@ -804,5 +824,23 @@ class WearableActivityController : IWearableActivityControl, ITimeEntryDatabaseC
         const val PREF_KEY_REFERENCE_TIME_SELECTION = "REF_TIME_SEL"
         private const val PREF_KEY_TIMER_STARTED = "TMR_START"
         private const val PREF_KEY_TIMER_INDEXID = "TMR_INDEX"
+
+        private val REQUIRED_PERMISSIONS =
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                // Wear OS 4 以上
+                arrayOf(
+                    Manifest.permission.VIBRATE,
+                    Manifest.permission.WAKE_LOCK,
+                    Manifest.permission.POST_NOTIFICATIONS,
+                )
+            }
+            else
+            {
+                // Wear OS 3 まで
+                arrayOf(
+                    Manifest.permission.VIBRATE,
+                    Manifest.permission.WAKE_LOCK,
+                )
+            }
     }
 }

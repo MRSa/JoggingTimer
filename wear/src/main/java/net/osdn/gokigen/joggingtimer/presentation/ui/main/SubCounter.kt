@@ -113,7 +113,8 @@ fun SubCounter(counterManager: ITimerCounter)
         // 左側のサブカウンタ (diffTimeStringを表示)
         Text(
             modifier = Modifier
-                .padding(start = 6.dp)
+                .padding(start = 15.dp)
+                //.padding(start = 6.dp)
                 .weight(1.0f),
             textAlign = TextAlign.Left,
             color = MaterialTheme.colors.secondary,
@@ -123,7 +124,8 @@ fun SubCounter(counterManager: ITimerCounter)
         // 右側のサブカウンタ (timeStringを表示)
         Text(
             modifier = Modifier
-                .padding(end = 6.dp)
+                .padding(end = 15.dp)
+                //.padding(end = 6.dp)
                 .weight(1.0f),
             textAlign = TextAlign.End,
             color = MaterialTheme.colors.secondary,

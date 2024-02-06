@@ -67,6 +67,23 @@ object ShareContent
                 putExtra(Intent.EXTRA_TEXT, dataToExport.toString())
                 addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             }
+
+            /////////////////////////////////////////////////////////////////////////////
+            try
+            {
+                val packageManager = context.packageManager
+                if (sendIntent.resolveActivity(packageManager) == null)
+                {
+                    Log.v("DetailData", "    SEND INTENT : cannot find receiver.")
+                }
+            }
+            catch (ee: Exception)
+            {
+                Log.v("DetailData", "  - - - - - - Package Manager get fail?")
+                ee.printStackTrace()
+            }
+            /////////////////////////////////////////////////////////////////////////////
+
             context.startActivity(sendIntent)
             Log.v("DetailData", "<<< SEND INTENT >>> : ${dataItem.title}")
         }
