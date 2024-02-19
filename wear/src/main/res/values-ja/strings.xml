@@ -52,4 +52,6 @@
     <string name="create_model">作成</string>
     <string name="create_total_time_label">総時間</string>
     <string name="create_total_lap_label">ラップ数</string>
+    <string name="notify_reference_lap">LAP到達通知</string>
+    <string name="show_graph_mode">V1グラフ</string>
 </resources>

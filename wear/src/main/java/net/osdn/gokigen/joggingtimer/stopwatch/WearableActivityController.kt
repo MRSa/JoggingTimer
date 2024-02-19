@@ -50,12 +50,16 @@ class WearableActivityController : IWearableActivityControl, ITimeEntryDatabaseC
     private var recordingIndexId: Long = -1
     private var vibrator: Vibrator? = null
     private var currentReferenceId = mutableIntStateOf(0)
+    private var notifyReferenceLap = mutableIntStateOf(0)
+    private var lapGraphicMode = mutableIntStateOf(0)
     private lateinit var myActivity : ComponentActivity
     //private PowerManager powerManager = null;
 
-    //init {
-    //    //Log.v(TAG, "WearableActivityController()")
-    //    //currentReferenceId.intValue = preferences?.getInt(PREF_KEY_REFERENCE_TIME_SELECTION, 0) ?: 0
+    //init
+    //{
+        //Log.v(TAG, "WearableActivityController()")
+        //notifyReferenceLap.value = preferences?.getBoolean(PREF_KEY_NOTIFY_REFERENCE_LAPTIME, false) ?: false
+        //lapGraphicMode.value = preferences?.getBoolean(PREF_KEY_MODE_LAP_GRAPHIC, false) ?: false
     //}
 
     override fun setup(
@@ -64,10 +68,12 @@ class WearableActivityController : IWearableActivityControl, ITimeEntryDatabaseC
     )
     {
         isReadyDatabase = false
-        preferences = PreferenceManager.getDefaultSharedPreferences(activity)
         try
         {
-            currentReferenceId.intValue = preferences?.getInt(PREF_KEY_REFERENCE_TIME_SELECTION, 0) ?: 0
+            preferences = PreferenceManager.getDefaultSharedPreferences(activity)
+            currentReferenceId.intValue = getPreferenceValue(preferences, PREF_KEY_REFERENCE_TIME_SELECTION)
+            notifyReferenceLap.intValue = getPreferenceValue(preferences, PREF_KEY_NOTIFY_REFERENCE_LAPTIME)
+            lapGraphicMode.intValue = getPreferenceValue(preferences, PREF_KEY_MODE_LAP_GRAPHIC)
         }
         catch (e: Exception)
         {
@@ -77,6 +83,45 @@ class WearableActivityController : IWearableActivityControl, ITimeEntryDatabaseC
         this.dbCallback = dbCallback
         setupHardwares(activity)
         setupDatabase(activity, false) // change true if when database file should be cleared.
+    }
+/*
+    private fun initializePreferences(preference: SharedPreferences?)
+    {
+        try
+        {
+            val items = preference?.all
+            val editor = preferences?.edit()
+            if (items?.containsKey(PREF_KEY_REFERENCE_TIME_SELECTION) != true) {
+                editor?.putInt(PREF_KEY_REFERENCE_TIME_SELECTION, 0)
+            }
+            if (items?.containsKey(PREF_KEY_NOTIFY_REFERENCE_LAPTIME) != true) {
+                editor?.putInt(PREF_KEY_NOTIFY_REFERENCE_LAPTIME, 0)
+            }
+            if (items?.containsKey(PREF_KEY_MODE_LAP_GRAPHIC) != true) {
+                editor?.putInt(PREF_KEY_MODE_LAP_GRAPHIC, 0)
+            }
+            editor?.apply()
+        }
+        catch (e: Exception)
+        {
+            e.printStackTrace()
+        }
+    }
+*/
+
+    private fun getPreferenceValue(preference: SharedPreferences?, key: String, defaultValue: Int = 0) : Int
+    {
+        var returnValue = defaultValue
+        try
+        {
+            returnValue = preference?.getInt(key, defaultValue) ?: defaultValue
+            Log.v(TAG, "getPreferenceValue($key) : $returnValue")
+        }
+        catch (e: Exception)
+        {
+            e.printStackTrace()
+        }
+        return (returnValue)
     }
 
     /**
@@ -808,7 +853,7 @@ class WearableActivityController : IWearableActivityControl, ITimeEntryDatabaseC
         var ret = 0L
         try
         {
-            ret = database?.createTimeEntryModelData(lap, totalLapTime, memo)!!
+            ret = database?.createTimeEntryModelData(lap, totalLapTime, memo)?: 0L
         }
         catch (e: Exception)
         {
@@ -817,11 +862,56 @@ class WearableActivityController : IWearableActivityControl, ITimeEntryDatabaseC
         return (ret)
     }
 
+    override fun getNotifyReachedReferenceLap() : Boolean
+    {
+        return (notifyReferenceLap.intValue != 0)
+    }
+
+    override fun setNotifyReachedReferenceLap(isNotify: Boolean)
+    {
+        try
+        {
+            notifyReferenceLap.intValue = if (!isNotify) { 0 } else { 1 }
+            val editor = preferences?.edit()
+            editor?.putInt(PREF_KEY_NOTIFY_REFERENCE_LAPTIME, notifyReferenceLap.intValue)
+            editor?.apply()
+            //Log.v(TAG, "setNotifyReachedReferenceLap : $isNotify (${notifyReferenceLap.value})")
+        }
+        catch (e: Exception)
+        {
+            e.printStackTrace()
+        }
+    }
+
+    override fun getLapGraphicMode() : Int
+    {
+        return (lapGraphicMode.intValue)
+    }
+
+    override fun setLapGraphicMode(isLegacy: Int)
+    {
+        try
+        {
+            lapGraphicMode.intValue = isLegacy
+            val editor = preferences?.edit()
+            editor?.putInt(PREF_KEY_MODE_LAP_GRAPHIC, isLegacy)
+            editor?.apply()
+            //Log.v(TAG, "setLapGraphicMode : $isLegacy (${lapGraphicMode.intValue})")
+        }
+        catch (e: Exception)
+        {
+            e.printStackTrace()
+        }
+    }
+
+
     companion object
     {
         private val TAG = WearableActivityController::class.java.simpleName
         const val PREF_KEY_DISPLAY_LAPGRAPHIC = "DISP_LAPGRPH"
+        const val PREF_KEY_MODE_LAP_GRAPHIC  = "MODE_LAPGRPH"
         const val PREF_KEY_REFERENCE_TIME_SELECTION = "REF_TIME_SEL"
+        const val PREF_KEY_NOTIFY_REFERENCE_LAPTIME = "REF_REPO_LAP"
         private const val PREF_KEY_TIMER_STARTED = "TMR_START"
         private const val PREF_KEY_TIMER_INDEXID = "TMR_INDEX"
 
