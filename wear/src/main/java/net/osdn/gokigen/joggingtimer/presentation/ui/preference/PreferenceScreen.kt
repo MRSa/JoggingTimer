@@ -13,7 +13,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
@@ -46,7 +45,6 @@ fun PreferenceScreen(navController: NavHostController)
 {
     JoggingTimerTheme {
         val focusRequester = remember { FocusRequester() }
-        val coroutineScope = rememberCoroutineScope()
         val listState = rememberScalingLazyListState()
         val notifyReachLap = remember { mutableStateOf(false)}
         val lapGraphicMode = remember { mutableIntStateOf(0)}
