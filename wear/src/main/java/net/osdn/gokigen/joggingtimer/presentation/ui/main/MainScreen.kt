@@ -51,7 +51,6 @@ fun MainScreen(context: Context, navController: NavHostController, counterManage
     val enableLapStamp  = remember { mutableStateOf(false)}
     val reportReachedLapTime  = remember { mutableStateOf(false)}
     val checkLapCount  = remember { mutableIntStateOf(0)}
-    var isNotifyVibrate = false
 
     Box(
         modifier = Modifier
@@ -138,8 +137,12 @@ fun MainScreen(context: Context, navController: NavHostController, counterManage
                             // ----- 「お知らせ」の通知する
                             Log.v("MainScreen", " ----- REACHED LAP TIME COUNT -----")
 
-                            // ----- ぶるぶるさせる (実処理は後で実施)
-                            isNotifyVibrate = true
+                            // ----- 通知：ぶるぶるさせる
+                            LaunchedEffect(Unit) {
+                                coroutineScope.launch {
+                                    AppSingleton.controller.vibrate(140)
+                                }
+                            }
 
                             // 通知したことを記憶する
                             reportReachedLapTime.value = true
@@ -226,14 +229,6 @@ fun MainScreen(context: Context, navController: NavHostController, counterManage
             }
         }
         LaunchedEffect(Unit) {
-            if (isNotifyVibrate)
-            {
-                coroutineScope.launch {
-                    AppSingleton.controller.vibrate(120)
-                }
-                Log.v("MainScreen", "Notify Vibration")
-                isNotifyVibrate = false
-            }
             focusRequester.requestFocus()
         }
     }

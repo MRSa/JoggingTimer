@@ -2,6 +2,7 @@ package net.osdn.gokigen.joggingtimer.presentation.ui.preference
 
 import android.text.format.DateFormat
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -89,13 +90,7 @@ fun PreferenceScreen(navController: NavHostController)
             )
             {
 /*
-            Text(
-                modifier = Modifier.fillMaxWidth(),
-                textAlign = TextAlign.Center,
-                color = MaterialTheme.colors.primary,
-                text = stringResource(R.string.settings, "PreferenceScreen")
-            )
-*/
+                // ---------- 通知のオプションは搭載したが、、、バイブレーションが必ず成功しないようなので、無効化する
                 ToggleChip(
                     label = {
                         Text(
@@ -121,14 +116,18 @@ fun PreferenceScreen(navController: NavHostController)
                         Icon(
                             painter = painterResource(id = R.drawable.baseline_notifications_active_24),
                             contentDescription = "notify",
-                            modifier = Modifier.size(16.dp)
+                            modifier = Modifier
+                                .size(16.dp)
                                 .wrapContentSize(align = Alignment.Center),
                         )
                     },
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier
+                        .fillMaxWidth()
                         .padding(start = 8.dp, end = 8.dp),
                     enabled = true,
                 )
+*/
+                Spacer(modifier = Modifier.padding(all = 1.dp))
                 ToggleChip(
                     label = {
                         Text(
@@ -154,11 +153,13 @@ fun PreferenceScreen(navController: NavHostController)
                         Icon(
                             painter = painterResource(id = R.drawable.baseline_auto_graph_24),
                             contentDescription = "notify",
-                            modifier = Modifier.size(16.dp)
+                            modifier = Modifier
+                                .size(16.dp)
                                 .wrapContentSize(align = Alignment.Center),
                         )
                     },
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier
+                        .fillMaxWidth()
                         .padding(start = 8.dp, end = 8.dp),
                     enabled = true,
                 )
