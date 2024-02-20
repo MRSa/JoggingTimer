@@ -1,6 +1,5 @@
 package net.osdn.gokigen.joggingtimer.presentation.ui.main
 
-import android.util.Log
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.fillMaxSize
@@ -60,7 +59,11 @@ fun GraphAreaLegacy(counterManager: ITimerCounter, refLapTimeList: List<Long>, m
             val lapTime = recordedLapTimeList[index].lapTime - recordedLapTimeList[index - 1].lapTime
             if (lapTime > maxLapTime)
             {
-                maxLapTime = lapTime
+                if (!recordedLapTimeList[index].isPass)
+                {
+                    // 通過の場合は、最大ラップタイムにはしない (≒ グラフを縮小しない)）
+                    maxLapTime = lapTime
+                }
             }
             actualLapTimeList.add(lapTime)
         }
@@ -118,12 +121,10 @@ fun GraphAreaLegacy(counterManager: ITimerCounter, refLapTimeList: List<Long>, m
             actualLapTimeList.forEachIndexed { index, _ ->
                 val positionX = (index + 0.5f) * boxWidthUnit
                 val positionY = (height - (actualLapTimeList[index].toFloat() * boxHeightUnit))
-                Log.v(
-                    "GraphAreaLegacy",
-                    "[$index] X:$positionX Y:$positionY [${actualLapTimeList[index]} / $maxLapTime]"
-                )
+                // Log.v("GraphAreaLegacy", "[$index] X:$positionX Y:$positionY [${actualLapTimeList[index]} / $maxLapTime]")
 
-                if ((positionY > 0.0f) && (positionY <= height)) {
+                if ((positionY > 0.0f) && (positionY <= height))
+                {
                     path.lineTo(x = positionX, y = positionY)
                     path.addOval(
                         oval = Rect(
@@ -133,7 +134,9 @@ fun GraphAreaLegacy(counterManager: ITimerCounter, refLapTimeList: List<Long>, m
                             bottom = positionY + 2.0f
                         )
                     )
-                } else {
+                }
+                else
+                {
                     val overY = if (positionY < 0.0f) {
                         0.0f
                     } else {

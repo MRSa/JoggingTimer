@@ -53,5 +53,5 @@
     <string name="create_total_time_label">Time</string>
     <string name="create_total_lap_label">Lap</string>
     <string name="notify_reference_lap">Report Lap</string>
-    <string name="show_graph_mode">Legacy Graph</string>
+    <string name="show_graph_mode">V1 Graph</string>
 </resources>

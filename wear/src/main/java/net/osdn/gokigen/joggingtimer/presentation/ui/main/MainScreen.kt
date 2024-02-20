@@ -2,6 +2,7 @@ package net.osdn.gokigen.joggingtimer.presentation.ui.main
 
 import android.content.Context
 import android.text.format.DateFormat
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.gestures.animateScrollBy
@@ -45,9 +46,12 @@ fun MainScreen(context: Context, navController: NavHostController, counterManage
 {
     val focusRequester = remember { FocusRequester() }
     val coroutineScope = rememberCoroutineScope()
-    val scrollState = remember { MyPositionIndicatorState() } // rememberScrollState()
+    val scrollState = remember { MyPositionIndicatorState() }
     val horizontalPadding = 5.dp
     val enableLapStamp  = remember { mutableStateOf(false)}
+    val reportReachedLapTime  = remember { mutableStateOf(false)}
+    val checkLapCount  = remember { mutableIntStateOf(0)}
+    var isNotifyVibrate = false
 
     Box(
         modifier = Modifier
@@ -75,7 +79,6 @@ fun MainScreen(context: Context, navController: NavHostController, counterManage
                 modifier = Modifier
                     .onRotaryScrollEvent {
                         coroutineScope.launch {
-                            //Log.v("TEST", "Pixels: ${it.verticalScrollPixels}")
                             scrollState.scrollState.scrollBy(it.verticalScrollPixels)
                             scrollState.scrollState.animateScrollBy(0f)
                         }
@@ -103,6 +106,62 @@ fun MainScreen(context: Context, navController: NavHostController, counterManage
                 refId.intValue = AppSingleton.controller.getReferenceTimerSelection()
                 val refLapTimeList = counterManager.getReferenceLapTimeList(refId.intValue)
                 val refLapTimeCount = refLapTimeList?.size ?: 0
+
+                // 「ラップタイム到達通知」を ON に設定している場合の処理...
+                if ((refLapTimeList != null)&&(AppSingleton.controller.getNotifyReachedReferenceLap()))
+                {
+                    // lapTimeValue ... ラップタイム計測経過時間
+
+                    // ----- ラップタイム数
+                    val currentLapTime = counterManager.getLapTimeCount() - 1
+                    if (currentLapTime != checkLapCount.intValue)
+                    {
+                        // --- 次のラップタイム ... カウンタをリセット
+                        checkLapCount.intValue = currentLapTime
+                        reportReachedLapTime.value = false
+                    }
+
+                    // reportReachedLapTime.value ... 通知したときに true にする
+                    val countStatus = counterManager.getCurrentCountStatus()
+                    if ((refLapTimeList.size > (currentLapTime + 1))&&
+                        (currentLapTime >= 0)&&
+                        (!reportReachedLapTime.value)&&
+                        (countStatus != ICounterStatus.STOP)&&
+                        (countStatus != ICounterStatus.FINISHED))
+                    {
+                        // ----- チェック条件（基準ラップタイム）
+                        val targetReferenceLapTime =
+                            refLapTimeList[currentLapTime + 1] - refLapTimeList[currentLapTime]
+
+                        if (targetReferenceLapTime < lapTimeValue)
+                        {
+                            // ----- 「お知らせ」の通知する
+                            Log.v("MainScreen", " ----- REACHED LAP TIME COUNT -----")
+
+                            // ----- ぶるぶるさせる (実処理は後で実施)
+                            isNotifyVibrate = true
+
+                            // 通知したことを記憶する
+                            reportReachedLapTime.value = true
+                        }
+                        // Log.v("MainScreen", "LAP: $currentLapTime target: $targetReferenceLapTime currentTime: $lapTimeValue checkLapCount: ${checkLapCount.intValue} status: ${counterManager.getCurrentCountStatus()}")
+                    }
+
+                    // ----- 確認するLAP数のリセット
+                    when (counterManager.getCurrentCountStatus())
+                    {
+                        ICounterStatus.STOP -> {
+                            // 開始前
+                            checkLapCount.intValue = 0
+                        }
+                        ICounterStatus.FINISHED -> {
+                            // 終了
+                            checkLapCount.intValue = 0
+                        }
+                        else -> { }
+                    }
+
+                }
 
                 if ((refLapTimeList != null)&&(refLapTimeCount > 1))
                 {
@@ -167,6 +226,14 @@ fun MainScreen(context: Context, navController: NavHostController, counterManage
             }
         }
         LaunchedEffect(Unit) {
+            if (isNotifyVibrate)
+            {
+                coroutineScope.launch {
+                    AppSingleton.controller.vibrate(120)
+                }
+                Log.v("MainScreen", "Notify Vibration")
+                isNotifyVibrate = false
+            }
             focusRequester.requestFocus()
         }
     }
