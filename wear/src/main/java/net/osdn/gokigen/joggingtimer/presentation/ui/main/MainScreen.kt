@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -33,6 +34,7 @@ import androidx.wear.compose.material.TimeText
 import androidx.wear.compose.material.TimeTextDefaults
 import androidx.wear.compose.material.scrollAway
 import kotlinx.coroutines.launch
+import net.osdn.gokigen.joggingtimer.AppSingleton
 import net.osdn.gokigen.joggingtimer.stopwatch.timer.ICounterStatus
 import net.osdn.gokigen.joggingtimer.stopwatch.timer.ITimerCounter
 import net.osdn.gokigen.joggingtimer.utilities.MyPositionIndicatorState
@@ -88,22 +90,59 @@ fun MainScreen(context: Context, navController: NavHostController, counterManage
                 horizontalAlignment = Alignment.Start,
             ) {
 
-                // ラップタイムボタンが有効になる条件を設定
+                // ----- ラップタイムボタンが有効になる条件を設定
                 val lapTimeValue = counterManager.getPastTime() - if (counterManager.getLastLapTime() <= 0 ) { 0 } else { counterManager.getLastLapTime() }
                 enableLapStamp.value = lapTimeValue > 3000
 
-                // メインカウンタ と サブカウンタ
+                // ----- メインカウンタ と サブカウンタ の表示
                 MainCounter(counterManager)
                 SubCounter(counterManager)
 
-                // 進捗グラフの表示
-                GraphArea(
-                    counterManager = counterManager,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        //.height(33.dp)  // 狭い表示...
-                        .height(45.dp)    // 48.dp -> 40.dp -> 44.dp
-                        .padding(6.dp))
+                // ----- 基準ラップタイムの取得
+                val refId = remember { mutableIntStateOf(0) }
+                refId.intValue = AppSingleton.controller.getReferenceTimerSelection()
+                val refLapTimeList = counterManager.getReferenceLapTimeList(refId.intValue)
+                val refLapTimeCount = refLapTimeList?.size ?: 0
+
+                if ((refLapTimeList != null)&&(refLapTimeCount > 1))
+                {
+                    // 基準ラップタイムが設定されていた時は、グラフ表示を行う
+                    when (AppSingleton.controller.getLapGraphicMode()) {
+                        0 -> {
+                            // 進捗グラフの表示 (新バージョン)
+                            GraphArea(
+                                counterManager = counterManager,
+                                refLapTimeList = refLapTimeList,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(45.dp)    // 48.dp -> 40.dp -> 44.dp (33.dp)
+                                    .padding(6.dp)
+                            )
+                        }
+                        else -> {
+                            // 進捗グラフの表示 (旧バージョン)
+                            GraphAreaLegacy(
+                                counterManager = counterManager,
+                                refLapTimeList = refLapTimeList,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(45.dp)    // 48.dp -> 40.dp -> 44.dp (33.dp)
+                                    .padding(6.dp)
+                            )
+                        }
+                    }
+                }
+                else
+                {
+                    // 基準ラップタイムが設定されていない場合は、平均ラップタイムを表示する
+                    DrawAverageLapTime(
+                        counterManager = counterManager,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(45.dp)    // 48.dp -> 40.dp -> 44.dp (33.dp)
+                            .padding(6.dp)
+                    )
+                }
 
                 // 現在の状態によって、メインボタンの表示を切り替える
                 when (counterManager.getCurrentCountStatus())
