@@ -76,15 +76,7 @@ fun PreferenceScreen(navController: NavHostController)
                 modifier = Modifier
                     .fillMaxSize()
                     .focusRequester(focusRequester)
-                    .padding(top = 24.dp)
-/*
-                padding = PaddingValues(
-                    top = 16.dp,
-                    start = 6.dp,
-                    end = 6.dp,
-                    bottom = 16.dp,
-                ),
- */
+                    .padding(top = 50.dp, start = 2.dp, end = 2.dp)
             )
             {
 /*
