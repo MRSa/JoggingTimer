@@ -82,12 +82,12 @@ fun BtnSubStop(navController: NavHostController, counterManager: ITimerCounter)
             shape = RoundedCornerShape(10.dp),
             colors = ButtonDefaults.primaryButtonColors(backgroundColor =  Color.Black),
             onClick = { navController.navigate("PreferenceScreen") },
-            enabled = false,
+            enabled = true,
         ) {
             Icon(
                 painter = painterResource(id = R.drawable.baseline_settings_24),
-                contentDescription = "List",
-                tint = Color.DarkGray // Color.White
+                contentDescription = "Settings",
+                tint = Color.White
             )
         }
 
@@ -287,12 +287,12 @@ fun BtnSubFinished(navController: NavHostController, counterManager: ITimerCount
             shape = RoundedCornerShape(10.dp),
             colors = ButtonDefaults.primaryButtonColors(backgroundColor =  Color.Black),
             onClick = { navController.navigate("PreferenceScreen") },
-            enabled = false,
+            enabled = true,
         ) {
             Icon(
                 painter = painterResource(id = R.drawable.baseline_settings_24),
                 contentDescription = "Settings",
-                tint = Color.DarkGray // Color.White
+                tint = Color.White
             )
         }
 

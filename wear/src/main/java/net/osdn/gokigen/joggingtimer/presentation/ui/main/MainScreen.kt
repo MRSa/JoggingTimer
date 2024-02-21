@@ -2,6 +2,7 @@ package net.osdn.gokigen.joggingtimer.presentation.ui.main
 
 import android.content.Context
 import android.text.format.DateFormat
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.gestures.animateScrollBy
@@ -16,6 +17,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -33,6 +35,7 @@ import androidx.wear.compose.material.TimeText
 import androidx.wear.compose.material.TimeTextDefaults
 import androidx.wear.compose.material.scrollAway
 import kotlinx.coroutines.launch
+import net.osdn.gokigen.joggingtimer.AppSingleton
 import net.osdn.gokigen.joggingtimer.stopwatch.timer.ICounterStatus
 import net.osdn.gokigen.joggingtimer.stopwatch.timer.ITimerCounter
 import net.osdn.gokigen.joggingtimer.utilities.MyPositionIndicatorState
@@ -43,9 +46,11 @@ fun MainScreen(context: Context, navController: NavHostController, counterManage
 {
     val focusRequester = remember { FocusRequester() }
     val coroutineScope = rememberCoroutineScope()
-    val scrollState = remember { MyPositionIndicatorState() } // rememberScrollState()
+    val scrollState = remember { MyPositionIndicatorState() }
     val horizontalPadding = 5.dp
     val enableLapStamp  = remember { mutableStateOf(false)}
+    val reportReachedLapTime  = remember { mutableStateOf(false)}
+    val checkLapCount  = remember { mutableIntStateOf(0)}
 
     Box(
         modifier = Modifier
@@ -73,7 +78,6 @@ fun MainScreen(context: Context, navController: NavHostController, counterManage
                 modifier = Modifier
                     .onRotaryScrollEvent {
                         coroutineScope.launch {
-                            //Log.v("TEST", "Pixels: ${it.verticalScrollPixels}")
                             scrollState.scrollState.scrollBy(it.verticalScrollPixels)
                             scrollState.scrollState.animateScrollBy(0f)
                         }
@@ -88,22 +92,119 @@ fun MainScreen(context: Context, navController: NavHostController, counterManage
                 horizontalAlignment = Alignment.Start,
             ) {
 
-                // ラップタイムボタンが有効になる条件を設定
+                // ----- ラップタイムボタンが有効になる条件を設定
                 val lapTimeValue = counterManager.getPastTime() - if (counterManager.getLastLapTime() <= 0 ) { 0 } else { counterManager.getLastLapTime() }
                 enableLapStamp.value = lapTimeValue > 3000
 
-                // メインカウンタ と サブカウンタ
+                // ----- メインカウンタ と サブカウンタ の表示
                 MainCounter(counterManager)
                 SubCounter(counterManager)
 
-                // 進捗グラフの表示
-                GraphArea(
-                    counterManager = counterManager,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        //.height(33.dp)  // 狭い表示...
-                        .height(45.dp)    // 48.dp -> 40.dp -> 44.dp
-                        .padding(6.dp))
+                // ----- 基準ラップタイムの取得
+                val refId = remember { mutableIntStateOf(0) }
+                refId.intValue = AppSingleton.controller.getReferenceTimerSelection()
+                val refLapTimeList = counterManager.getReferenceLapTimeList(refId.intValue)
+                val refLapTimeCount = refLapTimeList?.size ?: 0
+
+                // 「ラップタイム到達通知」を ON に設定している場合の処理...
+                if ((refLapTimeList != null)&&(AppSingleton.controller.getNotifyReachedReferenceLap()))
+                {
+                    // lapTimeValue ... ラップタイム計測経過時間
+
+                    // ----- ラップタイム数
+                    val currentLapTime = counterManager.getLapTimeCount() - 1
+                    if (currentLapTime != checkLapCount.intValue)
+                    {
+                        // --- 次のラップタイム ... カウンタをリセット
+                        checkLapCount.intValue = currentLapTime
+                        reportReachedLapTime.value = false
+                    }
+
+                    // reportReachedLapTime.value ... 通知したときに true にする
+                    val countStatus = counterManager.getCurrentCountStatus()
+                    if ((refLapTimeList.size > (currentLapTime + 1))&&
+                        (currentLapTime >= 0)&&
+                        (!reportReachedLapTime.value)&&
+                        (countStatus != ICounterStatus.STOP)&&
+                        (countStatus != ICounterStatus.FINISHED))
+                    {
+                        // ----- チェック条件（基準ラップタイム）
+                        val targetReferenceLapTime =
+                            refLapTimeList[currentLapTime + 1] - refLapTimeList[currentLapTime]
+
+                        if (targetReferenceLapTime < lapTimeValue)
+                        {
+                            // ----- 「お知らせ」の通知する
+                            Log.v("MainScreen", " ----- REACHED LAP TIME COUNT -----")
+
+                            // ----- 通知：ぶるぶるさせる
+                            LaunchedEffect(Unit) {
+                                coroutineScope.launch {
+                                    AppSingleton.controller.vibrate(140)
+                                }
+                            }
+
+                            // 通知したことを記憶する
+                            reportReachedLapTime.value = true
+                        }
+                        // Log.v("MainScreen", "LAP: $currentLapTime target: $targetReferenceLapTime currentTime: $lapTimeValue checkLapCount: ${checkLapCount.intValue} status: ${counterManager.getCurrentCountStatus()}")
+                    }
+
+                    // ----- 確認するLAP数のリセット
+                    when (counterManager.getCurrentCountStatus())
+                    {
+                        ICounterStatus.STOP -> {
+                            // 開始前
+                            checkLapCount.intValue = 0
+                        }
+                        ICounterStatus.FINISHED -> {
+                            // 終了
+                            checkLapCount.intValue = 0
+                        }
+                        else -> { }
+                    }
+
+                }
+
+                if ((refLapTimeList != null)&&(refLapTimeCount > 1))
+                {
+                    // 基準ラップタイムが設定されていた時は、グラフ表示を行う
+                    when (AppSingleton.controller.getLapGraphicMode()) {
+                        0 -> {
+                            // 進捗グラフの表示 (新バージョン)
+                            GraphArea(
+                                counterManager = counterManager,
+                                refLapTimeList = refLapTimeList,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(45.dp)    // 48.dp -> 40.dp -> 44.dp (33.dp)
+                                    .padding(6.dp)
+                            )
+                        }
+                        else -> {
+                            // 進捗グラフの表示 (旧バージョン)
+                            GraphAreaLegacy(
+                                counterManager = counterManager,
+                                refLapTimeList = refLapTimeList,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(45.dp)    // 48.dp -> 40.dp -> 44.dp (33.dp)
+                                    .padding(6.dp)
+                            )
+                        }
+                    }
+                }
+                else
+                {
+                    // 基準ラップタイムが設定されていない場合は、平均ラップタイムを表示する
+                    DrawAverageLapTime(
+                        counterManager = counterManager,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(45.dp)    // 48.dp -> 40.dp -> 44.dp (33.dp)
+                            .padding(6.dp)
+                    )
+                }
 
                 // 現在の状態によって、メインボタンの表示を切り替える
                 when (counterManager.getCurrentCountStatus())

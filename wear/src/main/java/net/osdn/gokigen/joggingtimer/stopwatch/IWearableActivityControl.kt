@@ -37,4 +37,9 @@ interface IWearableActivityControl
     fun launchNotify(isShow: Boolean)
     fun updateTimeEntryData(detailId: Long, totalTime: Long) : Boolean
     fun createTimeEntryModelData(lap: Int, totalLapTime: Long, memo: String): Long
+    fun getNotifyReachedReferenceLap() : Boolean
+    fun setNotifyReachedReferenceLap(isNotify: Boolean)
+    fun getLapGraphicMode() : Int
+    fun setLapGraphicMode(isLegacy: Int)
+
 }

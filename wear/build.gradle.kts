@@ -11,8 +11,8 @@ android {
         applicationId = "net.osdn.gokigen.joggingtimer"
         minSdk = 26
         targetSdk = 33
-        versionCode = 2000001
-        versionName = "2.0.1"
+        versionCode = 2001000
+        versionName = "2.1.0"
         vectorDrawables {
             useSupportLibrary = true
         }
@@ -53,15 +53,12 @@ dependencies {
     implementation("androidx.preference:preference-ktx:1.2.1")
     implementation("androidx.activity:activity-compose:1.8.2")
 
-    //implementation(platform("androidx.compose:compose-bom:2022.11.00"))
     implementation(platform("androidx.compose:compose-bom:2023.08.00"))
     //implementation(platform("androidx.compose:compose-bom:2024.01.00"))
     implementation("androidx.compose.ui:ui")
     implementation("androidx.compose.ui:ui-tooling-preview")
-    //implementation("androidx.compose.material:material:1.6.0")
 
-    //val navigationComposeVersion = "2.6.0"
-    val navigationComposeVersion = "2.7.6"
+    val navigationComposeVersion = "2.7.7"  // "2.7.6"
     implementation("androidx.navigation:navigation-compose:$navigationComposeVersion")
     implementation("androidx.navigation:navigation-runtime-ktx:$navigationComposeVersion")
 
