@@ -3,7 +3,6 @@ package jp.sourceforge.gokigen
 import android.Manifest
 import android.app.NotificationChannel
 import android.app.NotificationManager
-import android.content.Context
 import android.content.Intent
 import android.content.Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY
 import android.content.pm.PackageManager
@@ -110,7 +109,7 @@ class MainActivity : ComponentActivity(), ICounterStatusNotify
                 description = descriptionText
             }
             val notificationManager: NotificationManager =
-                getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+                getSystemService(NOTIFICATION_SERVICE) as NotificationManager
             notificationManager.createNotificationChannel(channel)
         }
         catch (e: Exception)
@@ -245,6 +244,7 @@ class MainActivity : ComponentActivity(), ICounterStatusNotify
 
     override fun onUserLeaveHint()
     {
+        super.onUserLeaveHint()
         Log.v(TAG, "onUserLeaveHint() ")
         // ハードキー（ホームボタン）が押されたとき、これがひろえるが...
     }

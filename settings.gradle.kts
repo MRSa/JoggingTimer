@@ -14,4 +14,4 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "JoggingTimer"
-include(":mobile", ":wear")
+include(":wear")

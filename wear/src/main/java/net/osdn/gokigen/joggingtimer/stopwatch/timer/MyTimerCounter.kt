@@ -114,7 +114,7 @@ class MyTimerCounter internal constructor() : ITimerCounter, ITimeoutReceiver, I
         {
             timeToSet = System.currentTimeMillis()
             lapTime.add(LapTimeInfo(timeToSet, isPass))
-            ++(currentLapCount.intValue)
+            ++currentLapCount.intValue
 
             val recordType = if (isPass) { PASSAGE_RECORD_TYPE } else { DEFAULT_RECORD_TYPE }
             AppSingleton.controller.appendTimeData(timeToSet, recordType)
@@ -131,7 +131,7 @@ class MyTimerCounter internal constructor() : ITimerCounter, ITimeoutReceiver, I
         {
             stopTime = System.currentTimeMillis()
             lapTime.add(LapTimeInfo(stopTime, false))
-            ++(currentLapCount.intValue)
+            ++currentLapCount.intValue
             executeUserFeedback(ICounterStatus.FINISHED)
             counterStatus.value = ICounterStatus.FINISHED
             AppSingleton.controller.finishTimeData(startTime = startTime, endTime = stopTime)
@@ -221,7 +221,7 @@ class MyTimerCounter internal constructor() : ITimerCounter, ITimeoutReceiver, I
         {
             if ((lapCount <= 0)||(lapCount > lapTime.size))
             {
-                return (false)
+                return false
             }
             return (lapTime[lapCount - 1].isPass)
         }
@@ -229,13 +229,13 @@ class MyTimerCounter internal constructor() : ITimerCounter, ITimeoutReceiver, I
         {
             e.printStackTrace()
         }
-        return (false)
+        return false
     }
     override fun getLastLapTime(): Long
     {
         try
         {
-            if (lapTime.size > 0)
+            if (lapTime.isNotEmpty())
             {
                 return (lapTime[lapTime.size - 1].lapTime - startTime)
             }
@@ -252,7 +252,7 @@ class MyTimerCounter internal constructor() : ITimerCounter, ITimeoutReceiver, I
         val currentTime = System.currentTimeMillis()
         try
         {
-            if (lapTime.size > 0)
+            if (lapTime.isNotEmpty())
             {
                 return currentTime - lapTime[lapTime.size - 1].lapTime
             }

@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.wear.compose.foundation.lazy.ScalingLazyColumn
+import androidx.wear.compose.foundation.lazy.ScalingLazyListAnchorType
 import androidx.wear.compose.foundation.lazy.itemsIndexed
 import androidx.wear.compose.foundation.lazy.rememberScalingLazyListState
 import androidx.wear.compose.material.ListHeader
@@ -139,6 +140,7 @@ fun DetailRecordScreen(context: Context, navController: NavHostController, id: I
                         end = 0.dp,
                         bottom = 8.dp,
                     ),
+                    anchorType = ScalingLazyListAnchorType.ItemStart,
                     state = listState
                 ) {
                     this.item {
