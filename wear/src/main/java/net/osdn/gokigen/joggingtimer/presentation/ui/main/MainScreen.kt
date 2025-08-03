@@ -4,7 +4,6 @@ import android.content.Context
 import android.text.format.DateFormat
 import android.util.Log
 import androidx.compose.foundation.background
-import androidx.compose.foundation.focusable
 import androidx.compose.foundation.gestures.animateScrollBy
 import androidx.compose.foundation.gestures.scrollBy
 import androidx.compose.foundation.layout.Arrangement
@@ -56,7 +55,7 @@ fun MainScreen(context: Context, navController: NavHostController, counterManage
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colors.background),
-        contentAlignment = Alignment.Center
+        contentAlignment = Alignment.Center,
     ) {
         Scaffold(
             timeText = {
@@ -86,8 +85,8 @@ fun MainScreen(context: Context, navController: NavHostController, counterManage
                     .fillMaxWidth()
                     .verticalScroll(scrollState.scrollState)
                     .padding(horizontal = horizontalPadding, vertical = 28.dp)  // 20.dp -> 26.dp -> 28.dp
-                    .focusRequester(focusRequester)
-                    .focusable(),
+                    .focusRequester(focusRequester),
+                    //.focusable(),
                 verticalArrangement = Arrangement.Top,
                 horizontalAlignment = Alignment.Start,
             ) {

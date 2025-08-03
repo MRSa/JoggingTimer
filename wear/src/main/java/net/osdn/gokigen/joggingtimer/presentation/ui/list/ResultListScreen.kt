@@ -21,6 +21,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.wear.compose.foundation.lazy.ScalingLazyColumn
+import androidx.wear.compose.foundation.lazy.ScalingLazyListAnchorType
 import androidx.wear.compose.foundation.lazy.items
 import androidx.wear.compose.foundation.lazy.rememberScalingLazyListState
 import androidx.wear.compose.material.ListHeader
@@ -96,6 +97,7 @@ fun ResultListScreen(navController: NavHostController)
                     ),
                     verticalArrangement = Arrangement.Top,
                     horizontalAlignment = Alignment.Start,
+                    anchorType = ScalingLazyListAnchorType.ItemStart,
                     state = listState
                 ) {
                     this.item {

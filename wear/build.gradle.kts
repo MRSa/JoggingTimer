@@ -1,18 +1,19 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    id("org.jetbrains.kotlin.plugin.compose") version "2.2.0"
 }
 
 android {
     namespace = "net.osdn.gokigen.joggingtimer"
-    compileSdk = 34
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "net.osdn.gokigen.joggingtimer"
         minSdk = 26
-        targetSdk = 33
-        versionCode = 2001000
-        versionName = "2.1.0"
+        targetSdk = 36
+        versionCode = 2001011
+        versionName = "2.1.1"
         vectorDrawables {
             useSupportLibrary = true
         }
@@ -48,33 +49,34 @@ android {
 }
 
 dependencies {
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.10.2")
+
+    implementation("androidx.activity:activity-compose:1.10.1")
+    implementation("androidx.core:core-ktx:1.16.0")
     implementation("androidx.core:core-splashscreen:1.0.1")
     implementation("androidx.preference:preference-ktx:1.2.1")
-    implementation("androidx.activity:activity-compose:1.8.2")
 
-    implementation(platform("androidx.compose:compose-bom:2023.08.00"))
-    //implementation(platform("androidx.compose:compose-bom:2024.01.00"))
+    implementation(platform("androidx.compose:compose-bom:2025.07.00"))
     implementation("androidx.compose.ui:ui")
     implementation("androidx.compose.ui:ui-tooling-preview")
 
-    val navigationComposeVersion = "2.7.7"  // "2.7.6"
+    val navigationComposeVersion = "2.9.3"
     implementation("androidx.navigation:navigation-compose:$navigationComposeVersion")
     implementation("androidx.navigation:navigation-runtime-ktx:$navigationComposeVersion")
 
-    val wearComposeVersion = "1.2.1"
-    //val wearComposeVersion = "1.3.0"    // cannot handle button long press
-    //val wearComposeVersion = "1.4.0-alpha01"
+    //val wearComposeVersion = "1.2.1"
+    val wearComposeVersion = "1.4.1"
     implementation("androidx.wear.compose:compose-material:$wearComposeVersion")
     implementation("androidx.wear.compose:compose-foundation:$wearComposeVersion")
     implementation("androidx.wear.compose:compose-navigation:$wearComposeVersion")
     implementation("androidx.wear.compose:compose-ui-tooling:$wearComposeVersion")
 
     // Horologist
-    implementation("com.google.android.horologist:horologist-composables:0.4.17")
+    val horologistVersion = "0.7.15"
+    implementation("com.google.android.horologist:horologist-composables:$horologistVersion")
+    implementation("com.google.android.horologist:horologist-compose-material:$horologistVersion")
 
-    // for ongoing activity API
+    // ongoing activity API
     implementation("androidx.wear:wear-ongoing:1.0.0")
-    implementation("androidx.core:core-ktx:1.12.0")
 
 }
