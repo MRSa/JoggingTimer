@@ -4,7 +4,6 @@ import android.content.Context
 import android.text.format.DateFormat
 import android.util.Log
 import androidx.compose.foundation.background
-import androidx.compose.foundation.focusable
 import androidx.compose.foundation.gestures.animateScrollBy
 import androidx.compose.foundation.gestures.scrollBy
 import androidx.compose.foundation.layout.Arrangement
